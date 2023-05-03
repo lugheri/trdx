@@ -1,0 +1,36 @@
+### BACKEND ###
+# Logs
+Backend/logs
+Backend/*.log
+Backend/npm-debug.log*
+Backend/yarn-debug.log*
+Backend/yarn-error.log*
+Backend/lerna-debug.log*
+Backend/.pnpm-debug.log*
+Backend/node_modules/
+Backend/jspm_packages/
+
+# dotenv environment variable files
+Backend/.env
+Backend/.env.development.local
+Backend/.env.test.local
+Backend/.env.production.local
+Backend/.env.local
+
+Backend/.temp
+
+### FRONTEND ###
+# Logs
+Frontend/logs
+Frontend/*.log
+
+Frontend/npm-debug.log*
+Frontend/yarn-debug.log*
+Frontend/yarn-error.log*
+Frontend/lerna-debug.log*
+Frontend/.pnpm-debug.log*
+
+Frontend/node_modules/
+Frontend/jspm_packages/
+Frontend/.temp
+
