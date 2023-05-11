@@ -5,6 +5,8 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 
+import db from './database/database'
+
 const app = express();
 
 
@@ -17,6 +19,8 @@ app.use(routes)
 
 
 
+
+
 const httpServer = http.createServer(app);
 
 
@@ -24,3 +28,4 @@ const startUp = async() => {
   httpServer.listen(4000,()=>console.log('😀 Backend Platform v4 - online!'));
 }
 startUp()
+
