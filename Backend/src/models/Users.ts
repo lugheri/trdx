@@ -9,6 +9,7 @@ export interface UserInstance extends Model{
   level:number;
   password:string;
   reset:number;
+  logged:number;
   status:number;
   created_at:string;
   updated_at:string;
@@ -20,31 +21,27 @@ export const User = sequelize.define<UserInstance>("User",{
     type: DataTypes.INTEGER
   },
   photo:{
-    primaryKey: true,
     type: DataTypes.INTEGER
   },
   name:{
-    primaryKey: true,
     type: DataTypes.STRING
   },
   mail:{
-    primaryKey: true,
     type: DataTypes.STRING
   },
   level:{
-    primaryKey: true,
     type: DataTypes.INTEGER
   },
   password:{
-    primaryKey: true,
     type: DataTypes.STRING
   },
   reset:{
-    primaryKey: true,
+    type: DataTypes.TINYINT
+  },
+  logged:{
     type: DataTypes.TINYINT
   },
   status:{
-    primaryKey: true,
     type: DataTypes.TINYINT,
     defaultValue:1
   }

@@ -5,9 +5,6 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 
-import { sequelize } from './instances/mysql';
-
-
 const app = express();
 
 

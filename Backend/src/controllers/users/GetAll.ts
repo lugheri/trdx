@@ -15,7 +15,6 @@ export const getAll = async (req:Request,res:Response) => {
   const qtdRegPage = 30
   const offset = qtdRegPage * p 
   try{
-    // const result = await knex<IUser>(ETableNames.users).select().where('status', '=', status).limit(qtdRegPage).offset(offset).orderBy(orderedBy,order);
     const users = await User.findAll({
       where: {status: status},
       order:[[orderedBy,order]],
