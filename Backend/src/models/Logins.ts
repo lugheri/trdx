@@ -12,6 +12,7 @@ export interface LoginsInstance extends Model {
 export const Logins = sequelize.define<LoginsInstance>("Logins",{
   id:{
     primaryKey: true,
+    autoIncrement: true,
     type: DataTypes.INTEGER
   },
   date:{

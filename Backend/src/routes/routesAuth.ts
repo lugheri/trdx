@@ -6,4 +6,5 @@ export default (routes: Router) => {
   routes.get('/live',AuthController.live)
   routes.post('/login',AuthController.login)
   routes.use(authMiddleware);
+  routes.post('/logout',AuthController.logout)
 }
