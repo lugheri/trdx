@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-
+import { z } from "zod";
 import LoginService from "../services/loginService";
 
 class AuthController{
@@ -9,8 +8,23 @@ class AuthController{
     res.json(true)
   }
   async login(req: Request,res: Response){
-    interface  RequestBody { username : string, password : string}
-    const {username,password}:RequestBody = req.body
+
+    const RequestBody = z.object({
+      username: z.string(),
+      password: z.string(),
+    });
+    
+    type RequestBody = z.infer<typeof RequestBody>;
+    //interface  RequestBody { username : string, password : string}
+    
+    const params = RequestBody.safeParse(req.body)
+    if(!params.success){
+      console.log(params)
+      res.json({"error":params.error})
+      return
+    }
+    const {username,password} = params.data
+
     try{
       const userdata = await LoginService.checkUser(username,password)
       if(!userdata){
