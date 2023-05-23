@@ -5,17 +5,18 @@ dotenv.config()
 
 import { Logins } from "../models/Logins";
 import { User,UserInstance } from "../models/Users";
+import { UserAccessType } from '../dtos/users.dto';
 
 class LoginService {
-  async checkUser(username:string, password:string){
+  async checkUser(accessUser: UserAccessType){
     const userdata = await User.findOne({
       attributes: ['id','name','password'],
-      where: {mail: username, status:1}
+      where: {mail: accessUser.username, status:1}
     })
     if(!userdata){
       return false
     }
-    if(userdata.password!=md5(password)){
+    if(userdata.password!=md5(accessUser.password)){
       return false
     }
     return userdata
