@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { z } from "zod";
 import LoginService from "../services/loginService";
-import { UserAccessDTO } from '../dtos/users.dto';
+import { UserAccessDTO } from './Dtos/usersAccess.dto';
 
 class AuthController{
   live(req: Request,res: Response){

@@ -5,7 +5,7 @@ dotenv.config()
 
 import { Logins } from "../models/Logins";
 import { User,UserInstance } from "../models/Users";
-import { UserAccessType } from '../dtos/users.dto';
+import { UserAccessType } from '../controllers/Dtos/usersAccess.dto';
 
 class LoginService {
   async checkUser(accessUser: UserAccessType){
@@ -25,7 +25,8 @@ class LoginService {
   async userAuthenticate(action:string,userdata?:UserInstance,authHeader?:string){
     if(action=='login'){
       if(userdata){
-        const token = jwt.sign({userId:userdata.id,userName:userdata.mail},process.env.APP_SECRET as string,{expiresIn:'12h'})
+        const typeAccess = 'adm'
+        const token = jwt.sign({userId:userdata.id,userName:userdata.mail,typeAccess:typeAccess},process.env.APP_SECRET as string,{expiresIn:'12h'})
         //Check last action login user
         const lastAction = await Logins.findOne({attributes: ['action'],
                                                 where: {id:userdata.id},

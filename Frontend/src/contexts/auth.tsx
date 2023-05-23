@@ -1,17 +1,14 @@
 import { createContext, useEffect, useState } from 'react';
 import api from '../services/api';
-
-interface AuthContextType {
-  authenticated: boolean | null;
-  userData: string[] | null;
-}
+import { AuthContextType,User,Student,AuthProviderProps,TokenProps } from './Dtos/auth.dto';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
-  const [ userData, setUserData] = useState<null | string[] | number[]>(null);
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [ userData, setUserData] = useState<User | Student | null>(null);
   const [ authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [ token, setToken] = useState<boolean | null>(null);
+  const [ typeAccess, setTypeAccess] = useState<'Adm' | 'Student' | null>(null);
 
   //Validation Data
   const validation = async () => {
@@ -23,15 +20,25 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
           }
         })
         if(verificateValidationToken.data){
-          const { userId } = verificateValidationToken.data;
-          const getUserData = await api.get(`/getUsersById/${userId}`, {
-            headers: {
-              authorization: localStorage.getItem('Token')
-            }
-          });
-          setUserData(getUserData.data.response[0])
+          const dataToken:TokenProps = verificateValidationToken.data;       
+          if(dataToken.typeAccess == 'Adm'){
+            const getUserData = await api.get(`/getUsersById/${dataToken.userId}`, {
+              headers: {
+                authorization: localStorage.getItem('Token')
+              }
+            });
+            setUserData(getUserData.data.response[0])
+          }else{
+            const getStudentData = await api.get(`/getUsersById/${dataToken.userId}`, {
+              headers: {
+                authorization: localStorage.getItem('Token')
+              }
+            });
+            setUserData(getStudentData.data.response[0])
+          }          
           setAuthenticated(true)
           setToken(true)
+          setTypeAccess(dataToken.typeAccess)
           return
         }
       }catch(err){
@@ -41,13 +48,15 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
     localStorage.removeItem('Token');
     setUserData(null);
     setAuthenticated(false)
+    setTypeAccess(null)
     setToken(false)
   }
+  
   useEffect(()=>{
     validation()
   },[token])
   
-  const contextValue:AuthContextType = {authenticated, userData}
+  const contextValue:AuthContextType = {authenticated, userData, typeAccess}  
   return(
     <AuthContext.Provider value={contextValue}>
       {children}
