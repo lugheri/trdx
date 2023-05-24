@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
-import { Toggle } from "../../components/Buttons"
+import { Button } from "../../components/Buttons"
 
 export const Login = () => {
   return (
-    <div>
+    <div className="bg-white dark:bg-slate-800">
       <h1>Login</h1>
      <form>
       <label className="block">
@@ -11,27 +10,33 @@ export const Login = () => {
         <input type="email" className="peer"/>
         <p className="mt-2 invisible peer-invalid:visible text-pink-600 text-sm">Username invalid!</p>
       </label>
-     </form>
-     
+     </form>     
     </div>
   )
 }
 
 export const LoginAdm = () => {
-  const [ darkMode, setDarkMode ] = useState<boolean>(localStorage.getItem('theme') == 'dark' ? true : false) 
-  useEffect(()=>{
-    darkMode ? localStorage.setItem('theme','dark') : localStorage.setItem('theme','light')
-  },[darkMode])
-
   return (
-    <div className={ darkMode ? 'dark' : 'light'}>
-      <div className="bg-white dark:bg-slate-800">
-        <h1>Login Adm {localStorage.getItem('theme')}</h1>
-        
-        <Toggle value={darkMode} setValue={setDarkMode}/>
-
-
+    <div className="bg-stone-900 h-screen flex justify-end items-center ">
+      <div className="bg-slate-50 p-10 w-1/2 h-auto rounded-md shadow">
+        <img src="" alt="logo"/>
+        <p>Área Administrativa</p>
+        <p>Bem-vindo à área administrativa da plataforma. <br/>Por favor, faça o login para acessar as ferramentas de administração e gerenciamento.</p>
+        <form className="flex flex-col">
+          <input type="text"/>
+          <input type="password"/>
+          <button>Autenticar</button>
+        </form>
+        <button>Esqueceu a Senha</button>
+        <div>
+          <a href="#">Suporte</a>
+          <a href="#">Termos de uso</a>
+          <a href="#">Politica de Privacidade</a>
+        </div>
+        <a href="#">Copyright</a>
       </div>
+      
+       
     </div>
   )
 }
