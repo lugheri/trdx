@@ -16,8 +16,7 @@ import { LoadingPage } from '../pages/LoadingPage';
 
 //Validate Auths
 const Private: React.FC<PrivateProps> = ({Item,typeAccess}) => {
-  const authenticate = useAuth();
-  
+  const authenticate = useAuth();  
   return(
     authenticate === undefined ? <LoadingPage/> 
     : authenticate.authenticated === null ? <LoadingPage/> 

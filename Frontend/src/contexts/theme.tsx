@@ -11,7 +11,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({children}) => {
     root.classList.remove(OldTheme);
     root.classList.add(theme);
     localStorage.setItem("theme",theme)
-    console.log("Theme",theme)
   },[theme])
 
   const contextValue:ThemeContextType={theme, setTheme }

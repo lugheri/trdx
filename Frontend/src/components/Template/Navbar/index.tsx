@@ -12,14 +12,20 @@ export const Navbar = () => {
 export const NavbarAdm = () => {
   const themeProps = useTheme() 
   const changeTheme = () => {
-    console.log("change theme")
     themeProps === undefined ? false
-    : themeProps.theme === "light" || undefined  ? themeProps.setTheme("dark") : themeProps.setTheme("light");
+    : themeProps.theme === "dark" ? themeProps.setTheme("light") : themeProps.setTheme("dark");
   }
   return (
-    <div>
-      <h1>NavbarAdm</h1>
-      { themeProps ? (<Button onClick={()=>changeTheme()} name="Theme" />) : false }
+    <div className="bg-white text-neutral-900 shadow-md dark:bg-neutral-900 dark:text-white flex justify-between items-center px-4 h-16">
+      {/*TITLE*/}
+      <div>
+        Navbar Adm
+      </div>
+       {/*ACTIONS*/}
+       <div>
+       { themeProps ? (<Button onClick={()=>changeTheme()} name="Theme" />) : false }
+       </div>
+  
     </div>
   )
 }
