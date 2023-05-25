@@ -25,7 +25,7 @@ class LoginService {
   async userAuthenticate(action:string,userdata?:UserInstance,authHeader?:string){
     if(action=='login'){
       if(userdata){
-        const typeAccess = 'adm'
+        const typeAccess : 'Adm' | 'Student' = 'Adm'
         const token = jwt.sign({userId:userdata.id,userName:userdata.mail,typeAccess:typeAccess},process.env.APP_SECRET as string,{expiresIn:'12h'})
         //Check last action login user
         const lastAction = await Logins.findOne({attributes: ['action'],
