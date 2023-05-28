@@ -45,52 +45,49 @@ export const LoginAdm = () => {
   }
   return (
     <div className="bg-cyan-950 h-screen flex justify-end items-center ">
-      <div className="p-10 w-1/2 h-auto">
-        <p className="text-white text-4xl font-bold mb-10">
+      <div className="px-1 w-1/3 h-auto  mr-10">
+        <p className="text-white text-4xl font-bold mb-5">
           Área Administrativa
         </p>
-        <p className="text-cyan-200 text-lg font-light mb-10">
+        <p className="text-cyan-200 font-light mb-10 ">
           Bem-vindo à área administrativa da plataforma. Por favor, faça o login para acessar as ferramentas de administração e gerenciamento.
         </p>
         <form onSubmit={sendAuth} className="flex flex-col">
           <input type="text" required name="username" value={username} onChange={(e)=>{setUsername(e.target.value)}}
-                 className="bg-cyan-900 mb-5 rounded-md border-0 text-cyan-50 text-xl p-4 mx-8
+                 className="bg-cyan-900 mb-5 rounded-md border-0 text-cyan-50 text p-2 mx-10
                             placeholder:italic placeholder:text-cyan-100 placeholder:opacity-70
                             focus:bg-cyan-900 focus:border-b-4 focus:border-t-0 focus:border-x-0 focus:border-b-cyan-200 focus:ring-0" 
                             
                  placeholder="Usuário"/>
           <input type="password" required name="password" value={password} onChange={(e)=>{setPassword(e.target.value)}}
-                 className="bg-cyan-900 mb-8 rounded-md border-0 text-cyan-50 text-xl p-4 mx-8
+                 className="bg-cyan-900 mb-5 rounded-md border-0 text-cyan-50 text p-2 mx-10
                             placeholder:italic placeholder:text-cyan-100 placeholder:opacity-70
                             focus:bg-cyan-800 focus:border-b-4 focus:border-t-0 focus:border-x-0 focus:border-b-cyan-200 focus:ring-0" 
                             
                  placeholder="Senha"/>
           <button 
             type="submit" 
-            className="text-cyan-950 mx-8 font-bold bg-green-500 rounded-xl p-4 text-lg shadow-md mb-10 transition duration-150 ease-out
+            className="text-cyan-950 mx-20 font-bold bg-green-500 rounded-xl p-2 text-lg shadow-md mb-5 transition duration-150 ease-out
                        hover:bg-green-600 hover:text-cyan-100 hover:ease-in">
             LOGIN           
           </button>
           {ErrorAuth ? ( 
-            <strong title={messageErrorAuth} className="bg-red-700 text-center mx-8 text-white py-4 px-2 rounded shadow-md mb-4">
+            <strong title={messageErrorAuth} className="bg-red-800 text-center mx-8 text-white py-4 px-2 rounded-md shadow-md mb-4">
               <FontAwesomeIcon icon={Fas.faExclamationTriangle}/> { causeErrorAuth }
             </strong>)
             :false}
 
         </form>
         <div className="text-center">
-          <button className="text-cyan-200 text-lg my-10 py-3 px-4 transition duration-150 ease-out 
-                              hover:border-cyan-300 hover:border-2 rounded-md hover:ease-in">
+          <button className="text-cyan-600 text nmy-5 py-3 px-4 transition duration-150 ease-out 
+                              hover:text-cyan-300 hover:ease-in">
             Esqueceu a Senha?
           </button>
           <div className="mt-32">
             <a className="mx-5 text-cyan-300 hover:text-cyan-200" href="#">Suporte</a>
             <a className="mx-5 text-cyan-300 hover:text-cyan-200" href="#">Termos de uso</a>
             <a className="mx-5 text-cyan-300 hover:text-cyan-200" href="#">Politica de Privacidade</a>
-          </div>
-          <div className="mt-10 text-cyan-500">
-            <p>Copyright</p>
-          </div>
+          </div>         
         </div>        
       </div>
     </div>

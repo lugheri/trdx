@@ -30,7 +30,7 @@ export const User = sequelize.define<UserInstance>("User",{
   mail:{
     type: DataTypes.STRING
   },
-  level:{
+  credential:{
     type: DataTypes.INTEGER
   },
   password:{
@@ -47,6 +47,6 @@ export const User = sequelize.define<UserInstance>("User",{
     defaultValue:1
   }
 },{
-  tableName: "users",
+  tableName: "sys_users",
   timestamps: true
 })
