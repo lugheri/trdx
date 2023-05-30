@@ -26,12 +26,12 @@ export const SidebarAdm = () => {
         { side == 'open' ? (
           <div className="absolute -right-2 -bottom-3 dark:bg-cyan-950 dark:text-cyan-50 dark:hover:bg-cyan-800 bg-cyan-100 hover:bg-cyan-200 border-2 border-cyan-950 rounded-full w-6 text-cyan-950 h-6 flex justify-center items-center text-xs shadow-md cursor-pointer" 
                onClick={()=>setSide('closed')}>
-            <FontAwesomeIcon icon={Fas.faCaretRight}/>
+            <FontAwesomeIcon icon={Fas.faCaretLeft}/>
           </div>
         ) : (
           <div className="absolute -right-2 -bottom-3 dark:bg-cyan-950 dark:text-cyan-50 dark:hover:bg-cyan-800 bg-cyan-100 hover:bg-cyan-200 border-2 border-cyan-950 rounded-full w-6 text-cyan-950 h-6 flex justify-center items-center text-xs shadow-md cursor-pointer" 
                onClick={()=>setSide('open')}>
-          <FontAwesomeIcon icon={Fas.faCaretLeft}/>
+          <FontAwesomeIcon icon={Fas.faCaretRight}/>
         </div>
         )}        
       </div>

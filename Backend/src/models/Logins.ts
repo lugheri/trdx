@@ -25,7 +25,7 @@ export const Logins = sequelize.define<LoginsInstance>("Logins",{
     type: DataTypes.INTEGER
   },
   action:{
-    type: DataTypes.TINYINT
+    type: DataTypes.STRING
   }
 },
 {
