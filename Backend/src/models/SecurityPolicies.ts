@@ -1,12 +1,15 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
+import { ModulesInstance } from './Modules';
+
+
 
 export interface SecurityPoliciesInstance extends Model{
   id:number;
   level_id:number;
   module_id:number;
   parent_module_id:number;
-  active:number;
+  active:number;  
 }
 
 export const SecurityPolicies = sequelize.define<SecurityPoliciesInstance>('SecurityPolicies',{
