@@ -16,7 +16,7 @@ class UserController{
         res.json({"success": true,"response": dataNewUser})  
         return
       }
-      res.json({"error":"Falha ao criar o novo Nível de acesso!"})  
+      res.json({"error":"Falha ao criar o novo Usuário de acesso!"})  
       return
     }catch(err){
       console.log(err)
