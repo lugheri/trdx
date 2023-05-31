@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { StudentsController } from '../controllers/students'
+import StudentsController from '../controllers/StudentsController'
 
 export default (routes: Router) => {
-  routes.post('/newStudent',StudentsController.create)
-  routes.get('/listStudents/:status/:page',StudentsController.list)
-  routes.post('/searchStudents',StudentsController.search)
-  routes.get('/infoStudents/:id',StudentsController.info)
-  routes.patch('/editStudents/:id',StudentsController.edit)
-  routes.delete('/removeStudents/:id',StudentsController.remove)
+  routes.post('/newStudent',StudentsController.newStudent)
+  routes.get("/getStudent/:studentId", StudentsController.getStudent)
+  routes.patch("/EditStudent/:studentId", StudentsController.editStudent)
+  routes.delete("/RemoveStudent/:studentId", StudentsController.removeStudent)
+  routes.post("/listUsers", StudentsController.listStudents)
+  routes.post("/searchStudents", StudentsController.searchStudent)
 }

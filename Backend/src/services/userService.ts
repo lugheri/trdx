@@ -23,8 +23,8 @@ class userService{
   }
 
   async getUser(userId:number):Promise<boolean | UserInstance >{
-    const level = await User.findByPk(userId)
-    return level ? level : false
+    const user = await User.findByPk(userId)
+    return user ? user : false
   }
 
   async listUsers(pagination:PaginationUserType):Promise<UserInstance[]>{
@@ -32,15 +32,18 @@ class userService{
     const qtdRegPage = 30
     const offset = qtdRegPage * p 
 
-    const listLevels = await User.findAll({
+    const listUsers = await User.findAll({
       where: {status: pagination.status},
       order:[[pagination.orderedBy,pagination.order]],
       offset:offset,
       limit:qtdRegPage
     })
 
-    return listLevels
+    return listUsers
   }
 }
 
 export default new userService()
+
+
+
