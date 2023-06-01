@@ -14,7 +14,7 @@ export const Template = () => {
 
 export const TemplateAdm = () => {
   return (
-    <div className="bg-sky-100 dark:bg-zinc-950 flex h-screen w-screen">
+    <div className="bg-green-50 dark:bg-zinc-950 flex h-screen w-screen">
       <SidebarAdm/>
       <div className="flex flex-col w-screen">
         <NavbarAdm/>

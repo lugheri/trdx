@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import * as Fas from "@fortawesome/free-solid-svg-icons";
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-import { Button } from '../../Buttons';
+import { NavLink } from 'react-router-dom';
+import { NavLinkProps } from '../../Dtos/sidebar.dto';
+
 export const Sidebar = () => {
   return (
     <div>
@@ -37,14 +40,41 @@ export const SidebarAdm = () => {
       </div>
       {/*SIDE*/}
       <div className="flex-1">
-        actions
+        <ul className="py-2">
+          <SideItem to="/admin" side={side} name="Dashboard" icon="faTachometer"/>
+          <SideItem to="/admin/students" side={side} name="Alunos" icon="faGraduationCap"/>
+        </ul>
       </div>
       {/*FOOTER*/}
       <div className="p-4">
         footer
       </div>
-      
-
     </div>
+  )
+}
+
+const SideItem : React.FC<NavLinkProps> = (props) => {
+  const nav="flex w-full justify-start items-center text-sm font-semibold text-white p-2 mt-1 opacity-70"
+  const activeNav="border-r-green-600 border-r-8 opacity-100 "
+
+  const navClosed="flex flex-col w-full justify-center items-center text font-semibold text-white p-2 mb-1 opacity-70"
+  const activeNavClosed="border-r-green-600 border-r-8 opacity-100"
+  
+  return(
+    props.side == 'open' ? (
+      <NavLink
+        to={props.to}
+        className={({ isActive, isPending }) =>isActive ? (`${nav} ${activeNav}`) : isPending ? nav : nav}>
+        {props.icon ? (<FontAwesomeIcon className="px-4 ml-3 opacity-60" icon={Fas[props.icon] as IconProp}/>) : false}
+        {props.name ? (<p>{props.name}</p>) : false}      
+      </NavLink>
+    ):(
+      <NavLink
+        className={({ isActive, isPending }) =>isActive ? (`${navClosed} ${activeNavClosed}`) : isPending ? navClosed : navClosed}
+        to={props.to}>
+        {props.icon ? (<FontAwesomeIcon className="py-1" icon={Fas[props.icon] as IconProp}/>) : false}  
+        {props.name ? (<p className="text-xs font-light">{props.name}</p>) : false}         
+      </NavLink>
+    )
   )
 }
