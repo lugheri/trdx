@@ -22,14 +22,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         if(verificateValidationToken.data){
           const dataToken:TokenProps = verificateValidationToken.data;       
           if(dataToken.typeAccess == 'Adm'){
-            const getUserData = await api.get(`/getUsersById/${dataToken.userId}`, {
+            const getUserData = await api.get(`/getUser/${dataToken.userId}`, {
               headers: {
                 authorization: localStorage.getItem('Token')
               }
             });
             setUserData(getUserData.data.response[0])
           }else{
-            const getStudentData = await api.get(`/getUsersById/${dataToken.userId}`, {
+            const getStudentData = await api.get(`/getUser/${dataToken.userId}`, {
               headers: {
                 authorization: localStorage.getItem('Token')
               }

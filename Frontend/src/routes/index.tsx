@@ -12,6 +12,8 @@ import { ClassRoom } from '../pages/ClassRoom';
 import { Dashboard } from '../pages/Dashboard';
 import { Users } from '../pages/Users';
 import { LoadingPage } from '../pages/LoadingPage';
+import { Levels } from '../pages/Levels';
+import { Students } from '../pages/Levels/Students';
 
 
 //Validate Auths
@@ -56,9 +58,14 @@ const RoutesApp = () => {
           errorElement:<Error/>,
           children:[
             { index: true, element:<Dashboard/>},
+            { path: '/Admin/students', element:<Students/>},
             {
               path:'/Admin/users',
               element:<Users/>,
+            },
+            {
+              path:'/Admin/levels',
+              element:<Levels/>,
             }
           ]
         }

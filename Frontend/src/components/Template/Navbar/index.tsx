@@ -16,7 +16,7 @@ export const NavbarAdm = () => {
     : themeProps.theme === "dark" ? themeProps.setTheme("light") : themeProps.setTheme("dark");
   }
   return (
-    <div className="bg-white text-neutral-900 shadow-md dark:bg-neutral-900 dark:text-white flex justify-between items-center px-4 h-16">
+    <div className="bg-white text-neutral-900 shadow-md dark:bg-zinc-950 dark:text-white flex justify-between items-center px-4 h-16">
       {/*TITLE*/}
       <div>
         Navbar Adm
