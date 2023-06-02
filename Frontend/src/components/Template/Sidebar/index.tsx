@@ -4,7 +4,8 @@ import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { NavLink } from 'react-router-dom';
-import { NavLinkProps } from '../../Dtos/sidebar.dto';
+import { NavLinkProps, itemSide } from '../../Dtos/sidebar.dto';
+import api from '../../../services/api';
 
 export const Sidebar = () => {
   return (
@@ -15,6 +16,24 @@ export const Sidebar = () => {
 }
 
 export const SidebarAdm = () => {
+  const [ menu, setMenu ] = useState<itemSide[]>([])
+
+  const getMenu = async() => {
+    try{
+      const type='side'
+      const parentModule=0
+      const levelId=100
+      const menuItems = await api.get(`modules/${type}/${parentModule}/${levelId}`)
+      setMenu(menuItems.data.response)
+    }catch(e){
+      console.log(e)
+    }
+  }
+  useEffect(()=>{
+    getMenu()
+  },[])
+
+
   const [ side, setSide ] = useState<'open'|'closed'>('open')
   const [ sideSize, setSideSize ] = useState<'w-60'|'w-20'>('w-60')
   useEffect(()=>{
@@ -41,8 +60,14 @@ export const SidebarAdm = () => {
       {/*SIDE*/}
       <div className="flex-1">
         <ul className="py-2">
-          <SideItem to="/admin" side={side} name="Dashboard" icon="faTachometer"/>
-          <SideItem to="/admin/students" side={side} name="Alunos" icon="faGraduationCap"/>
+          { menu.length == 0 ? (<p>Carregando...</p>)
+          : menu.map((item:itemSide, index: number)=>(
+            <SideItem key={index}
+                      to={`/admin/${item.name}`} 
+                      side={side} 
+                      name={ item.alias ? item.alias : '' } 
+                      icon={ item.icon ? item.icon : null}/>  
+          ))}
         </ul>
       </div>
       {/*FOOTER*/}

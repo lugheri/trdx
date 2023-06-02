@@ -27,8 +27,7 @@ export const newModule = async (req:Request, res:Response) => {
 export const getModule = async (req:Request, res:Response) => { 
   const moduleId : number = parseInt(req.params.moduleId)
   try{
-    const module = await systemService.getModule(moduleId)
-    console.log(module)
+    const module = await systemService.getModule(moduleId)    
     res.json({"success": true,"response": module})  
     return
   }catch(err){

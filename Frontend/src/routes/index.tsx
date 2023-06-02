@@ -57,7 +57,7 @@ const RoutesApp = () => {
         {
           errorElement:<Error/>,
           children:[
-            { index: true, element:<Dashboard/>},
+            { index: true, path: '/Admin/dashboard', element:<Dashboard/>},
             { path: '/Admin/students', element:<Students/>},
             {
               path:'/Admin/users',

@@ -79,6 +79,7 @@ class systemService{
 
   async editModule(moduleId:number,moduleData:ModuleAccessPartialType):Promise<boolean>{   
     await Modules.update(moduleData,{where:{id:moduleId}})   
+    
     return true;
   }
 
@@ -88,7 +89,7 @@ class systemService{
   }
 
   async getModule(moduleId:number):Promise<boolean | ModulesInstance >{
-    const module = await Modules.findByPk(moduleId)
+    const module = await Modules.findByPk(moduleId)  
     return module ? module : false
   }
 
@@ -96,7 +97,7 @@ class systemService{
     const listModules = await Modules.findAll({where:{status:status}})
     return listModules
   }
-
+  
 }
 
 export default new systemService()
