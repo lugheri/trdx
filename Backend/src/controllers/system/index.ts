@@ -1,6 +1,6 @@
-import * as Levels from './Levels';
-import * as Credentials from './Credentials';
-import * as Modules from './Modules';
+import * as Levels from './LevelsController';
+import * as Credentials from './CredentialsController';
+import * as Modules from './ModulesController';
 
 export const SystemController = { 
   ...Levels,

@@ -9,6 +9,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [ authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [ token, setToken] = useState<boolean | null>(null);
   const [ typeAccess, setTypeAccess] = useState<'Adm' | 'Student' | null>(null);
+  const [ levelAccess, setLevelAccess] = useState<number>(0);
 
   //Validation Data
   const validation = async () => {
@@ -27,15 +28,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 authorization: localStorage.getItem('Token')
               }
             });
-            setUserData(getUserData.data.response[0])
+            setUserData(getUserData.data.response)           
+            const credential = userData ? await api.get(`/getCredential/${userData.credential}`) : null
+            setLevelAccess(credential ? credential.data.response.level_id : 0)
           }else{
             const getStudentData = await api.get(`/getUser/${dataToken.userId}`, {
               headers: {
                 authorization: localStorage.getItem('Token')
               }
             });
-            setUserData(getStudentData.data.response[0])
-          }          
+            setUserData(getStudentData.data.response)
+          }                  
+         
           setAuthenticated(true)
           setToken(true)
           setTypeAccess(dataToken.typeAccess)
@@ -56,7 +60,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     validation()
   },[token])
   
-  const contextValue:AuthContextType = {authenticated, userData, typeAccess}  
+  const contextValue:AuthContextType = {authenticated, userData, typeAccess, levelAccess}    
   return(
     <AuthContext.Provider value={contextValue}>
       {children}

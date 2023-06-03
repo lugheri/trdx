@@ -1,13 +1,15 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
 
+import { SecurityPolicies, SecurityPoliciesInstance } from './SecurityPolicies';
+
 export interface ModulesInstance extends Model{
   id:number;
   parent:number;
   name:string;
+  alias:string;
   icon:string;
   description:string;
-  level_security:number;
   type:string;
   order:number;
   status:number;
@@ -25,15 +27,15 @@ export const Modules = sequelize.define<ModulesInstance>('Modules',{
   name:{
     type:DataTypes.STRING
   },
+  alias:{
+    type:DataTypes.STRING
+  },
   icon:{
     type:DataTypes.STRING
   },
   description:{
     type:DataTypes.STRING
-  },
-  level_security:{
-    type:DataTypes.INTEGER
-  },
+  }, 
   type:{
     type:DataTypes.STRING
   },
@@ -47,3 +49,4 @@ export const Modules = sequelize.define<ModulesInstance>('Modules',{
   tableName: 'sys_modules',
   timestamps:false
 })
+Modules.hasOne(SecurityPolicies, { foreignKey: 'module_id', sourceKey: 'id'});

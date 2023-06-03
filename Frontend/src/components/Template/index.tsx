@@ -19,7 +19,6 @@ export const TemplateAdm = () => {
       <div className="flex flex-col w-screen">
         <NavbarAdm/>
         <div>
-          <h1>Template Adm</h1>
           <Outlet/>
         </div>
       </div>

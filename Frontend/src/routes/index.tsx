@@ -14,6 +14,7 @@ import { Users } from '../pages/Users';
 import { LoadingPage } from '../pages/LoadingPage';
 import { Levels } from '../pages/Levels';
 import { Students } from '../pages/Levels/Students';
+import { Settings } from '../pages/Settings';
 
 
 //Validate Auths
@@ -57,7 +58,7 @@ const RoutesApp = () => {
         {
           errorElement:<Error/>,
           children:[
-            { index: true, element:<Dashboard/>},
+            { index: true, path: '/Admin/dashboard', element:<Dashboard/>},
             { path: '/Admin/students', element:<Students/>},
             {
               path:'/Admin/users',
@@ -66,6 +67,10 @@ const RoutesApp = () => {
             {
               path:'/Admin/levels',
               element:<Levels/>,
+            },
+            {
+              path:'/Admin/settings',
+              element:<Settings />,
             }
           ]
         }

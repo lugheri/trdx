@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
-import { CheckAccessDTO } from "./Dtos/securityPolicies.dto";
+import { CheckAccessDTO, GetModulesDTO, GetSubModulesDTO } from "./Dtos/securityPolicies.dto";
 import securityService from "../services/securityService";
-import { ModulesInstance } from "../models/Modules";
-import systemService from "../services/systemService";
 class Security{
-  async getModuleLevel(req:Request,res:Response){
+  /*async getModuleLevel(req:Request,res:Response){
     const levelId: number = parseInt(req.params.levelId)
     const modules = await securityService.getModules(levelId,0)
     const allModules:any = []
@@ -29,6 +27,32 @@ class Security{
         allModules.push(module)
     }   
     res.json({"success": true,"response": allModules})  
+  }*/
+
+  async getModules(req: Request,res:Response){
+    const params = GetModulesDTO
+    const dataParams = params.safeParse(req.params)     
+    if(!dataParams.success){
+      res.json({"error":dataParams.error})
+      return
+    }
+    const modules = await securityService.modulesPolicies(dataParams.data);
+
+    res.json({"success": true,"response": modules})  
+
+  }
+
+  async subModules(req: Request,res:Response){
+    const params = GetSubModulesDTO
+    const dataParams = params.safeParse(req.params)     
+    if(!dataParams.success){
+      res.json({"error":dataParams.error})
+      return
+    }
+    const modules = await securityService.subModulesPolicies(dataParams.data);
+
+    res.json({"success": true,"response": modules})  
+
   }
  
   async getAccess(req:Request,res:Response){

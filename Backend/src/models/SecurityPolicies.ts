@@ -1,8 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
-import { ModulesInstance } from './Modules';
-
-
 
 export interface SecurityPoliciesInstance extends Model{
   id:number;
