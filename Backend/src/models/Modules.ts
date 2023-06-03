@@ -10,7 +10,6 @@ export interface ModulesInstance extends Model{
   alias:string;
   icon:string;
   description:string;
-  level_security:number;
   type:string;
   order:number;
   status:number;
@@ -36,10 +35,7 @@ export const Modules = sequelize.define<ModulesInstance>('Modules',{
   },
   description:{
     type:DataTypes.STRING
-  },
-  level_security:{
-    type:DataTypes.INTEGER
-  },
+  }, 
   type:{
     type:DataTypes.STRING
   },

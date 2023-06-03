@@ -14,6 +14,7 @@ import { Users } from '../pages/Users';
 import { LoadingPage } from '../pages/LoadingPage';
 import { Levels } from '../pages/Levels';
 import { Students } from '../pages/Levels/Students';
+import { Settings } from '../pages/Settings';
 
 
 //Validate Auths
@@ -66,6 +67,10 @@ const RoutesApp = () => {
             {
               path:'/Admin/levels',
               element:<Levels/>,
+            },
+            {
+              path:'/Admin/settings',
+              element:<Settings />,
             }
           ]
         }

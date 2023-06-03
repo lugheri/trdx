@@ -14,7 +14,6 @@ export type itemSide = {
   alias: string | null;
 	icon:null | keyof typeof Fas ;
 	description: string | null;
-	level_security: number;
 	type:string;
 	order: number;
 	status: number;

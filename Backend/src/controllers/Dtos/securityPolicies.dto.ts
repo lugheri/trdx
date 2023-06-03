@@ -11,3 +11,10 @@ export const GetModulesDTO = z.object({
   levelId: z.string().transform((value) => Number(value))
 })
 export type GetModulesType = z.infer<typeof GetModulesDTO>
+
+export const GetSubModulesDTO = z.object({
+  type: z.string(),
+  module: z.string(),
+  levelId: z.string().transform((value) => Number(value))
+})
+export type GetSubModulesType = z.infer<typeof GetSubModulesDTO>

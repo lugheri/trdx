@@ -4,7 +4,7 @@ export interface User{
   photo:number;
   name:string;
   mail:string;
-  level:number;
+  credential:number;
   password:string;
   reset:number;
   logged:number;
@@ -18,7 +18,7 @@ export interface Student{
   photo:number;
   name:string;
   mail:string;
-  level:number;
+  credential:number;
   password:string;
   reset:number;
   logged:number;
@@ -31,6 +31,7 @@ export interface AuthContextType {
   authenticated: boolean | null;
   userData: User | Student | null;
   typeAccess: 'Adm' | 'Student' | null;
+  levelAccess: number ;
 }
 
 export interface AuthProviderProps{
