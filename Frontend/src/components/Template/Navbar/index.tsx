@@ -1,7 +1,6 @@
 import useAuth from "../../../hooks/useAuth";
-import useTheme from "../../../hooks/useTheme"
 import api from "../../../services/api";
-import { Button } from "../../Buttons"
+import { ToggleDarkMode } from "../../Buttons"
 import { useState, useEffect } from 'react';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -22,19 +21,13 @@ export const Navbar = () => {
 
 
 export const NavbarAdm = () => {
-  const authenticate = useAuth();  
-  const themeProps = useTheme() 
+  const authenticate = useAuth();
   const location = useLocation();
   const moduleName = location.pathname.split('/')[2]; 
   const [ userLevel, setUserLevel ] = useState<number>(0)
 
   const [ retry, setRetry ] = useState<number>(0)
-  const [ menu, setMenu ] = useState<itemSide[]>([])
-
-  const changeTheme = () => {
-    themeProps === undefined ? false
-    : themeProps.theme === "dark" ? themeProps.setTheme("light") : themeProps.setTheme("dark");
-  }
+  const [ menu, setMenu ] = useState<itemSide[]>([])  
 
   const getSubmodules = async() => {
     if(authenticate !== undefined ){ 
@@ -58,7 +51,9 @@ export const NavbarAdm = () => {
   }
   useEffect(()=>{
     console.log('retry',retry)
-    getSubmodules()
+    if(moduleName){
+      getSubmodules()
+    }
   },[retry,location])
 
 
@@ -96,9 +91,9 @@ export const NavbarAdm = () => {
                   <FontAwesomeIcon className="mr-2 opacity-60 " icon={Fas.faHeadset}/> 
                   Suporte
               </NavLink>   
-              <div className="w-full flex justify-center p-4 border-b border-slate-300 hover:bg-slate-200
+              <div className="w-full flex justify-center border-b border-slate-300 hover:bg-slate-200
                              dark:border-slate-700 dark:hover:bg-slate-800">
-              { themeProps ? (<Button onClick={()=>changeTheme()} name="Mode" />) : false } 
+                <ToggleDarkMode/>            
               </div> 
               <NavLink
                 to="/admin"

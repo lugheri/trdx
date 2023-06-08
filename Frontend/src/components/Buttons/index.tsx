@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ButtonType, ToggleType } from "../Dtos/buttons.dto"
+import { ButtonType, ToggleDarkModeType, ToggleType } from "../Dtos/buttons.dto"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import useTheme from '../../hooks/useTheme';
 
 export const Toggle: React.FC<ToggleType> = (props) => {
   return (
@@ -12,6 +13,35 @@ export const Toggle: React.FC<ToggleType> = (props) => {
       {props.value ? (<>On</>) : (<>Off</>)}
     </div>
   )
+}
+
+export const ToggleDarkMode: React.FC<ToggleDarkModeType> = () => {
+  const themeProps = useTheme() 
+
+  const changeTheme = () => {
+    themeProps === undefined ? false
+    : themeProps.theme === "dark" ? themeProps.setTheme("light") : themeProps.setTheme("dark");
+  }
+
+  return (
+    <div className="flex justify-start items-center py-4 cursor-pointer" onClick={()=>changeTheme()}>
+      <div         
+        className="flex justify-start items-center bg-blue-400 rounded-full h-[30px] w-[40px] ease-in-out duration-300
+                  dark:justify-end dark:bg-gray-800">
+        <div className="h-[30px] w-[30px] flex justify-center items-center rounded-full text-lg ease-in-out duration-300
+                         text-yellow-300
+                         dark:text-blue-300">
+          { themeProps === undefined ? false 
+            : themeProps.theme === "dark" ? (<FontAwesomeIcon icon={Fas.faMoon}/>) : (<FontAwesomeIcon icon={Fas.faSun}/>) } 
+            
+        </div> 
+            
+      </div>
+      <p className="text-slate-300 ml-2 hidden dark:inline">Modo Escuro</p>
+      <p className="text-slate-600 ml-2 inline dark:hidden">Modo Claro</p>
+    </div>
+  )
+
 }
 
 export const Button : React.FC<ButtonType> = (props) => {

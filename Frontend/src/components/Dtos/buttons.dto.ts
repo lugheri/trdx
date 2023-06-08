@@ -5,6 +5,10 @@ export type ToggleType = {
   setValue: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+export type ToggleDarkModeType = {
+  value?: boolean;
+}
+
 export type ButtonType = {
   btn?: 'info'|'success'|'warning'|'error'|'muted'; 
   type?: 'default'|'outline'|'notline'; 

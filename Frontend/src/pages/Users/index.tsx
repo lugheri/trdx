@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Button } from '../../components/Buttons';
+import { Button, ToggleDarkMode } from '../../components/Buttons';
 
 export const Users = () => {
 
