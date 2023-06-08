@@ -14,11 +14,11 @@ export const Template = () => {
 
 export const TemplateAdm = () => {
   return (
-    <div className="bg-green-50 dark:bg-zinc-950 flex h-screen w-screen">
+    <div className="bg-blue-50 dark:bg-zinc-950 flex h-screen w-screen">
       <SidebarAdm/>
-      <div className="flex flex-col w-screen">
+      <div className="flex flex-col w-screen overflow-auto">
         <NavbarAdm/>
-        <div>
+        <div className="h-[100vh] overflow-auto">
           <Outlet/>
         </div>
       </div>

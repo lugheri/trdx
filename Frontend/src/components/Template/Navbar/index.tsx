@@ -64,34 +64,56 @@ export const NavbarAdm = () => {
 
   return (
     <>
-      <div className="bg-white text-neutral-900 dark:bg-zinc-950 dark:text-white flex justify-between items-center px-4 h-14">
+      <div className="bg-white text-neutral-900 dark:bg-neutral-950 dark:text-white flex justify-between items-center px-4 h-14">
         {/*TITLE*/}
         <div>
-          Navbar Adm
+          Search
         </div>
         {/*ACTIONS*/}
-        <a href="#" className="flex group justify-center items-center">
+        <div className="flex justify-center items-center">
           <div className="text-gray-900 dark:text-gray-300 opacity-50 text-xl p-2 hover:opacity-100 cursor-pointer mx-2">
             <FontAwesomeIcon icon={Far.faBell}/>
           </div>
-          <div className="flex items-center relative min-w-[180px] px-2 group">
-            <div className="w-[40px] h-[40px] rounded-full text-4xl flex items-center justify-center text-teal-800  opacity-80 group-hover:opacity-100">
-              <FontAwesomeIcon icon={Fas.faCircleUser}/>
+          {/*PROFILE*/}
+          <a href="#" className="group relative">
+            <div className="flex bg-slate-50 border-x border-slate-300 items-center min-w-[180px] h-full py-[.4rem] px-2 opacity-70
+                           dark:bg-gray-900 dark:border-gray-700 hover:opacity-100">
+              <div className="w-[40px] h-[40px] rounded-full text-4xl flex items-center justify-center text-teal-800">
+                <FontAwesomeIcon icon={Fas.faCircleUser}/>
+              </div>
+              <div className="flex flex-col px-2">
+                <p className="font-semibold text-slate-600 dark:text-slate-300">Nome Completo</p>
+                <small>Cargo</small>
+              </div>
             </div>
-            <div className="flex flex-col px-2 opacity-80 group-hover:opacity-100">
-              <p className="font-semibold text-slate-600 dark:text-slate-400">Nome Completo</p>
-              <small>Cargo</small>
-            </div>
-            <div className="absolute group-focus:inline hidden w-full bg-white dark:bg-gray-900 p-4 right-0 top-14 opacity-100">
-              { themeProps ? (<Button onClick={()=>changeTheme()} name="Theme" />) : false }
-            </div>
-            
-          </div>
+            <div 
+              className="flex-col justify-center items-center absolute group-focus:flex hidden w-full px-2 bg-slate-50  shadow right-0 top-[56px] opacity-100 border-x border-slate-300
+                      dark:bg-gray-900 dark:border-gray-700">
+              <NavLink
+                to="/admin"
+                className="w-full flex justify-center p-4 border-b border-slate-300 hover:bg-slate-200
+                           dark:border-slate-700 dark:hover:bg-slate-800">
+                  <FontAwesomeIcon className="mr-2 opacity-60 " icon={Fas.faHeadset}/> 
+                  Suporte
+              </NavLink>   
+              <div className="w-full flex justify-center p-4 border-b border-slate-300 hover:bg-slate-200
+                             dark:border-slate-700 dark:hover:bg-slate-800">
+              { themeProps ? (<Button onClick={()=>changeTheme()} name="Mode" />) : false } 
+              </div> 
+              <NavLink
+                to="/admin"
+                className="w-full flex justify-center p-4 hover:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-800">
+                  <FontAwesomeIcon className="mr-2 opacity-60 " icon={Fas.faArrowRightFromBracket}/> 
+                  Sair
+              </NavLink> 
+            </div>           
+          </a>
           
           
-        </a>  
+        </div>  
       </div>
-      <div className="bg-white text-neutral-900 shadow-md min-h-[6px] dark:bg-zinc-950 dark:text-white flex px-4">
+      <div className="flex px-4 bg-slate-50 text-neutral-900 shadow-md min-h-[6px] 
+                    dark:bg-stone-950 dark:text-white ">
         { menu.length > 0 ? 
           menu.map((item:itemSide, index: number)=>(
             <NavItem
@@ -108,7 +130,7 @@ export const NavbarAdm = () => {
 }
 
 const NavItem : React.FC<NavLinkProps>  = (props) => {
-  const nav = "flex px-2 py-1 hover:bg-slate-100 dark:hover:bg-green-950 mx-1 justify-center items-center font-semibold text-sm opacity-60 hover:opacity-100 ease-in duration-150"
+  const nav = "flex px-2 py-1 hover:bg-slate-100 dark:hover:bg-neutral-900 mx-1 justify-center items-center font-semibold text-sm opacity-60 hover:opacity-100 ease-in duration-150"
   const navActive = "flex px-2 py-1 mx-2 justify-center items-center font-semibold text-sm border-b-4  border-b-green-600 dark:border-b-green-300 border-b-4 opacity-100"
   return(
     <NavLink
