@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { ButtonType, ToggleDarkModeType, ToggleType } from "../Dtos/buttons.dto"
+import { ButtonType, ToggleType } from "../Dtos/buttons.dto"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -15,7 +14,7 @@ export const Toggle: React.FC<ToggleType> = (props) => {
   )
 }
 
-export const ToggleDarkMode: React.FC<ToggleDarkModeType> = () => {
+export const ToggleDarkMode: React.FC = () => {
   const themeProps = useTheme() 
 
   const changeTheme = () => {
@@ -69,9 +68,11 @@ export const Button : React.FC<ButtonType> = (props) => {
     const btnOutlineMuted = "border-2 border-[#bdc3c7] text-[#bdc3c7] hover:bg-[#bdc3c7] hover:text-white"
     const btnNotlineMuted = "text-[#bdc3c7] hover:bg-[#bdc3c7] hover:text-white"
 
-    const sizeSM="p-1 text-xs"
-    const sizeMD="p-2"
-    const sizeLG="p-3 text-lg"
+    const sizeSM= props.name ? "py-1 px-2 text-xs" : "p-1 text-xs"
+    const sizeMD= props.name ? "py-2 px-3" :"p-2"
+    const sizeLG= props.name ? "py-3 px-4 text-lg" : "p-3 text-lg"
+    
+    const block= "w-full"
 
     const borderCircle="rounded-full"
     const borderSquare=" "
@@ -88,6 +89,7 @@ export const Button : React.FC<ButtonType> = (props) => {
     ];
     classNames.push(size === 'sm' ? sizeSM : (size === 'lg' ? sizeLG : sizeMD));
     classNames.push(border === 'square' ? borderSquare : (border === 'circle' ? borderCircle : borderRounded));
+    props.block ? classNames.push(block) : false
 
     return classNames.join(' ');
   };
@@ -95,6 +97,7 @@ export const Button : React.FC<ButtonType> = (props) => {
 
   return (
     <div className={style}
+         title={ props.title ? props.title : ""}
          onClick={props.onClick}>
       { props.icon ? (<FontAwesomeIcon className="m-1" icon={Fas[props.icon] as IconProp}/>) : false}  
       { props.name ? props.name : false}

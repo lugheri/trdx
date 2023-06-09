@@ -5,16 +5,15 @@ export type ToggleType = {
   setValue: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export type ToggleDarkModeType = {
-  value?: boolean;
-}
 
 export type ButtonType = {
   btn?: 'info'|'success'|'warning'|'error'|'muted'; 
   type?: 'default'|'outline'|'notline'; 
   size?: 'sm'|'md'|'lg'; 
   name?: string;
+  title?: string;
   border?: 'square'|'rounded'|'circle';
+  block?: boolean;
   icon?:null | keyof typeof Fas ;
   onClick?: () => void;
 };
