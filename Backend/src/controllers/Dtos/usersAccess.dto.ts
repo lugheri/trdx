@@ -44,7 +44,7 @@ export type LevelAccessPartialType = z.infer<typeof LevelAccessPartialDTO>;
 //CREDENTIALS
 export const CredentialAccessDTO = z.object({
   name:z.string(),
-  levelId: z.number(),
+  level_id: z.number(),
   description: z.optional(z.string()).default('Sem Descrição'),
   status: z.optional(z.literal(1).or(z.literal(0))).default(1),
 })
