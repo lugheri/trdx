@@ -6,7 +6,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { NavLink } from 'react-router-dom';
 import { NavLinkProps, itemSide } from '../../Dtos/sidebar.dto';
 import api from '../../../services/api';
-import Logo from '/img/comunidade_branco.png'
+import Logo from '/img/logo.png'
 import Brand from '/img/brand.png'
 import useAuth from '../../../hooks/useAuth';
 

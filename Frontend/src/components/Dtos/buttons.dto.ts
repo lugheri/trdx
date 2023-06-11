@@ -8,6 +8,7 @@ export type ToggleType = {
 
 export type ButtonType = {
   btn?: 'info'|'success'|'warning'|'error'|'muted'; 
+  submit?: boolean;
   type?: 'default'|'outline'|'notline'; 
   size?: 'sm'|'md'|'lg'; 
   name?: string;
@@ -15,5 +16,6 @@ export type ButtonType = {
   border?: 'square'|'rounded'|'circle';
   block?: boolean;
   icon?:null | keyof typeof Fas ;
-  onClick?: () => void;
+  className?:string;
+  onClick?:() => void;
 };

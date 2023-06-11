@@ -48,38 +48,38 @@ export const Button : React.FC<ButtonType> = (props) => {
   const getClassNames = () => {
     const btnDefault = "bg-[#2ecc71] text-white hover:bg-[#27ae60]"
 
-    const btnInfo = "bg-[#3498db] text-white hover:bg-[#2980b9]"
-    const btnOutlineInfo = "border-2 border-[#3498db] text-[#3498db] hover:bg-[#3498db] hover:text-white"
+    const btnInfo = "bg-[#3498db] text-white hover:bg-[#2980b9] border border-[#3498db]"
+    const btnOutlineInfo = "border border-[#3498db] text-[#3498db] hover:bg-[#3498db] hover:text-white"
     const btnNotlineInfo = "text-[#3498db] hover:bg-[#3498db] hover:text-white"
 
-    const btnSuccess = "bg-[#1abc9c] text-white hover:bg-[#16a085]"
-    const btnOutlineSuccess = "border-2 border-[#1abc9c] text-[#1abc9c] hover:bg-[#1abc9c] hover:text-white"
+    const btnSuccess = "bg-[#1abc9c] text-white hover:bg-[#16a085] border border-[#1abc9c]"
+    const btnOutlineSuccess = "border border-[#1abc9c] text-[#1abc9c] hover:bg-[#1abc9c] hover:text-white"
     const btnNotlineSuccess = "text-[#1abc9c] hover:bg-[#1abc9c] hover:text-white"
 
-    const btnWarning = "bg-[#e67e22] text-white hover:bg-[#d35400]"
-    const btnOutlineWarning = "border-2 border-[#e67e22] text-[#e67e22] hover:bg-[#e67e22] hover:text-white"
+    const btnWarning = "bg-[#e67e22] text-white hover:bg-[#d35400] border border-[#e67e22]"
+    const btnOutlineWarning = "border border-[#e67e22] text-[#e67e22] hover:bg-[#e67e22] hover:text-white"
     const btnNotlineWarning = "text-[#e67e22] hover:bg-[#e67e22] hover:text-white"
 
-    const btnError = "bg-[#e74c3c] text-white hover:bg-[#c0392b]"
-    const btnOutlineError = "border-2 border-[#e74c3c] text-[#e74c3c] hover:bg-[#e74c3c] hover:text-white"
+    const btnError = "bg-[#e74c3c] text-white hover:bg-[#c0392b] border border-[#e74c3c]"
+    const btnOutlineError = "border border-[#e74c3c] text-[#e74c3c] hover:bg-[#e74c3c] hover:text-white"
     const btnNotlineError = "text-[#e74c3c] hover:bg-[#e74c3c] hover:text-white"
 
-    const btnMuted = "bg-[#bdc3c7] text-white hover:bg-[#95a5a6]"
-    const btnOutlineMuted = "border-2 border-[#bdc3c7] text-[#bdc3c7] hover:bg-[#bdc3c7] hover:text-white"
-    const btnNotlineMuted = "text-[#bdc3c7] hover:bg-[#bdc3c7] hover:text-white"
+    const btnMuted = "bg-[#bdc3c7] text-white hover:bg-[#95a5a6] border border-[#bdc3c7]"
+    const btnOutlineMuted = "border border-[#bdc3c7] text-[#bdc3c7] hover:bg-[#bdc3c7] hover:text-slate-600"
+    const btnNotlineMuted = "text-slate-400 dark:text-[#bdc3c7] hover:bg-[#bdc3c7] hover:text-slate-600 dark:hover:text-slate-800"
 
     const sizeSM= props.name ? "py-1 px-2 text-xs" : "p-1 text-xs"
-    const sizeMD= props.name ? "py-2 px-3" :"p-2"
+    const sizeMD= props.name ? "py-2 px-3 text-sm" :"p-2 text-sm"
     const sizeLG= props.name ? "py-3 px-4 text-lg" : "p-3 text-lg"
     
     const block= "w-full"
 
     const borderCircle="rounded-full"
     const borderSquare=" "
-    const borderRounded="rounded-lg"
+    const borderRounded="rounded-md"
 
     const classNames = [
-      'flex justify-center items-center text-center cursor-pointer font-semibold',
+      'flex justify-center m-1 items-center text-center cursor-pointer font-semibold',
       btn === 'info' ? (type === 'outline' ? btnOutlineInfo : (type === 'notline' ? btnNotlineInfo : btnInfo)) :
         (btn === 'success' ? (type === 'outline' ? btnOutlineSuccess : (type === 'notline' ? btnNotlineSuccess : btnSuccess)) :
           (btn === 'warning' ? (type === 'outline' ? btnOutlineWarning : (type === 'notline' ? btnNotlineWarning : btnWarning)) :
@@ -96,11 +96,13 @@ export const Button : React.FC<ButtonType> = (props) => {
   const style = getClassNames();
 
   return (
-    <div className={style}
-         title={ props.title ? props.title : ""}
-         onClick={props.onClick}>
-      { props.icon ? (<FontAwesomeIcon className="m-1" icon={Fas[props.icon] as IconProp}/>) : false}  
-      { props.name ? props.name : false}
-    </div>
+    <button 
+      type={ props.submit ? "submit" : "button" }
+      className={style+" "+props.className}
+      title={ props.title ? props.title : ""}
+      onClick={props.onClick}>
+        { props.icon ? (<FontAwesomeIcon className="m-1" icon={Fas[props.icon] as IconProp}/>) : false}  
+        { props.name ? props.name : false}
+    </button>
   )
 }
