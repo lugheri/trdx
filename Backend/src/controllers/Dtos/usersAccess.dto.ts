@@ -11,7 +11,7 @@ export type UserAccessType = z.infer<typeof UserAccessDTO>;
 export const UserDataDTO = z.object({
   name:z.string(),
   mail:z.string(),
-  level: z.number(),
+  credential: z.number(),
   password:z.string().transform(v=>md5(v)),
   reset: z.optional(z.number()).default(1),
   logged: z.optional(z.number()).default(0),

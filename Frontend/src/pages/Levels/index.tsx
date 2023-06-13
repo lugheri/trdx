@@ -71,7 +71,7 @@ export const Levels = () => {
 /*
 * New Level
 */
-const NewLevel:React.FC<{opened: React.Dispatch<React.SetStateAction<boolean|number>>;
+const NewLevel:React.FC<{opened: React.Dispatch<React.SetStateAction<boolean>>;
                          update: React.Dispatch<React.SetStateAction<boolean>>}>= (props) => {
   const [name,setName]=useState<string>("")
   const [description,setDescription]=useState<string>("")
