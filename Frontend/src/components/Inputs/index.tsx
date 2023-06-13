@@ -12,7 +12,7 @@ export const InputForm: React.FC<InputType> = (props) => {
           {props.label}
         </label>)}
       <input 
-        type="text" 
+        type={props.inputType ? props.inputType : "text"} 
         className={`shadow border border-slate-300 mb-4 rounded text-slate-700 p-2 placeholder:italic placeholder:text-slate-400
                     dark:bg-zinc-600 dark:border-slate-800 dark:text-white dark:placeholder:text-zinc-400
                     focus:border-b-4 focus:border-teal-600 focus:ring-0 dark:focus:border-zinc-300 ${props.className}`} 

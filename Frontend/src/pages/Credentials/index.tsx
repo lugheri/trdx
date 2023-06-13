@@ -109,7 +109,7 @@ const NameLevel:React.FC<{level: number; update:boolean}>= (props) => {
 const NewCredential:React.FC<{opened: React.Dispatch<React.SetStateAction<boolean|number|any>>;
                               update: React.Dispatch<React.SetStateAction<boolean>>}>= (props) => {
   const [name,setName]=useState<string>("")
-  const [levelId,setLevelId]=useState<number>(0)
+  const [levelId,setLevelId]=useState<string>('0')
   const [description,setDescription]=useState<string>("")
   const createCredential = async (e:FormEvent) => {
     e.preventDefault()
@@ -167,7 +167,7 @@ const EditCredential:React.FC<{credentialId:number|boolean;
                           update:React.Dispatch<React.SetStateAction<boolean>>}> = (props) => {
   const [ deleteCredential, setDeleteCredential ] = useState<number|boolean>(false)
   const [ name, setName ] = useState<string>("")
-  const [ levelId, setLevelId ] = useState<number>(0)  
+  const [ levelId, setLevelId ] = useState<string>('0')  
   const [ description, setDescription ] = useState<string>("")
 
   const getInfoCredential = async() => {
