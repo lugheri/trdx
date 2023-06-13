@@ -53,7 +53,8 @@ export const Levels = () => {
                 <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">{ level.description }</p>
               </div>
               <div className="border-t flex w-full justify-end items-center p-2 bg-slate-50 dark:bg-gray-700 dark:border-gray-600">
-                <Button title="Editar Nível" icon="faEdit" size="sm" btn="info" type="outline" onClick={()=>setEditLevel(level.id)}/>                
+                <Button title="Configurar Acessos" icon="faWrench" size="sm" btn="muted" type="notline" onClick={()=>setEditLevel(level.id)}/>                
+                <Button title="Editar Nível" icon="faEdit" size="sm" btn="info" type="notline" onClick={()=>setEditLevel(level.id)}/>                
               </div>
             </div>
           }/>
