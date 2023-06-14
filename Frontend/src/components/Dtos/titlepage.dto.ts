@@ -4,5 +4,5 @@ export type TitlePageType = {
   icon?:null | keyof typeof Fas ;
   title?: string;
   description?: string;
-  rightComponent: React.ReactNode;
+  rightComponent?: React.ReactNode;
 }
