@@ -1,14 +1,14 @@
 import { useState, useEffect, FormEvent } from 'react';
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Button } from "../../components/Buttons"
-import { TitlePage } from "../../components/Template/TitlePage"
-import api from '../../services/api';
-import { Card } from '../../components/Cards';
-import { Modal, TitleModal } from '../../components/Modal';
-import { InputForm, SelectForm, TextAreaForm } from '../../components/Inputs';
-import { CredentialType } from '../Dtos/credential.dto';
-import { LevelType } from '../Dtos/levels.dto';
+import { Button } from "../../../../components/Buttons"
+import { TitlePage } from "../../../../components/Template/TitlePage"
+import api from '../../../../services/api';
+import { Card } from '../../../../components/Cards';
+import { Modal, TitleModal } from '../../../../components/Modal';
+import { InputForm, SelectForm, TextAreaForm } from '../../../../components/Inputs';
+import { CredentialType } from '../../../Dtos/credential.dto';
+import { LevelType } from '../../../Dtos/levels.dto';
 
 export const Credentials = () => {
   const [ newCredential, setNewCredential ] = useState<boolean>(false)

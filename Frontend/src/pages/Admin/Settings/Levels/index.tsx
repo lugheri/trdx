@@ -1,13 +1,13 @@
 import { useState, useEffect, FormEvent } from 'react';
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Button } from "../../components/Buttons"
-import { TitlePage } from "../../components/Template/TitlePage"
-import { LevelType } from '../Dtos/levels.dto';
-import api from '../../services/api';
-import { Card } from '../../components/Cards';
-import { Modal, TitleModal } from '../../components/Modal';
-import { InputForm, TextAreaForm } from '../../components/Inputs';
+import { Button } from "../../../../components/Buttons"
+import { TitlePage } from "../../../../components/Template/TitlePage"
+import { LevelType } from '../../../Dtos/levels.dto';
+import api from '../../../../services/api';
+import { Card } from '../../../../components/Cards';
+import { Modal, TitleModal } from '../../../../components/Modal';
+import { InputForm, TextAreaForm } from '../../../../components/Inputs';
 
 export const Levels = () => {
   const [ newLevel, setNewLevel ] = useState<boolean>(false)

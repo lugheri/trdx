@@ -113,7 +113,7 @@ export const NavbarAdm = () => {
           menu.map((item:itemSide, index: number)=>(
             <NavItem
               key={index} 
-               to={`/admin/settings/${item.name}`}
+               to={`/admin/${moduleName}/${item.name}`}
              side='open'
              name={ item.alias ? item.alias : '' }
              icon={ item.icon ? item.icon : null}/>

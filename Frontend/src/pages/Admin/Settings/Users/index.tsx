@@ -2,14 +2,14 @@ import { useState, useEffect,FormEvent } from 'react';
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Button } from '../../components/Buttons';
-import { Card } from '../../components/Cards';
-import { TitlePage } from '../../components/Template/TitlePage';
-import api from '../../services/api';
-import { User } from '../../contexts/Dtos/auth.dto';
-import { Modal, TitleModal } from '../../components/Modal';
-import { InputForm, SelectForm } from '../../components/Inputs';
-import { CredentialType } from '../Dtos/credential.dto';
+import { Button } from '../../../../components/Buttons';
+import { Card } from '../../../../components/Cards';
+import { TitlePage } from '../../../../components/Template/TitlePage';
+import api from '../../../../services/api';
+import { User } from '../../../../contexts/Dtos/auth.dto';
+import { Modal, TitleModal } from '../../../../components/Modal';
+import { InputForm, SelectForm } from '../../../../components/Inputs';
+import { CredentialType } from '../../../Dtos/credential.dto';
 
 export const Users = () => {
 
