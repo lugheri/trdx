@@ -117,7 +117,7 @@ export const SidebarAdm = () => {
       </div>
       {/*FOOTER*/}
       <div className="text-center text-cyan-700 dark:text-gray-600 py-2 px-1 text-xs">
-        Version: {version} - {userLevel}
+        Version: {version}
       </div>
     </div>
   )

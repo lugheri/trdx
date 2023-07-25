@@ -17,7 +17,10 @@ export default {
           '60%':{ marginTop: '5%'},
           '100%':{ marginTop:'0', opacity: '1'},
         }
-      }
+      },
+      backgroundImage:{
+        'login-bg':"url('/public/img/bg-login.jpg')",
+      },
     },
   },
   plugins: [
