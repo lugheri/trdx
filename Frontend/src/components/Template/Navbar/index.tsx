@@ -13,9 +13,29 @@ import { NavLinkProps, itemSide } from "../../Dtos/sidebar.dto";
 
 export const Navbar = () => {
   return (
-    <div>
-      <h1>NavBar</h1>
-    </div>
+    <>
+      <div className=" text-neutral-900  dark:text-white flex justify-between items-center px-4 h-14">
+        {/*TITLE*/}
+        <div>
+          Search
+        </div>
+        {/*ACTIONS*/}
+        <div className="flex justify-center items-center">
+          <div className="text-gray-900 dark:text-gray-300 opacity-50 text-xl p-2 hover:opacity-100 cursor-pointer mx-2">
+            <FontAwesomeIcon icon={Far.faBell}/>
+          </div>
+          <div className="group opacity-50 text-xl p-2 hover:opacity-100 cursor-pointer mx-2 flex justify-center items-center">
+            <FontAwesomeIcon className="text-gray-900 dark:text-gray-300 block group-hover:hidden" icon={Fas.faDoorClosed}/>
+            <FontAwesomeIcon className="text-red-800 dark:text-gray-300 hidden group-hover:block" icon={Fas.faDoorOpen}/>
+            <p className="mx-2 text-sm group-hover:text-red-500">Sair</p>
+          </div>
+          {/*PROFILE*/}
+          
+          
+        </div>  
+      </div>
+      
+    </>
   )
 }
 
@@ -59,7 +79,7 @@ export const NavbarAdm = () => {
 
   return (
     <>
-      <div className="bg-white text-neutral-900 dark:bg-neutral-950 dark:text-white flex justify-between items-center px-4 h-14">
+      <div className="bg-white text-neutral-900 dark:bg-[#1a1a1a] dark:text-white flex justify-between items-center px-4 h-14">
         {/*TITLE*/}
         <div>
           Search
@@ -108,7 +128,7 @@ export const NavbarAdm = () => {
         </div>  
       </div>
       <div className="flex px-4 bg-slate-50 text-neutral-900 shadow-md min-h-[6px] 
-                    dark:bg-stone-950 dark:text-white ">
+                    dark:bg-[#2C3A47] dark:text-white ">
         { menu.length > 0 ? 
           menu.map((item:itemSide, index: number)=>(
             <NavItem

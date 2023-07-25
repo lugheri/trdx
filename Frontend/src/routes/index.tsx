@@ -47,15 +47,9 @@ import { LoadingPage } from '../pages/LoadingPage';
 import { Levels } from '../pages/Admin/Settings/Levels';
 import { Credentials } from '../pages/Admin/Settings/Credentials';
 import { ForgotPass } from '../pages/forgotPass';
-
-
-
-
-
-
-
-
-
+import { Profile } from '../pages/Profile';
+import { Youtube } from '../pages/Youtube';
+import { Instagram } from '../pages/Instagram';
 
 
 //Validate Auths
@@ -83,10 +77,21 @@ const RoutesApp = () => {
           errorElement:<Error/>,
           children:[
             { index: true, element:<Home/>},
-
             {
               path:'/classRoom',
               element:<ClassRoom/>,
+            },
+            {
+              path:'/instagram',
+              element:<Instagram/>,
+            },
+            {
+              path:'/youtube',
+              element:<Youtube/>,
+            },
+            {
+              path:'/Profile',
+              element:<Profile/>,
             }
           ]
         }
