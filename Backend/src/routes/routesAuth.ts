@@ -5,6 +5,7 @@ import authMiddleware from '../middlewares/auth'
 export default (routes: Router) => {
   routes.get('/live',AuthController.live)
   routes.post('/login',AuthController.login)
+  routes.post('/loginStudent',AuthController.loginStudent)
   routes.use(authMiddleware);
   routes.get('/validation',AuthController.validation)
   routes.post('/logout',AuthController.logout)

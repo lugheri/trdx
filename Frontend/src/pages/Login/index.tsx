@@ -18,7 +18,7 @@ export const Login = () => {
   const sendAuth = async (e:FormEvent) => {
     e.preventDefault()
     try{
-      const response = await api.post('/login', {
+      const response = await api.post('/loginStudent', {
         username: username,
         password: password
       });

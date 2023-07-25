@@ -1,4 +1,12 @@
 import {z} from 'zod';
+import md5 from 'md5';
+export const StudentAccessDTO = z.object({
+  username:z.string().email('Nome de usuário inválido'),
+  password: z.string().min(5,'A senha deve ter mais de 5 dígitos'),
+})
+export type StudentAccessType = z.infer<typeof StudentAccessDTO>;
+
+
 
 export const StudentDTO = z.object({
   comunity:z.optional(z.literal(1).or(z.literal(0))).default(1),
@@ -8,7 +16,7 @@ export const StudentDTO = z.object({
   born:z.optional(z.string()),
   phone:z.optional(z.string()),
   gender:z.optional(z.string()),
-  password:z.string(),
+  password:z.string().transform(v=>md5(v)),
   reset:z.optional(z.number()).default(1),
   status:z.optional(z.literal(1).or(z.literal(0))).default(1)
 })
