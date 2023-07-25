@@ -46,6 +46,7 @@ import { Users } from '../pages/Admin/Settings/Users';
 import { LoadingPage } from '../pages/LoadingPage';
 import { Levels } from '../pages/Admin/Settings/Levels';
 import { Credentials } from '../pages/Admin/Settings/Credentials';
+import { ForgotPass } from '../pages/forgotPass';
 
 
 
@@ -82,14 +83,20 @@ const RoutesApp = () => {
           errorElement:<Error/>,
           children:[
             { index: true, element:<Home/>},
+
             {
               path:'/classRoom',
               element:<ClassRoom/>,
             }
           ]
         }
-      ]
+      ],     
     },
+    {
+      path: '/forgotPass',
+      element:<ForgotPass/>,
+      errorElement:<Error/>,
+    }, 
     {
       path: '/admin',
       element:<Private Item={TemplateAdm} typeAccess={'Adm'}/>,
