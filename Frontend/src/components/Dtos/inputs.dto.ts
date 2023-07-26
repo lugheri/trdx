@@ -1,6 +1,6 @@
 export type InputType={
   value: string;
-  inputType?: 'text'|'password';
+  inputType?: 'text'|'password'|'date';
   className?:string;
   label?:string;
   placeholder?:string;

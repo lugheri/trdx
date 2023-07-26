@@ -4,10 +4,14 @@ import { PrivateProps } from '../contexts/Dtos/auth.dto';
 //Templates
 import { Template, TemplateAdm } from '../components/Template';
 import { Login, LoginAdm } from '../pages/Login';
+import { ForgotPass } from '../pages/forgotPass';
 import { Error } from '../pages/Error';
 //Pages Students
 import { Home } from '../pages/Home';
-import { ClassRoom } from '../pages/ClassRoom';
+import { CoursesGalery } from '../pages/CoursesGalery';
+import { Profile } from '../pages/Profile';
+import { Youtube } from '../pages/Youtube';
+import { Instagram } from '../pages/Instagram';
 //Page Admin
 //Dashboard
 import { Dashboard } from '../pages/Admin/Dashboard';
@@ -46,10 +50,7 @@ import { Users } from '../pages/Admin/Settings/Users';
 import { LoadingPage } from '../pages/LoadingPage';
 import { Levels } from '../pages/Admin/Settings/Levels';
 import { Credentials } from '../pages/Admin/Settings/Credentials';
-import { ForgotPass } from '../pages/forgotPass';
-import { Profile } from '../pages/Profile';
-import { Youtube } from '../pages/Youtube';
-import { Instagram } from '../pages/Instagram';
+
 
 
 //Validate Auths
@@ -78,8 +79,8 @@ const RoutesApp = () => {
           children:[
             { index: true, element:<Home/>},
             {
-              path:'/classRoom',
-              element:<ClassRoom/>,
+              path:'/coursesGalery',
+              element:<CoursesGalery/>,
             },
             {
               path:'/instagram',
