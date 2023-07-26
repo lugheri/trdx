@@ -55,7 +55,7 @@ export const Sidebar = () => {
               name='Inicio' 
               icon='faHome'/>  
             <SideItem 
-              to={`/CoursesGalery`} 
+              to={`/CoursesGallery`} 
               side={side} 
               name='Meus Cursos' 
               icon='faChalkboard'/>  
