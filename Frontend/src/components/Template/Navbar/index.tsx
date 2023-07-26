@@ -14,10 +14,13 @@ import { NavLinkProps, itemSide } from "../../Dtos/sidebar.dto";
 export const Navbar = () => {
   return (
     <>
-      <div className=" text-neutral-900  dark:text-white flex justify-between items-center px-4 h-14">
+      <div className=" text-neutral-900  dark:text-white flex justify-between items-center px-8 h-14">
         {/*TITLE*/}
-        <div>
-          Search
+        <div className="bg-slate-400 dark:bg-stone-900 w-1/3 h-[35px] flex justify-between items-center overflow-hidden border rounded-full border-slate-500">
+          <FontAwesomeIcon className="p-3 text-xs text-slate-300" icon={Fas.faSearch}/>
+          <input 
+            className="flex-1 px-2 bg-slate-400 dark:bg-stone-900 dark:text-slate-400 h-full focus:ring-0 dark:focus:border-zinc-300" 
+            placeholder="Pesquise cursos e aulas ..."/>
         </div>
         {/*ACTIONS*/}
         <div className="flex justify-center items-center">
@@ -81,8 +84,11 @@ export const NavbarAdm = () => {
     <>
       <div className="bg-white text-neutral-900 dark:bg-[#1a1a1a] dark:text-white flex justify-between items-center px-4 h-14">
         {/*TITLE*/}
-        <div>
-          Search
+        <div className="bg-slate-400 dark:bg-stone-900 w-1/3 h-[35px] flex justify-between items-center overflow-hidden border rounded-full border-slate-500">
+          <FontAwesomeIcon className="p-3 text-xs text-slate-300" icon={Fas.faSearch}/>
+          <input 
+            className="flex-1 px-2 bg-slate-400 dark:bg-stone-900 dark:text-slate-400 h-full focus:ring-0 dark:focus:border-zinc-300" 
+            placeholder="Pesquise cursos e aulas ..."/>
         </div>
         {/*ACTIONS*/}
         <div className="flex justify-center items-center">

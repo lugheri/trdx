@@ -14,7 +14,7 @@ export const InputForm: React.FC<InputType> = (props) => {
       <input 
         type={props.inputType ? props.inputType : "text"} 
         className={`shadow border border-slate-300 mb-4 rounded text-slate-700 p-2 placeholder:italic placeholder:text-slate-400
-                    dark:bg-zinc-600 dark:border-slate-800 dark:text-white dark:placeholder:text-zinc-400
+                    dark:bg-zinc-600 dark:border-slate-800 dark:text-white dark:placeholder:text-zinc-400 bg-slate-200
                     focus:border-b-4 focus:border-teal-600 focus:ring-0 dark:focus:border-zinc-300 ${props.className}`} 
         placeholder={props.placeholder} 
         value={props.value}
@@ -37,7 +37,7 @@ export const InputNumberForm: React.FC<InputNumberType> = (props) => {
       <input 
         type="number" 
         className={`shadow border border-slate-300 mb-4 rounded text-slate-700 p-2 placeholder:italic placeholder:text-slate-400
-                    dark:bg-zinc-600 dark:border-slate-800 dark:text-white dark:placeholder:text-zinc-400
+                    dark:bg-zinc-600 dark:border-slate-800 dark:text-white dark:placeholder:text-zinc-400 bg-slate-200
                     focus:border-b-4 focus:border-teal-600 focus:ring-0 dark:focus:border-zinc-300 ${props.className}`} 
         value={props.value}
         min={props.min}
@@ -61,7 +61,7 @@ export const TextAreaForm: React.FC<TextAreaType> = (props) => {
         </label>)}
       <textarea 
         className={`shadow border border-slate-300 mb-4 rounded text-slate-700 p-2 placeholder:italic placeholder:text-slate-400
-                    dark:bg-zinc-600 dark:border-slate-800 dark:text-white dark:placeholder:text-zinc-400
+                    dark:bg-zinc-600 dark:border-slate-800 dark:text-white dark:placeholder:text-zinc-400 bg-slate-200
                     focus:border-b-4 focus:border-teal-600 focus:ring-0 dark:focus:border-zinc-300 ${props.className}`} 
         value={props.value}
         required={props.required}
@@ -82,7 +82,7 @@ export const SelectForm: React.FC<SelectType> = (props) => {
         </label>)}  
       <select 
         className={`shadow border border-slate-300 mb-4 rounded text-slate-700 p-2 placeholder:italic placeholder:text-slate-400
-                    dark:bg-zinc-600 dark:border-slate-800 dark:text-white dark:placeholder:text-zinc-400
+                    dark:bg-zinc-600 dark:border-slate-800 dark:text-white dark:placeholder:text-zinc-400 bg-slate-200
                     focus:border-b-4 focus:border-teal-600 focus:ring-0 dark:focus:border-zinc-300 ${props.className}`} 
         value={props.value} 
         onChange={handleSelectChange} 

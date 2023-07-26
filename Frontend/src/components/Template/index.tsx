@@ -4,7 +4,7 @@ import { Sidebar, SidebarAdm } from "./Sidebar"
 
 export const Template = () => {
   return (
-    <div className="bg-blue-50 dark:bg-[#1e272e] flex h-screen w-screen">
+    <div className="bg-slate-200 dark:bg-[#101010] flex h-screen w-screen">
       <Sidebar/>
       <div className="flex flex-col w-screen overflow-auto">
         <Navbar/>
