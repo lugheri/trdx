@@ -8,14 +8,14 @@ import { ForgotPass } from '../pages/forgotPass';
 import { Error } from '../pages/Error';
 //Pages Students
 import { Home } from '../pages/Home';
-import { CoursesGalery } from '../pages/CoursesGalery';
+import { CoursesGallery } from '../pages/CoursesGallery';
 import { Profile } from '../pages/Profile';
 import { Youtube } from '../pages/Youtube';
 import { Instagram } from '../pages/Instagram';
 //Page Admin
 //Dashboard
 import { Dashboard } from '../pages/Admin/Dashboard';
-import { Wellcome } from '../pages/Admin/Dashboard/Wellcome';
+import { Welcome } from '../pages/Admin/Dashboard/Welcome';
 //Content
 import { Content } from '../pages/Admin/Content';
 import { Catalog } from '../pages/Admin/Content/Catalog';
@@ -53,6 +53,7 @@ import { Credentials } from '../pages/Admin/Settings/Credentials';
 
 
 
+
 //Validate Auths
 const Private: React.FC<PrivateProps> = ({Item,typeAccess}) => {
   const authenticate = useAuth();  
@@ -79,8 +80,8 @@ const RoutesApp = () => {
           children:[
             { index: true, element:<Home/>},
             {
-              path:'/coursesGalery',
-              element:<CoursesGalery/>,
+              path:'/CoursesGallery',
+              element:<CoursesGallery/>,
             },
             {
               path:'/instagram',
@@ -115,7 +116,7 @@ const RoutesApp = () => {
               path: '/admin/dashboard',
               children:[
                 { index: true, element:<Dashboard/>},
-                { path: '/admin/dashboard/wellcome', element:<Wellcome/>},
+                { path: '/admin/dashboard/welcome', element:<Welcome/>},
               ]
             }, 
             { //CONTENT

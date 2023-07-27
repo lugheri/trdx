@@ -14,7 +14,7 @@ import { NavLinkProps, itemSide } from "../../Dtos/sidebar.dto";
 export const Navbar = () => {
   return (
     <>
-      <div className=" text-neutral-900  dark:text-white flex justify-between items-center px-8 h-14">
+      <div className=" text-neutral-900  dark:text-white flex justify-between items-center px-4 h-14">
         {/*TITLE*/}
         <div className="bg-slate-400 dark:bg-stone-900 w-1/3 h-[35px] flex justify-between items-center overflow-hidden border rounded-full border-slate-500">
           <FontAwesomeIcon className="p-3 text-xs text-slate-300" icon={Fas.faSearch}/>

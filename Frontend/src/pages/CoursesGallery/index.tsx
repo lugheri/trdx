@@ -1,6 +1,6 @@
 import { TitlePage } from "../../components/Template/TitlePage"
 
-export const CoursesGalery = () => {
+export const CoursesGallery = () => {
   return(
     <div>
         <TitlePage 
