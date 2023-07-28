@@ -8,7 +8,7 @@ export const Gallery = () => {
       <TitlePage
         icon="faTableCells" 
         title="Galeria de Mídia" 
-        description=""/>
+        description="Gerencie as imagens da plataforma aqui na galeria de mídia"/>
     </div>
   )
 }
