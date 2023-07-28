@@ -44,6 +44,8 @@ import { Emails } from '../pages/Admin/Platform/Emails';
 import { Advertising } from '../pages/Admin/Platform/Advertising';
 import { Integrations } from '../pages/Admin/Platform/Integrations';
 import { Gamification } from '../pages/Admin/Platform/Gamefication';
+//Metrics
+import { Reports } from '../pages/Admin/Reports';
 //Settings
 import { Settings } from '../pages/Admin/Settings';
 import { Users } from '../pages/Admin/Settings/Users';
@@ -167,8 +169,12 @@ const RoutesApp = () => {
                 { path: '/admin/platform/gamification', element:<Gamification/>},
               ]
             }, 
-
-            
+            { //MÉTRICS
+              path: '/admin/reports',
+              children:[
+                { index: true, element:<Reports/>},
+              ]
+            },            
             {//SETTINGS
               path: '/admin/settings',
               children:[
