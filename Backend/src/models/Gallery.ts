@@ -8,7 +8,7 @@ export interface GalleryInstance extends Model{
   description:string;
   file:string;
   extension:string;
-  size:string;
+  size:number;
   folder:number;
   status:number;
 }
@@ -20,7 +20,8 @@ export const Gallery = sequelize.define<GalleryInstance>("Gallery",{
     autoIncrement:true
   },
   date_created:{
-    type:DataTypes.DATE
+    type:DataTypes.DATE,
+    defaultValue:DataTypes.NOW
   },
   name:{
     type:DataTypes.STRING
@@ -35,7 +36,7 @@ export const Gallery = sequelize.define<GalleryInstance>("Gallery",{
     type:DataTypes.STRING
   },
   size:{
-    type:DataTypes.STRING
+    type:DataTypes.INTEGER
   },
   folder:{
     type:DataTypes.INTEGER
