@@ -13,6 +13,14 @@ const upload = multer({
 });
 
 export default (routes:Router) => {
+  //Folders 
+  routes.post('/newFolder',GalleryController.newFolder)
+  routes.patch('/editFolder/:folderId',GalleryController.editFolder)
+  routes.get('/infoFolder/:folderId',GalleryController.infoFolder)
+  routes.get('/listFolders/:status',GalleryController.listFolders)
+  routes.delete('/removeFolder/:folderId',GalleryController.removeFolder)
+
+  //Gallery
   routes.post('/filterFiles',GalleryController.filterFiles)
   routes.post('/uploadFile',upload.single('file'),GalleryController.uploadFile)
   routes.get('/infoFile/:fileId',GalleryController.infoFile)
