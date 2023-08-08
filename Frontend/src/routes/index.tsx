@@ -64,7 +64,7 @@ const Private: React.FC<PrivateProps> = ({Item,typeAccess}) => {
     : authenticate.authenticated === null ? <LoadingPage/> 
       : authenticate.authenticated ? //If Authenticated
           typeAccess == 'Adm' ? //Check if type access is adm and typeAuthUser is compatible or logout
-            authenticate.typeAccess=='Adm' ? <Item/> : <Login/>  
+            authenticate.typeAccess=='Adm' ? <Item/> : <LoginAdm/>
           : <Item/> 
         : typeAccess == 'Adm' ? <LoginAdm/> : <Login/>
   );
