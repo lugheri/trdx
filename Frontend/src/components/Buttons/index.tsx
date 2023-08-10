@@ -65,7 +65,7 @@ export const Button : React.FC<ButtonType> = (props) => {
     const btnNotlineError = "text-[#e74c3c] hover:bg-[#e74c3c] hover:text-white"
 
     const btnMuted = "bg-[#bdc3c7] text-white hover:bg-[#95a5a6] border border-[#bdc3c7]"
-    const btnOutlineMuted = "border border-[#bdc3c7] text-[#bdc3c7] hover:bg-[#bdc3c7] hover:text-slate-600"
+    const btnOutlineMuted = "border border-slate-500 text-slate-500 hover:bg-[#bdc3c7] hover:text-slate-800"
     const btnNotlineMuted = "text-slate-400 dark:text-[#bdc3c7] hover:bg-[#bdc3c7] hover:text-slate-600 dark:hover:text-slate-800"
 
     const sizeSM= props.name ? "py-1 px-2 text-xs" : "p-1 text-xs"

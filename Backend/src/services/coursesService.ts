@@ -1,4 +1,4 @@
-import { CoursesType, PaginationCoursesType, SearchCoursesType } from "../controllers/Dtos/courses.dto";
+import { CoursesPartialType, CoursesType, PaginationCoursesType, SearchCoursesType } from "../controllers/Dtos/courses.dto";
 import { Courses, CoursesInstance } from "../models/Courses"
 import { Op } from "sequelize"
 
@@ -16,7 +16,24 @@ class CoursesService{
     })
     return listCourses
   } 
-  
+
+  async createNewCourse(dataCourse:CoursesType):Promise<boolean|CoursesInstance>{
+    const [newCourse,created] = await Courses.findOrCreate({
+      where: { name: dataCourse.name},
+      defaults:dataCourse
+    });
+    return newCourse.id ? newCourse : false
+  }
+
+  async getCourse(courseId:number):Promise<boolean | CoursesInstance>{
+    const course = await Courses.findByPk(courseId)
+    return course ? course : false
+  }  
+
+  async editCourse(courseId:number,dataCourse:CoursesPartialType):Promise<boolean>{   
+    await Courses.update(dataCourse,{where:{id:courseId}})   
+    return true;
+  }
 
 }
 export default new CoursesService();
