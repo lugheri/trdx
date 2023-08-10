@@ -6,7 +6,7 @@ export const InputForm: React.FC<InputType> = (props) => {
     props.onChange(e.target.value)
   }
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-1">
       {!props.label ? false 
       : (<label className="font-semibold italic text-sm text-slate-500 dark:text-slate-300">
           {props.label}
@@ -29,7 +29,7 @@ export const InputNumberForm: React.FC<InputNumberType> = (props) => {
     props.onChange(e.target.value)
   }
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-1">
       {!props.label ? false 
       : (<label className="font-semibold italic text-sm text-slate-500 dark:text-slate-300">
           {props.label}
@@ -54,7 +54,7 @@ export const TextAreaForm: React.FC<TextAreaType> = (props) => {
     props.onChange(e.target.value)
   }
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-1">
       {!props.label ? false 
       : (<label className="font-semibold italic text-sm text-slate-500 dark:text-slate-300">
          {props.label}
@@ -64,6 +64,7 @@ export const TextAreaForm: React.FC<TextAreaType> = (props) => {
                     dark:bg-zinc-600 dark:border-slate-800 dark:text-white dark:placeholder:text-zinc-400 bg-slate-200
                     focus:border-b-4 focus:border-teal-600 focus:ring-0 dark:focus:border-zinc-300 ${props.className}`} 
         value={props.value}
+        placeholder={props.placeholder} 
         required={props.required}
         onChange={handleTextareaChange } />
     </div>
@@ -75,7 +76,7 @@ export const SelectForm: React.FC<SelectType> = (props) => {
     props.onChange(e.target.value)
   }
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-1">
       {!props.label ? false 
       : (<label className="font-semibold italic text-sm text-slate-500 dark:text-slate-300">
           {props.label}

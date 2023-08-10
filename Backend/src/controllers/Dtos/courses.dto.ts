@@ -1,7 +1,7 @@
 import {z} from 'zod';
 
 export const CoursesDTO = z.object({
-  date_created:z.string(),
+  date_created:z.optional(z.string()),
   image:z.optional(z.number()),
   author:z.optional(z.string()),
   name:z.optional(z.string()),
@@ -14,6 +14,9 @@ export const CoursesDTO = z.object({
   status:z.optional(z.literal(1).or(z.literal(0))).default(1)
 })
 export type CoursesType = z.infer<typeof CoursesDTO>;
+
+export const CoursesPartialDTO = CoursesDTO.partial();
+export type CoursesPartialType = z.infer<typeof CoursesPartialDTO>;
 
 export const PaginationCoursesDTO = z.object({
   status: z.optional(z.literal(1).or(z.literal(0))).default(1),
