@@ -15,4 +15,6 @@ routesUsers(routes)
 routesGallery(routes)
 routesCourses(routes)
 routesStudents(routes)
+
+
 export default routes;

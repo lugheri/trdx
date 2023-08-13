@@ -290,6 +290,7 @@ const NewCourse : React.FC<{setNewCourse: React.Dispatch<React.SetStateAction<bo
 }
 const PageGallery: React.FC<{page:number;setCapaCurso:React.Dispatch<React.SetStateAction<number>>}> = (props) => {
   const [ itemsGallery, setItemsGallery ] = useState<IFileGallery[]|null>(null)
+  const [ nextPage, setNextPage ] = useState(0)
   useEffect(()=>{
     const listItemsGallery = async () => {
       try{
@@ -307,23 +308,29 @@ const PageGallery: React.FC<{page:number;setCapaCurso:React.Dispatch<React.SetSt
   },[])
 
   return (
-    <div className="flex">
-      {
-        itemsGallery === null ? <Loading/> 
-        : itemsGallery.map((file,key)=>(
-          <div key={key} className="p-4">
-            <p className="text-slate-400 font-bold text-sm text-center">{ file.name}</p>
-            <div className="w-[150px] relative h-auto flex justify-center items-center">
-              <img src={`${urlBase}/gallery/${file.file}`} className='w-[150px]'/>
-              <div 
-                className="bg-slate-900 text-center cursor-pointer absolute w-full h-full flex justify-center items-center text-white opacity-10 hover:opacity-70"
-                onClick={()=>props.setCapaCurso(file.id)}>
-                Selecionar Imagem
-              </div>
-            </div>           
-          </div>
-        ))
-      }
+    <div className="flex flex-col">
+      <div className="flex flex-wrap">
+        {
+          itemsGallery === null ? <Loading/> 
+          : itemsGallery.map((file,key)=>(
+            <div key={key} className="p-4">
+              <p className="text-slate-400 font-bold text-sm text-center">{ file.name}</p>
+              <div className="w-[150px] relative h-auto flex justify-center items-center">
+                <img src={`${urlBase}/gallery/${file.file}`} className='w-[150px]'/>
+                <div 
+                  className="bg-slate-900 text-center cursor-pointer absolute w-full h-full flex justify-center items-center text-white opacity-10 hover:opacity-70"
+                  onClick={()=>props.setCapaCurso(file.id)}>
+                  Selecionar Imagem
+                </div>
+              </div>           
+            </div>
+          ))
+        }       
+      </div>  
+      {nextPage > 0 ?  <PageGallery page={nextPage} setCapaCurso={props.setCapaCurso}/> : false}
+      { itemsGallery ? itemsGallery.length > 0 ? nextPage == 0 ?
+        <Button btn="muted" type="outline" size="sm" name="Carregar Mais" onClick={()=>setNextPage(props.page+1)}/>
+      : false : false : false }
     </div>
   )
 }
@@ -350,7 +357,7 @@ const ListCourses : React.FC<{setEditCourse: React.Dispatch<React.SetStateAction
         { listCourses === null ? <Loading/>
         : listCourses.map((course,key)=>(
           <div key={key} 
-              className="dark:bg-slate-500 bg-white shadow-md m-2 w-[23%] rounded  flex flex-col justify-start items-center">
+              className="dark:bg-gray-800 bg-white shadow-md m-2 w-[23%] rounded  flex flex-col justify-start items-center">
             <div className="bg-slate-600 w-full h-[250px] flex justify-center items-center relative overflow-hidden">
               <RenderImage imageId={course.image}/>
               { course.published == 1 ? 
@@ -430,7 +437,7 @@ const EditCourse : React.FC<{setEditCourse: React.Dispatch<React.SetStateAction<
               <p className="text-slate-500 dark:text-slate-300"><strong>Descrição: </strong>{infoCourse.description}</p>
               <p className="text-slate-500 dark:text-slate-300"><strong>Por: </strong>{infoCourse.author}</p>
               <p className="text-slate-500 dark:text-slate-300"><strong>Tags: </strong>{infoCourse.tags}</p>
-              <p className="text-slate-500 dark:text-slate-300"><strong>Status: </strong>{infoCourse.published == 1 ? "Público" : "Privado"}</p>
+              <p className="text-slate-500 dark:text-slate-300"><strong>Privacidade: </strong>{infoCourse.published == 1 ? "Público" : "Privado"}</p>
               <div className="flex justify-end items-center p-2 bg-gradient-to-l from-slate-200 to-white dark:bg-gradient-to-l dark:from-gray-900 dark:to-gray-800 flex-1 w-full">
                 <Button icon="faReply" name="Voltar" btn="muted" type="notline" size="sm" className='rounded-none' onClick={()=>props.setEditCourse(null)} />
                 <Button icon="faListCheck" name="Provas" btn="info" type="notline" size="sm" className='rounded-none'/>
@@ -470,6 +477,7 @@ const EditInfoCourse : React.FC<{infoCourse: ICourse;
 
   const [autor, setAutor] = useState(props.infoCourse.author)
   const [comunidade, setComunidade] = useState(props.infoCourse.community)
+  const [published, setPublished] = useState(props.infoCourse.published)
   const [tags, setTags] = useState(props.infoCourse.tags)
 
   const [ editImage, setEditImage ] = useState(false)
@@ -493,9 +501,9 @@ const EditInfoCourse : React.FC<{infoCourse: ICourse;
         "name":nome,
         "description":descricao,
         "tags":tags,
-        "community":comunidade,
+        "community":typeof comunidade == 'string' ? parseInt(comunidade,10) : comunidade ,
         "completed":0,
-        "published":0,
+        "published":typeof published == 'string' ? parseInt(published,10) : published ,
         "status":1
       }
       console.log(data)
@@ -510,6 +518,7 @@ const EditInfoCourse : React.FC<{infoCourse: ICourse;
   }
 
   const optionSelComunidade = [{"valor":0,"label":"Não"},{"valor":1,"label":"Sim"}]
+  const optionSelPublished = [{"valor":0,"label":"Privado"},{"valor":1,"label":"Público"}]
   return (   
     <form className="flex flex-col flex-1" onSubmit={(e)=>editInfoCourse(e)}>
       <div className="flex">
@@ -537,8 +546,9 @@ const EditInfoCourse : React.FC<{infoCourse: ICourse;
             <div className="flex flex-col w-full ">
               <InputForm label="Autor" placeholder='Nome do Autor do Curso' value={autor} onChange={setAutor}/>
             </div>
-            <div className="flex flex-col w-full ">
+            <div className="flex w-full ">
               <SelectForm label="Comunidade" options={optionSelComunidade} valueKey="valor"  lableKey="label" value={comunidade} onChange={setComunidade}/>
+              <SelectForm label="Privacidade" options={optionSelPublished} valueKey="valor"  lableKey="label" value={published} onChange={setPublished}/>
             </div>
             <div className="flex flex-col w-full ">
               <TextAreaForm 

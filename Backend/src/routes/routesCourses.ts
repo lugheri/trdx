@@ -6,4 +6,7 @@ export default (routes:Router)=>{
   routes.post("/newCourse",CoursesController.newCourse)
   routes.get("/infoCourse/:courseId",CoursesController.infoCourse)
   routes.patch("/editCourse/:courseId",CoursesController.editCourse)
+
+  //Students Routes
+  routes.get("/myCourses/:studentId",CoursesController.myCourses)
 }
