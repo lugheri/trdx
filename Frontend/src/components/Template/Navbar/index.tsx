@@ -83,7 +83,7 @@ export const NavbarAdm = () => {
 
   return (
     <>
-      <div className="bg-white text-neutral-900 dark:bg-[#1a1a1a] dark:text-white flex justify-between items-center px-4 h-14">
+      <div className="bg-white text-neutral-900 dark:bg-slate-700 dark:text-white flex justify-between items-center px-4 h-14">
         {/*TITLE*/}
         <div className="bg-slate-400 dark:bg-stone-900 w-1/3 h-[35px] flex justify-between items-center overflow-hidden border rounded-full border-slate-500">
           <FontAwesomeIcon className="p-3 text-xs text-slate-300" icon={Fas.faSearch}/>
@@ -135,7 +135,7 @@ export const NavbarAdm = () => {
         </div>  
       </div>
       <div className="flex px-4 bg-slate-50 text-neutral-900 shadow-md min-h-[6px] 
-                    dark:bg-[#2C3A47] dark:text-white ">
+                    dark:bg-slate-700 opacity-80 hover:opacity-90 dark:text-white ">
         { menu.length > 0 ? 
           menu.map((item:itemSide, index: number)=>(
             <NavItem

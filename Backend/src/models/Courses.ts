@@ -1,6 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
 
+
+import { StudentsCourses } from './StudentsCourses';
+
 export interface CoursesInstance extends Model{
   id:number;
   date_created:string;
@@ -60,3 +63,4 @@ export const Courses = sequelize.define<CoursesInstance>("Courses",{
   tableName:"courses",
   timestamps:false
 })
+Courses.hasOne(StudentsCourses, { foreignKey: 'course_id', sourceKey: 'id'});

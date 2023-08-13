@@ -9,11 +9,15 @@ import api from '../../../services/api';
 import Logo from '/img/logo.png'
 import Brand from '/img/brand.png'
 import useAuth from '../../../hooks/useAuth';
+import { Student } from '../../../contexts/Dtos/auth.dto';
 
 
 export const Sidebar = () => {
-  const authenticate = useAuth();  
-  const [ version, setVersion ] = useState<string>('Alpha Centauri: 1.0.0')
+  const authenticated = useAuth();  
+  const userData:Student|null = authenticated ? authenticated.userData : null
+
+  const version='Alpha Centauri: 1.0.0'
+  //const [ version, setVersion ] = useState<string>('Alpha Centauri: 1.0.0')
 
   
   const [ side, setSide ] = useState<'open'|'closed'>('open')
@@ -23,13 +27,13 @@ export const Sidebar = () => {
   },[side])
 
   return (
-    <div className={`bg-cyan-950 dark:bg-gray-900 flex flex-col ${sideSize} ease-in duration-150`}>
+    <div className={`bg-cyan-900 dark:bg-slate-800 flex flex-col ${sideSize} ease-in duration-150`}>
       {/*BRAND*/}
-      <div className="bg-sky-950 dark:bg-gray-900 h-16 flex justify-center items-center text-cyan-100 font-bold relative">
+      <div className="bg-cyan-900 dark:bg-slate-800 h-16 flex justify-center items-center text-cyan-50 font-bold relative">
         {side == 'open' ? (
           <>
             <img src={Logo} className="w-1/2 my-2"/>
-            <div className="absolute -right-2 -bottom-3 dark:bg-cyan-950 dark:text-cyan-50 dark:hover:bg-cyan-800 bg-cyan-100 hover:bg-cyan-200 border-2 border-cyan-950 rounded-full w-6 text-cyan-950 h-6 flex justify-center items-center text-xs shadow-md cursor-pointer" 
+            <div className="absolute right-2 top-5 dark:bg-cyan-950 dark:text-cyan-50 dark:hover:bg-cyan-800 bg-cyan-100 hover:bg-cyan-200 border-2 border-cyan-950 rounded-full w-6 text-cyan-950 h-6 flex justify-center items-center text-xs shadow-md cursor-pointer z-50" 
                  onClick={()=>setSide('closed')}>
               <FontAwesomeIcon icon={Fas.faCaretLeft}/>
             </div>
@@ -37,9 +41,9 @@ export const Sidebar = () => {
         ) : (
           <>
             <img src={Brand} className="w-1/3 my-2"/>
-            <div className="absolute -right-2 -bottom-3 dark:bg-cyan-950 dark:text-cyan-50 dark:hover:bg-cyan-800 bg-cyan-100 hover:bg-cyan-200 border-2 border-cyan-950 rounded-full w-6 text-cyan-950 h-6 flex justify-center items-center text-xs shadow-md cursor-pointer" 
+            <div className="absolute -right-3 top-5 dark:bg-cyan-950 dark:text-cyan-50 dark:hover:bg-cyan-800 bg-cyan-100 hover:bg-cyan-200 border-2 border-cyan-950 rounded-full w-6 text-cyan-950 h-6 flex justify-center items-center text-xs shadow-md cursor-pointer z-50" 
                  onClick={()=>setSide('open')}>
-              <FontAwesomeIcon icon={Fas.faCaretRight}/>
+              <FontAwesomeIcon icon={Fas.faBars}/>
             </div>
           </>
         )}        
@@ -47,7 +51,7 @@ export const Sidebar = () => {
       {/*SIDE*/}
       <div className="flex-1 flex flex-col justify-between">
         <div className="flex flex-col">
-          { side == 'open' ? <SideProfile/> : false }
+          { side == 'open' ? <SideProfile userData={userData}/> : false }
           <ul className="py-2">
             <SideItem 
               to={`/`} 
@@ -135,13 +139,13 @@ export const SidebarAdm = () => {
   },[side])
 
   return (
-    <div className={`bg-cyan-950 dark:bg-gray-900 flex flex-col ${sideSize} ease-in duration-150`}>
+    <div className={`bg-cyan-950 dark:bg-slate-800 flex flex-col ${sideSize} ease-in duration-150`}>
       {/*BRAND*/}
-      <div className="bg-sky-950 dark:bg-gray-900 h-16 flex justify-center items-center text-cyan-100 font-bold relative">
+      <div className="bg-sky-950 dark:bg-slate-800 h-16 flex justify-center items-center text-cyan-100 font-bold relative">
         {side == 'open' ? (
           <>
             <img src={Logo} className="w-1/2 my-2"/>
-            <div className="absolute -right-2 -bottom-3 dark:bg-cyan-950 dark:text-cyan-50 dark:hover:bg-cyan-800 bg-cyan-100 hover:bg-cyan-200 border-2 border-cyan-950 rounded-full w-6 text-cyan-950 h-6 flex justify-center items-center text-xs shadow-md cursor-pointer" 
+            <div className="absolute right-2 top-5 dark:bg-cyan-950 dark:text-cyan-50 dark:hover:bg-cyan-800 bg-cyan-100 hover:bg-cyan-200 border-2 border-cyan-950 rounded-full w-6 text-cyan-950 h-6 flex justify-center items-center text-xs shadow-md cursor-pointer" 
                  onClick={()=>setSide('closed')}>
               <FontAwesomeIcon icon={Fas.faCaretLeft}/>
             </div>
@@ -149,9 +153,9 @@ export const SidebarAdm = () => {
         ) : (
           <>
             <img src={Brand} className="w-1/3 my-2"/>
-            <div className="absolute -right-2 -bottom-3 dark:bg-cyan-950 dark:text-cyan-50 dark:hover:bg-cyan-800 bg-cyan-100 hover:bg-cyan-200 border-2 border-cyan-950 rounded-full w-6 text-cyan-950 h-6 flex justify-center items-center text-xs shadow-md cursor-pointer" 
+            <div className="absolute -right-3 top-5 dark:bg-cyan-950 dark:text-cyan-50 dark:hover:bg-cyan-800 bg-cyan-100 hover:bg-cyan-200 border-2 border-cyan-950 rounded-full w-6 text-cyan-950 h-6 flex justify-center items-center text-xs shadow-md cursor-pointer" 
                  onClick={()=>setSide('open')}>
-              <FontAwesomeIcon icon={Fas.faCaretRight}/>
+              <FontAwesomeIcon icon={Fas.faBars}/>
             </div>
           </>
         )}        
@@ -192,16 +196,16 @@ export const SidebarAdm = () => {
   )
 }
 
-const SideProfile : React.FC = () => {
+const SideProfile : React.FC<{userData:Student|null}> = (props) => {
   return(
     <div className="flex flex-col justify-center items-center">
       <div className="w-[80px] h-[80px] rounded-full mt-6 flex justify-center items-center bg-gray-300 text-gray-600">
         <FontAwesomeIcon icon={Fas.faUser}/>
       </div>
-      <p className="font-semibold text-sm mt-2 text-slate-400">Nome Aluno</p>
+      <p className="font-semibold text-sm mt-2 text-slate-300">{props.userData?.name}</p>
 
       <div className="w-full flex flex-col justify-center items-center p-4">
-        <p className="font-semibold text-xs m-1 text-slate-400">Seu Progresso</p>
+        <p className="font-semibold text-xs m-1 text-slate-300">Seu Progresso</p>
         <div className="w-full h-[10px] bg-slate-500 rounded-md shadow">
         </div>
       </div>
@@ -209,9 +213,8 @@ const SideProfile : React.FC = () => {
   )
 }
 
-
 const SideItem : React.FC<NavLinkProps> = (props) => {
-  const navDefault = "flex w-full justify-start items-center text-sm font-semibold text-white p-2 mt-1 opacity-50 hover:opacity-100 ease-in duration-150"
+  const navDefault = "flex w-full justify-start items-center text-sm font-semibold text-white p-2 mt-1 opacity-70 hover:opacity-100 ease-in duration-150"
   const navActive = "flex w-full justify-start items-center text-sm font-semibold text-white p-2 mt-1 border-r-green-600 border-r-8 opacity-100"
 
   const navDefaultClosed = "flex flex-col group w-full justify-center items-center text font-semibold text-white p-2 mb-1 opacity-70 hover:opacity-100 ease-in duration-150"

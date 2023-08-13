@@ -34,7 +34,7 @@ class GalleryServices{
   }
   async filterFiles(pagination:PaginationGalleryTypes){
     const p = pagination.page-1
-    const qtdRegPage = 30
+    const qtdRegPage = 15
     const offset = qtdRegPage * p 
 
     const filterFiles = await Gallery.findAll({

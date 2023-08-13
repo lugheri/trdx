@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import coursesService from '../services/coursesService';
 import { PaginationCoursesDTO, SearchCoursesDTO, CoursesDTO, CoursesPartialDTO } from "./Dtos/courses.dto";
+import studentCoursesServices from '../services/studentCoursesServices';
 
 class CoursesController{
   async listCourses(req:Request,res:Response){
@@ -63,6 +64,19 @@ class CoursesController{
     try{
       const edit = await coursesService.editCourse(courseId, dataCourse.data)
       res.json({"success": true,"response": edit})  
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})  
+    }
+  }
+
+  //Students Methods
+  async myCourses(req:Request, res:Response){
+    const studentId = parseInt(req.params.studentId)
+    try{
+      const myCourses = await studentCoursesServices.myCourses(studentId)
+      res.json({"success":true,"response":myCourses})
       return
     }catch(err){
       console.log(err)
