@@ -8,6 +8,7 @@ import api from '../../services/api';
 import { Loading } from '../../components/Loading';
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { urlBase } from '../../utils/baseUrl';
 
 export const CoursesGallery = () => {
   const authenticated = useAuth();  
@@ -35,20 +36,73 @@ export const CoursesGallery = () => {
           title="Meus Cursos" 
           description="Acesse seus cursos por aqui"/>
           <Card component={
-            <div className="overflow-auto w-full h-[77vh] flex-wrap flex ">
+            <div className="overflow-x-hidden overflow-y-auto w-full h-[77vh] flex flex-wrap">
                 { listMyCourses === null ? <Loading/> : listMyCourses.length == 0 ? <Empty/> : 
-                  listMyCourses.map((course,key)=>(<Course key={key} infoCourse={course}/>
-                ))} 
+                  listMyCourses.map((course,key)=>(<Course key={key} infoCourse={course} userId={userData? userData.id : 0}/>
+                ))}              
             </div>
           }/>
     </div>
   )
 }
 
-const Course : React.FC<{infoCourse:IMyCourses}> = (props) => {
+const Course : React.FC<{infoCourse:IMyCourses;userId:number}> = (props) => {
+  const [ fileImage, setFileImage ] = useState(null)
+  useEffect(()=>{
+    const getInfoImage = async () => {
+      try{
+        const i = await api.get(`infoFile/${props.infoCourse.image}`)
+        setFileImage(i.data.response.file)
+        
+      }catch(e){
+        console.log(e)
+      }
+    }
+    getInfoImage()
+  },[props.infoCourse])
+
+  const [ progress, setProgress] = useState(0);
+  useEffect(()=>{
+    const getProgress = async () => {
+      try{
+        const prog = await api.get(`progressCourse/${props.infoCourse.id}/${props.userId}`)
+        setProgress(prog.data.response)        
+      }catch(e){
+        console.log(e)
+      }
+    }
+    getProgress()
+  },[props.infoCourse])
+
+  const [ validityCourse, setValidityCourse] = useState(null);
+  useEffect(()=>{
+    const checkValidity = async () => {
+      try{
+        const contract = await api.get(`validityCourse/${props.infoCourse.id}/${props.userId}`)
+        setValidityCourse(contract.data.response)        
+      }catch(e){
+        console.log(e)
+      }
+    }
+    checkValidity()
+  },[props.infoCourse])
+
+  
+
   return (
-    <div className="bg-white m-1 rounded shadow flex justify-center items-center text-center w-[200px] h-[200px]">
-      {props.infoCourse.name}
+    <div className="flex relative flex-col m-2 mb-2 w-[210px] max-h-[230px]  justify-center items-center rounded opacity-80 hover:opacity-100 cursor-pointer">      
+      { validityCourse == 'expired' ? <div className="absolute w-full h-[220px] flex justify-center items-center -top-4 left-0 bg-black opacity-80 text-white font-bold text-4xl">EXPIRADO</div>: false }
+      { fileImage ? <img className="w-auto rounded shadow"  src={`${urlBase}/gallery/${fileImage}`}/> : <Loading/> }
+      {/*Progress Bar */}
+      <div className="flex w-full justify-center items-center py-2">
+        <div className="flex-1 flex bg-slate-800 h-2 rounded-md w-full overflow-hidden">
+          <div className={`h-full bg-green-500`} style={{width:progress+'%'}}>
+          </div>
+        </div>
+        <div className="text-xs font-bold text-slate-400 dark:text-slate-300 pl-1">
+          {progress}% Concluído
+        </div>
+      </div>
     </div>
   )
 }
@@ -61,3 +115,4 @@ const Empty = () => {
     </div>
   )
 }
+
