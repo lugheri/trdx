@@ -9,4 +9,6 @@ export default (routes:Router)=>{
 
   //Students Routes
   routes.get("/myCourses/:studentId",CoursesController.myCourses)
+  routes.get("/validityCourse/:courseId/:studentId",CoursesController.validityCourse)
+  routes.get("/progressCourse/:courseId/:studentId",CoursesController.progressCourse)
 }
