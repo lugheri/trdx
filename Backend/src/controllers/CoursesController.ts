@@ -6,6 +6,7 @@ import coursesValidityContractsService from '../services/coursesValidityContract
 import coursesLessonsService from '../services/coursesLessonsService';
 import lessonsViewedService from '../services/lessonsViewedService';
 import { parseISO, isAfter, format } from 'date-fns';
+import courseModulesService from '../services/courseModulesService';
 
 class CoursesController{
   async listCourses(req:Request,res:Response){
@@ -122,14 +123,38 @@ class CoursesController{
     try{
       const lessonsCourse = await coursesLessonsService.lessonsCourse(courseId)
       const viewedLessons = await lessonsViewedService.lessonsViewed(studentId,courseId)
-      const progress = viewedLessons == 0 ? 0 : Math.round((viewedLessons/lessonsCourse)*100)
-
-      
+      const progress = viewedLessons == 0 ? 0 : Math.round((viewedLessons/lessonsCourse)*100)      
       res.json({"success":true,"response":progress})
       return
     }catch(err){
       console.log(err)
       res.json({"error":err})  
+    }
+  }
+
+  async progressModule(req:Request, res:Response){
+    const studentId = parseInt(req.params.studentId)
+    const moduleId = parseInt(req.params.moduleId)
+    try{
+      const lessonsModule = await coursesLessonsService.lessonsModule(moduleId)
+      const viewedLessons = await lessonsViewedService.lessonsViewedByModule(studentId,moduleId)
+      const progress = viewedLessons == 0 ? 0 : Math.round((viewedLessons/lessonsModule)*100)      
+      res.json({"success":true,"response":progress})
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})  
+    }
+  }
+
+  async modulesMyCourse(req:Request,res:Response){
+    const courseId = parseInt(req.params.courseId)
+    try{
+      const modulesMyCourse = await courseModulesService.modulesCourse(courseId);
+      res.json({"success":true,"response":modulesMyCourse})
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})
     }
   }
 

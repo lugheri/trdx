@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useAuth from "../../hooks/useAuth"
+
+import * as Fas from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { Card } from "../../components/Cards"
 import { TitlePage } from "../../components/Template/TitlePage"
-import useAuth from "../../hooks/useAuth"
-import { User,Student } from '../../contexts/Dtos/auth.dto';
+import { Student } from '../../contexts/Dtos/auth.dto';
 import { IMyCourses } from '../Dtos/courses.dto';
 import api from '../../services/api';
 import { Loading } from '../../components/Loading';
-import * as Fas from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { urlBase } from '../../utils/baseUrl';
+
 
 export const CoursesGallery = () => {
   const authenticated = useAuth();  
@@ -87,10 +91,19 @@ const Course : React.FC<{infoCourse:IMyCourses;userId:number}> = (props) => {
     checkValidity()
   },[props.infoCourse])
 
+  const navigate = useNavigate();
+
+  
+  const openCourse = () => {
+    const hash_CourseId: string = btoa(`[{"courseId":"${props.infoCourse.id}"}]`);
+    navigate(`/classRoom/course/${hash_CourseId}`)
+  }
   
 
   return (
-    <div className="flex relative flex-col m-2 mb-2 w-[210px] max-h-[230px]  justify-center items-center rounded opacity-80 hover:opacity-100 cursor-pointer">      
+    <div 
+      onClick={()=>openCourse()}
+      className="flex relative flex-col m-2 mb-2 w-[210px] max-h-[230px] justify-center items-center rounded opacity-80 hover:opacity-100 cursor-pointer">      
       { validityCourse == 'expired' ? <div className="absolute w-full h-[220px] flex justify-center items-center -top-4 left-0 bg-black opacity-80 text-white font-bold text-4xl">EXPIRADO</div>: false }
       { fileImage ? <img className="w-auto rounded shadow"  src={`${urlBase}/gallery/${fileImage}`}/> : <Loading/> }
       {/*Progress Bar */}
