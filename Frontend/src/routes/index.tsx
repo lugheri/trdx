@@ -9,6 +9,8 @@ import { Error } from '../pages/Error';
 //Pages Students
 import { Home } from '../pages/Home';
 import { CoursesGallery } from '../pages/CoursesGallery';
+import { CourseModules } from '../pages/CourseModules';
+import { ClassRoom} from '../pages/ClassRoom';
 import { Profile } from '../pages/Profile';
 import { Youtube } from '../pages/Youtube';
 import { Instagram } from '../pages/Instagram';
@@ -56,6 +58,7 @@ import { Credentials } from '../pages/Admin/Settings/Credentials';
 
 
 
+
 //Validate Auths
 const Private: React.FC<PrivateProps> = ({Item,typeAccess}) => {
   const authenticate = useAuth();  
@@ -82,8 +85,17 @@ const RoutesApp = () => {
           children:[
             { index: true, element:<Home/>},
             {
-              path:'/CoursesGallery',
-              element:<CoursesGallery/>,
+              path:'/coursesGallery',
+              element:<CoursesGallery/>, 
+            },
+            {
+              path:'/classRoom',
+              children:[
+                { index: true, element:<CoursesGallery/>},
+                { path: '/classRoom/course/:course_id', element:<CourseModules/>},
+                { path: '/classRoom/course/lesson/:lesson_id', element:<ClassRoom/>},
+              ]
+             
             },
             {
               path:'/instagram',

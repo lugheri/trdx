@@ -7,7 +7,13 @@ class LessonsViewedService{
       where:{student_id:studentId,course_id:courseId}
     })
     return totalViewed 
+  }
 
+  async lessonsViewedByModule(studentId:number,moduleId:number):Promise<number>{
+    const totalViewed = await LessonsViewed.count({
+      where:{student_id:studentId,module_id:moduleId}
+    })
+    return totalViewed 
   }
 }
 
