@@ -9,11 +9,18 @@ class CoursesLessonsService{
     return totalLessons
   }
 
-  async lessonsModule(moduleId:number):Promise<number>{
+  async totalLessonsModule(moduleId:number):Promise<number>{
     const totalLessons = await CoursesLessons.count({
       where:{module_id:moduleId,visibility:1,status:1}
     })
     return totalLessons
+  }
+
+  async lessonsModule(courseId:number,moduleId:number):Promise<CoursesLessonsInstance[]>{
+    const lessonsModule = await CoursesLessons.findAll({
+      where:{course_id:courseId,module_id:moduleId,visibility:1,status:1}
+    })
+    return lessonsModule
   }
 }
 
