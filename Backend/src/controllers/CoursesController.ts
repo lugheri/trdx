@@ -136,7 +136,7 @@ class CoursesController{
     const studentId = parseInt(req.params.studentId)
     const moduleId = parseInt(req.params.moduleId)
     try{
-      const lessonsModule = await coursesLessonsService.lessonsModule(moduleId)
+      const lessonsModule = await coursesLessonsService.totalLessonsModule(moduleId)
       const viewedLessons = await lessonsViewedService.lessonsViewedByModule(studentId,moduleId)
       const progress = viewedLessons == 0 ? 0 : Math.round((viewedLessons/lessonsModule)*100)      
       res.json({"success":true,"response":progress})
@@ -152,6 +152,18 @@ class CoursesController{
     try{
       const modulesMyCourse = await courseModulesService.modulesCourse(courseId);
       res.json({"success":true,"response":modulesMyCourse})
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})
+    }
+  }
+
+  async lessonsModule(req:Request,res:Response){
+    const courseId = parseInt(req.params.courseId)
+    const moduleId = parseInt(req.params.moduleId)
+    try{
+      const lessonsModule = await coursesLessonsService.lessonsModule(courseId,moduleId);
+      res.json({"success":true,"response":lessonsModule})
     }catch(err){
       console.log(err)
       res.json({"error":err})
