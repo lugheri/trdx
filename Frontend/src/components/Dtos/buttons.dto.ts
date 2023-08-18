@@ -7,7 +7,7 @@ export type ToggleType = {
 
 
 export type ButtonType = {
-  btn?: 'info'|'success'|'warning'|'error'|'muted'; 
+  btn?: 'light'|'info'|'success'|'warning'|'error'|'muted'; 
   submit?: boolean;
   type?: 'default'|'outline'|'notline'; 
   size?: 'sm'|'md'|'lg'; 

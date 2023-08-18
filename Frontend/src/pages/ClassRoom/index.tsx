@@ -41,6 +41,14 @@ export const ClassRoom = () => {
   )
 } 
 
+const Player = () => {
+  return(
+    <>
+      Player
+    </>
+  ) 
+}
+
 const SideBarCurso : React.FC<{courseId:number,moduleId:number}> = (props) => {
   const [ modules, setModules ] = useState<IModules[]|null>(null)
   const [ moduleOpen, setModuleOpen ] = useState<number>(props.moduleId)
@@ -87,7 +95,7 @@ const SideBarCurso : React.FC<{courseId:number,moduleId:number}> = (props) => {
           
             { module.id != moduleOpen ? false :  
               <div 
-                className={` overflow-auto rounded-b`}>
+                className={` overflow-auto`}>
                 <div 
                   className={`flex flex-col items-start overflow-hidden`}> 
                   { lessonsModule === null ? <Loading/> : 
@@ -107,8 +115,8 @@ const SideBarCurso : React.FC<{courseId:number,moduleId:number}> = (props) => {
 
 const LessonButton : React.FC<{lesson:ILessons}> = (props) => {
   return(
-    <button className="flex opacity-50 hover:opacity-90 bg-slate-700 border-b border-slate-500 text-white w-full pl-8 h-[45px] justify-start items-center text-sm p-1">
-      <FontAwesomeIcon className="text-green-400 mr-4" icon={Fas.faPlay}/>  {props.lesson.name}
+    <button className="flex opacity-50 hover:opacity-90 bg-slate-700 border-b border-slate-500 text-white w-full pl-2 h-[50px] justify-between items-center text-sm p-1">
+      <p className="text-left max-w-[60%] flex justify-center items-center"><FontAwesomeIcon className="text-green-400 mr-2" icon={Fas.faPlay}/>  {props.lesson.name}</p> <Button name="Assistir a aula" btn="light" type="outline" border="circle" size="sm"/>
     </button>
   )
 }

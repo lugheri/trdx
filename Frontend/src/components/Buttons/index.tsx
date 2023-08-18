@@ -48,6 +48,10 @@ export const Button : React.FC<ButtonType> = (props) => {
   const getClassNames = () => {
     const btnDefault = "bg-[#2ecc71] text-white hover:bg-[#27ae60]"
 
+    const btnLight = "bg-[#ececec] text-slate-900 hover:bg-[#777] border border-[#ececec]"
+    const btnOutlineLight = "border border-[#ececec] text-white hover:bg-[#ececec] hover:text-slate-600"
+    const btnNotlineLight = "text-[#ececec] hover:bg-[#ececec] hover:text-slate-600"
+
     const btnInfo = "bg-[#3498db] text-white hover:bg-[#2980b9] border border-[#3498db]"
     const btnOutlineInfo = "border border-[#3498db] text-[#3498db] hover:bg-[#3498db] hover:text-white"
     const btnNotlineInfo = "text-[#3498db] hover:bg-[#3498db] hover:text-white"
@@ -81,11 +85,12 @@ export const Button : React.FC<ButtonType> = (props) => {
     const classNames = [
       'flex justify-center m-1 items-center text-center cursor-pointer font-semibold',
       btn === 'info' ? (type === 'outline' ? btnOutlineInfo : (type === 'notline' ? btnNotlineInfo : btnInfo)) :
+      (btn === 'light' ? (type === 'outline' ? btnOutlineLight : (type === 'notline' ? btnNotlineLight : btnLight)) :
         (btn === 'success' ? (type === 'outline' ? btnOutlineSuccess : (type === 'notline' ? btnNotlineSuccess : btnSuccess)) :
           (btn === 'warning' ? (type === 'outline' ? btnOutlineWarning : (type === 'notline' ? btnNotlineWarning : btnWarning)) :
             (btn === 'error' ? (type === 'outline' ? btnOutlineError : (type === 'notline' ? btnNotlineError : btnError)) :
               (btn === 'muted' ? (type === 'outline' ? btnOutlineMuted : (type === 'notline' ? btnNotlineMuted : btnMuted)) :
-                btnDefault))))
+                btnDefault)))))
     ];
     classNames.push(size === 'sm' ? sizeSM : (size === 'lg' ? sizeLG : sizeMD));
     classNames.push(border === 'square' ? borderSquare : (border === 'circle' ? borderCircle : borderRounded));
