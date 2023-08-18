@@ -2,6 +2,11 @@ import { sequelize } from "../instances/mysql";
 import { CoursesLessons, CoursesLessonsInstance } from "../models/CoursesLessons";
 
 class CoursesLessonsService{
+  async infoLesson(lessonId:number){
+    const infoLesson = await CoursesLessons.findByPk(lessonId)
+    return infoLesson
+  }
+
   async lessonsCourse(courseId:number):Promise<number>{
     const totalLessons = await CoursesLessons.count({
       where:{course_id:courseId,visibility:1,status:1}

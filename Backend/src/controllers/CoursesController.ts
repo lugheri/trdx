@@ -170,6 +170,17 @@ class CoursesController{
     }
   }
 
+  async infoLesson(req:Request,res:Response){
+    const lessonId = parseInt(req.params.lessonId)
+    try{
+      const infoLesson = await coursesLessonsService.infoLesson(lessonId);
+      res.json({"success":true,"response":infoLesson})
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})
+    }
+  }
+
 }
 
 export default new CoursesController();
