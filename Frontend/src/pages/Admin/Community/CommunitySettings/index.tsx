@@ -1,4 +1,3 @@
-import { Button } from "../../../../components/Buttons"
 import { TitlePage } from "../../../../components/Template/TitlePage"
 
 export const CommunitySettings = () => {

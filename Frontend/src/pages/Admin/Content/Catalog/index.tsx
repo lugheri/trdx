@@ -472,7 +472,7 @@ const EditInfoCourse : React.FC<{infoCourse: ICourse;
                                  setEditCourse: React.Dispatch<React.SetStateAction<null|number>>;
                                  setEditInfoCourse: React.Dispatch<React.SetStateAction<boolean>>}> = (props) => {
   const [nome, setNome] = useState(props.infoCourse.name)
-  const [warningNome, setWarningNome] = useState(false)
+  //const [warningNome, setWarningNome] = useState(false)
   const [descricao, setDescricao] = useState(props.infoCourse.description)
 
   const [autor, setAutor] = useState(props.infoCourse.author)

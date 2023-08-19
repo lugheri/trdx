@@ -10,7 +10,6 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { NavLink, useLocation} from 'react-router-dom';
 import { NavLinkProps, itemSide } from "../../Dtos/sidebar.dto";
-import { InputForm } from "../../Inputs";
 
 export const Navbar = () => {
   return (

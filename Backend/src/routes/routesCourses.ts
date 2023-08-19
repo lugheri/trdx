@@ -18,4 +18,17 @@ export default (routes:Router)=>{
   routes.get("/modulesMyCourse/:courseId",CoursesController.modulesMyCourse)
   routes.get("/lessonsModule/:courseId/:moduleId",CoursesController.lessonsModule)
   routes.get("/infoLesson/:lessonId",CoursesController.infoLesson)
+  //LessonActions
+  routes.post("/watchedLesson",CoursesController.watchedLesson)
+  routes.get("/getWatchedLesson/:studentId/:lessonId",CoursesController.getWatchedLesson)
+  routes.delete("/watchedLesson/:studentId/:lessonId",CoursesController.removeWatchedLesson)
+  
+  routes.patch("/ratingLesson/:studentId/:lessonId",CoursesController.ratingLesson)
+
+  //Tools
+  //routes.get('/note')
+  //routes.get('/savenote')
+
+
+  //Comments
 }

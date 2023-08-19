@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import coursesService from '../services/coursesService';
-import { PaginationCoursesDTO, SearchCoursesDTO, CoursesDTO, CoursesPartialDTO } from "./Dtos/courses.dto";
+import { PaginationCoursesDTO, SearchCoursesDTO, CoursesDTO, CoursesPartialDTO, WatchedLessonDTO, RatingLessonDTO } from "./Dtos/courses.dto";
 import studentCoursesServices from '../services/studentCoursesServices';
 import coursesValidityContractsService from '../services/coursesValidityContractsService';
 import coursesLessonsService from '../services/coursesLessonsService';
@@ -179,6 +179,67 @@ class CoursesController{
       console.log(err)
       res.json({"error":err})
     }
+  }
+
+  async watchedLesson(req:Request,res:Response){
+    const watch = WatchedLessonDTO.safeParse(req.body)
+    if(!watch.success){
+      res.json({"error": watch.error})  
+      return
+    }  
+    try{
+      await lessonsViewedService.setViewedLesson(watch.data) 
+      res.json({"success": true,"response": watch.data.viewed})  
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error": err})  
+    }
+  }
+
+  async removeWatchedLesson(req:Request,res:Response){
+    const lessonId = parseInt(req.params.lessonId)
+    const studentId = parseInt(req.params.studentId)
+    try{
+      await lessonsViewedService.removeViewedLesson(lessonId,studentId)
+      res.json({"success": true,"response":0})  
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error": err})  
+    }
+  }
+
+  async getWatchedLesson(req:Request,res:Response){
+    const lessonId = parseInt(req.params.lessonId)
+    const studentId = parseInt(req.params.studentId)
+    try{
+      const lesson = await lessonsViewedService.lessonStudentViewed(lessonId,studentId)      
+      res.json({"success": true,"response":lesson})  
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error": err})  
+    }
+  }
+
+  async ratingLesson(req:Request,res:Response){
+    const lessonId = parseInt(req.params.lessonId)
+    const studentId = parseInt(req.params.studentId)
+    const score = RatingLessonDTO.safeParse(req.body)
+    if(!score.success){
+      res.json({"error": score.error})  
+      return
+    }  
+    try{
+      await lessonsViewedService.setScoreLesson(lessonId,studentId,score.data) 
+      res.json({"success": true,"response": score.data.score})  
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error": err})  
+    }
+
   }
 
 }

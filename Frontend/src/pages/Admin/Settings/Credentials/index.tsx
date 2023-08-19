@@ -26,7 +26,7 @@ export const Credentials = () => {
   }
 
  
-  const nameLevels = async(levelId:number):Promise<any> => {
+  /*const nameLevels = async(levelId:number):Promise<any> => {
     try{
       const lvls = await api.get(`GetLevel/${levelId}`)
       const name=lvls.data.response.name
@@ -34,7 +34,7 @@ export const Credentials = () => {
     }catch(e){
       console.log(e)
     }    
-  }
+  }*/
   
   useEffect(()=>{
     getCredentials()
