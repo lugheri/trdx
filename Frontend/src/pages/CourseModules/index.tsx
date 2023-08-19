@@ -8,7 +8,6 @@ import { urlBase } from "../../utils/baseUrl";
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button } from "../../components/Buttons";
 import useAuth from "../../hooks/useAuth";
 import { Student } from "../../contexts/Dtos/auth.dto";
 

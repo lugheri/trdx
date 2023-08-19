@@ -51,3 +51,13 @@ export interface ILessons{
   status:number;
 }
 
+export interface ILessonsViewed{
+  id:number;  
+  date_created:string;
+  course_id:number;
+  module_id:number;
+  lesson_id:number;
+  student_id:number;
+  score:number;
+}
+

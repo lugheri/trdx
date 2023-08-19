@@ -94,7 +94,7 @@ export const Sidebar = () => {
 
 export const SidebarAdm = () => {
   const authenticate = useAuth();  
-  const [ version, setVersion ] = useState<string>('Alpha Centauri: 1.0.0')
+  const version='Alpha Centauri: 1.0.0'
   const [ userLevel, setUserLevel ] = useState<number>(0)
   const [ retry, setRetry ] = useState<number>(0)
   const [ menu, setMenu ] = useState<itemSide[]>([])

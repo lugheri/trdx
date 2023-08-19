@@ -35,3 +35,19 @@ export const SearchCoursesDTO = z.object({
   orderedBy: z.optional(z.string()).default('id'),
 })
 export type SearchCoursesType = z.infer<typeof SearchCoursesDTO>
+
+//Watched
+export const WatchedLessonDTO = z.object({
+  viewed: z.number(z.literal(1).or(z.literal(0))).default(1),
+  student_id: z.number(),
+  course_id: z.number(),
+  module_id: z.number(),
+  lesson_id: z.number(),
+})
+export type WatchedLessonType = z.infer<typeof WatchedLessonDTO>
+
+//Rating
+export const RatingLessonDTO = z.object({
+  score: z.number()
+})
+export type RatingLessonType = z.infer<typeof RatingLessonDTO>

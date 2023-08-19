@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { ICourse, ILessons, IModules } from "../Dtos/courses.dto";
+import { useLocation } from "react-router-dom";
+import { ILessons,  IModules } from "../Dtos/courses.dto";
 import api from "../../services/api";
 import { Loading } from "../../components/Loading";
 import { Card } from "../../components/Cards";
-import { urlBase } from "../../utils/baseUrl";
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
-import * as Far from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from "../../components/Buttons";
 import useAuth from "../../hooks/useAuth";
@@ -16,6 +14,9 @@ import { Student } from "../../contexts/Dtos/auth.dto";
 
 
 export const ClassRoom = () => {
+  const authenticated = useAuth();  
+  const userData:Student|null = authenticated ? authenticated.userData : null
+
   const location = useLocation();  
   const params = location.pathname.split('/')[4]
   interface LessonObject {
@@ -26,58 +27,105 @@ export const ClassRoom = () => {
   const courseId = parseInt(base64Decoded[0].courseId,10)
   const moduleId = parseInt(base64Decoded[0].moduleId,10)
   const [ lessonId, setLessonId ] = useState<number>(0)
+  const [ moduleOpen, setModuleOpen ] = useState<number>(moduleId)
 
   return (
     <div className="flex ">
       <div className="flex flex-1 flex-col h-[93vh] overflow-auto">
-        { lessonId === 0 ? <Card component={<div className="h-[500px]">Player Aula</div>}/> : <Player lessonId={lessonId}/>}
+        { lessonId === 0 ? 
+          <Card component={<div className="h-[500px]">Player Aula</div>}/> 
+        : <Player 
+            courseId={courseId}
+            moduleId={moduleOpen}
+            lessonId={lessonId} 
+            userId={userData ? userData.id : 0}/>}
         <Card component={<div className="h-[1000px]">Comentarios Curso {courseId}</div>}/>
       </div>
       <div className="flex w-1/3 flex-col mr-2 mt-2 relative h-[92vh] overflow-hidden">
-        <SideBarCurso courseId={courseId}  moduleId={moduleId} lessonId={lessonId} setLessonId={setLessonId}/>
+        <SideBarCurso
+          courseId={courseId}
+          moduleOpen={moduleOpen} setModuleOpen={setModuleOpen}
+          lessonId={lessonId} setLessonId={setLessonId}/>
         <SideActions/>
       </div>
     </div>
   )
 } 
 
-const Player: React.FC<{lessonId:number}> = (props) => {
+const Player: React.FC<{courseId:number,moduleId:number,lessonId:number,userId:number}> = (props) => {
   const [ infoLesson, setInfoLesson ] = useState<ILessons|null>(null)
+  const [ scoreLesson, setScoreLesson ] = useState<number|null>(null)
+  const [ watchedLesson, setWatchedLesson ] = useState<boolean|null>(null)
   useEffect(()=>{
     const getInfoLesson = async () => {
       try{
         const il = await api.get(`infoLesson/${props.lessonId}`)
         setInfoLesson(il.data.response)
+
+        const v = await api.get(`getWatchedLesson/${props.userId}/${props.lessonId}`)
+        setScoreLesson(v.data.response ? v.data.response.score : null )
+        setWatchedLesson(v.data.response ? true : false)
       }catch(e){
         console.log(e)
       }
     }
     getInfoLesson()
   },[props.lessonId])
+
+  const watchLesson = async () => {
+    try{
+      setWatchedLesson(true)
+      const options = {'viewed':1,
+        student_id: props.userId, 
+        course_id: props.courseId,
+        module_id: props.moduleId,
+        lesson_id: props.lessonId}      
+      await api.post(`watchedLesson`,options)
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+  const unwatchLesson = async () => {
+    try{
+      setWatchedLesson(false)
+      await api.delete(`watchedLesson/${props.userId}/${props.lessonId}`)      
+    }catch(e){
+      console.log(e)
+    }
+  }
+
   return(
     infoLesson === null ? <Loading/> :
       <div className="flex flex-col p-1 w-full items-center">
-        <div className="block w-[770px] h-[443px] p-0 overflow-hidden shadow-md shadow-teal-500">
+        <div className="block w-[770px] h-[442px] p-0 overflow-hidden shadow-md shadow-teal-800">
+         
           <iframe className="w-full h-full" width="100%" height="200" allow="autoplay; fullscreen" 
-            src={`https://player.vimeo.com/video/12696355?color=ff9933&title=0&byline=0&portrait=0&badge=0`}></iframe>
+            src={`https://player.vimeo.com/video/${infoLesson.link}?color=ff9933&title=0&byline=0&portrait=0&badge=0`}></iframe>
         </div>
         {/* Controllers */}  
         <div className="flex w-full p-4 justify-between">
           <div className="flex flex-col flex-1 justify-start">
             <p className="text-slate-800 dark:text-white text-lg">{infoLesson.name}</p>
-            <p className="text-slate-600 dark:text-slate-400 text-xs">{infoLesson.description}</p>
+            <p className="text-slate-600 dark:text-slate-400 text-xs">
+              <div dangerouslySetInnerHTML={{ __html: infoLesson.description}}/>
+            </p>
           </div> 
-          <div className="flex">
-            <Button name="Concluir Aula" btn="muted" size="sm" icon="faCheck" type="outline"/>            
+          <div className="flex flex-col items-center">
+            { watchedLesson ? 
+              <div className="flex flex-col">
+                {scoreLesson}              
+                <Button name="Assistida" btn="success" size="sm" icon="faCheck" type="outline" onClick={()=>unwatchLesson()}/> 
+              </div>
+            : <Button name="Concluir Aula" btn="muted" size="sm" icon="faCheck" type="outline" onClick={()=>watchLesson()}/>   }
           </div>
         </div>
       </div>
   ) 
 }
 
-const SideBarCurso : React.FC<{courseId:number,moduleId:number,lessonId:number,setLessonId:React.Dispatch<React.SetStateAction<number>>}> = (props) => {
+const SideBarCurso : React.FC<{courseId:number,moduleOpen:number,setModuleOpen:React.Dispatch<React.SetStateAction<number>>,lessonId:number,setLessonId:React.Dispatch<React.SetStateAction<number>>}> = (props) => {
   const [ modules, setModules ] = useState<IModules[]|null>(null)
-  const [ moduleOpen, setModuleOpen ] = useState<number>(props.moduleId)
   useEffect(()=>{
     const getModules = async () => {
       try{
@@ -94,14 +142,14 @@ const SideBarCurso : React.FC<{courseId:number,moduleId:number,lessonId:number,s
     const getLessons = async () => {
       setLessonsModule(null)
       try{
-        const lm = await api.get(`/lessonsModule/${props.courseId}/${moduleOpen}`)
+        const lm = await api.get(`/lessonsModule/${props.courseId}/${props.moduleOpen}`)
         setLessonsModule(lm.data.response)
       }catch(e){
         console.log(e)
       }
     }
     getLessons()
-  },[props.courseId,moduleOpen])
+  },[props.courseId,props.moduleOpen])
 
   return(
     <div className="flex flex-col min-h-[500px] max-h-[550px] bg-gradient-to-b from-slate-500 dark:from-slate-950 to-slate-400 dark:to-slate-900  rounded overflow-hidden">
@@ -110,19 +158,19 @@ const SideBarCurso : React.FC<{courseId:number,moduleId:number,lessonId:number,s
       modules.length == 0 ? <p>Nenhum modulo ativo</p> :
       modules.map((module,key)=>
         <div 
-          style={{maxHeight:`${module.id == moduleOpen ? 585-(modules.length*35)+'px' : 'auto' }`}}
+          style={{maxHeight:`${module.id == props.moduleOpen ? 585-(modules.length*35)+'px' : 'auto' }`}}
           key={key}
           className={`flex flex-col`}>
           
-          <div className={`flex border-l-8 border-teal-800 dark:border-teal-500 justify-start items-center cursor-pointer ${module.id == moduleOpen ? `bg-white text-teal-800 dark:bg-slate-900 dark:text-green-400  h-[40px] `:"border-b border-b-slate-700 h-[35px] text-teal-800 dark:text-teal-500 opacity-40 bg-white dark:bg-slate-800 hover:bg-slate-50 hover:dark:bg-slate-800 hover:opacity-80"}`}
-               onClick={()=>setModuleOpen(module.id == moduleOpen ? 0 : module.id)}>
+          <div className={`flex border-l-8 border-teal-800 dark:border-teal-500 justify-start items-center cursor-pointer ${module.id == props.moduleOpen ? `bg-white text-teal-800 dark:bg-slate-900 dark:text-green-400  h-[40px] `:"border-b border-b-slate-700 h-[35px] text-teal-800 dark:text-teal-500 opacity-40 bg-white dark:bg-slate-800 hover:bg-slate-50 hover:dark:bg-slate-800 hover:opacity-80"}`}
+               onClick={()=>props.setModuleOpen(module.id == props.moduleOpen ? 0 : module.id)}>
             <p className="font-bold text-sm">
-              <FontAwesomeIcon className="ml-6 mr-4 opacity-70" icon={module.id == moduleOpen ? Fas.faFolderOpen : Fas.faFolder }/>
+              <FontAwesomeIcon className="ml-6 mr-4 opacity-70" icon={module.id == props.moduleOpen ? Fas.faFolderOpen : Fas.faFolder }/>
               {module.module}
             </p>
           </div>
           
-            { module.id != moduleOpen ? false :  
+            { module.id != props.moduleOpen ? false :  
               <div 
                 className={` overflow-auto`}>
                 <div 

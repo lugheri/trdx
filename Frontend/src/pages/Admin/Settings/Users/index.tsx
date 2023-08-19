@@ -1,7 +1,6 @@
 import { useState, useEffect,FormEvent } from 'react';
 
-import * as Fas from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+
 import { Button } from '../../../../components/Buttons';
 import { Card } from '../../../../components/Cards';
 import { TitlePage } from '../../../../components/Template/TitlePage';

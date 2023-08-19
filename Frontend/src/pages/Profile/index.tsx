@@ -7,9 +7,7 @@ import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { InputForm, SelectForm } from '../../components/Inputs';
 import { TitlePage } from '../../components/Template/TitlePage';
 
-interface Gender {
-  [key: string]: string;
-}
+
 
 export const Profile = () => {
   const [ nome, setNome ] = useState<string>('Nome do Aluno')
@@ -17,7 +15,7 @@ export const Profile = () => {
   const [ nasc, setNasc ] = useState<string>('2023-07-25')
   const [ numero, setNumero ] = useState<string>('11 98765-4321')
   const [ sexo, setSexo ] = useState<string>('M')
-  const [ options, setOptions ] = useState<Gender[]>([{'id':'M','sexo':'Masculino'},{'id':'F','sexo':'Feminino'}])
+  const options =[{'id':'M','sexo':'Masculino'},{'id':'F','sexo':'Feminino'}]
 
 
   return(
