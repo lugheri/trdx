@@ -1,6 +1,6 @@
 import { PaginationUserType, UserDataType,UserDataPartialType } from "../controllers/Dtos/usersAccess.dto";
 import { User, UserInstance } from "../models/Users";
-
+import {redisSet,redisGet,redisDel} from '../config/redis';
 
 class userService{
   async createNewUser(userData:UserDataType):Promise<boolean | UserInstance >{
@@ -8,22 +8,30 @@ class userService{
       where: { name: userData.name},
       defaults:userData
     });
+    await redisDel('Users:[all]')   
     console.log('created',created);
     return newUser.id ? newUser : false;
   }
 
   async editUser(userId:number,userData:UserDataPartialType):Promise<boolean>{   
     await User.update(userData,{where:{id:userId}})   
+    await redisDel(`UserData:[${userId}]`) 
     return true;
   }
 
   async removeUser(userId:number):Promise<boolean>{
     await User.destroy({where:{id:userId}})
+    await redisDel(`UserData:[${userId}]`) 
     return true;
   }
 
   async getUser(userId:number):Promise<boolean | UserInstance >{
+    const infoUser = await redisGet(`UserData:[${userId}]`)
+     if(infoUser!==null){
+      return infoUser
+    }
     const user = await User.findByPk(userId)
+    await redisSet(`UserData:[${userId}]`,user,30)
     return user ? user : false
   }
 

@@ -61,3 +61,26 @@ export interface ILessonsViewed{
   score:number;
 }
 
+export interface ILessonsModule{
+  id:number;
+  course_id:number;
+  module_id:number;
+  date_created:string;
+  type_lesson:string;
+  max_time:string;
+  top_score:number;
+  teacher_id:number;
+  type_content:string;
+  link:string;
+  video_platform:string;
+  image:number;
+  name:string;
+  description:string;
+  tags:string;
+  order:number;
+  visibility:number;
+  status:number;
+  LessonsViewed?: {
+    id: number;
+  };
+}

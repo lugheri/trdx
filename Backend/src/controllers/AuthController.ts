@@ -6,8 +6,7 @@ import { UserAccessDTO } from './Dtos/usersAccess.dto';
 import { StudentAccessDTO } from './Dtos/student.dto';
 
 class AuthController{
-  live(req: Request,res: Response){
-    console.log('Server online')
+  async live(req: Request,res: Response){  
     res.json(true)
   }
   async login(req: Request,res: Response){   

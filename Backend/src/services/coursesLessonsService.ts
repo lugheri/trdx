@@ -1,9 +1,17 @@
+import { redisGet, redisSet } from "../config/redis";
 import { sequelize } from "../instances/mysql";
+import { Op } from "sequelize"
 import { CoursesLessons, CoursesLessonsInstance } from "../models/CoursesLessons";
+import { LessonsViewed } from "../models/LessonsViewed";
 
 class CoursesLessonsService{
   async infoLesson(lessonId:number){
+    const redisKey = `infoLesson:[${lessonId}]`
+    const infoLessonRedis = await redisGet(redisKey)
+    if(infoLessonRedis!==null){ return infoLessonRedis }
+
     const infoLesson = await CoursesLessons.findByPk(lessonId)
+    await redisSet(redisKey,infoLesson)
     return infoLesson
   }
 
@@ -21,11 +29,23 @@ class CoursesLessonsService{
     return totalLessons
   }
 
-  async lessonsModule(courseId:number,moduleId:number):Promise<CoursesLessonsInstance[]>{
+  async lessonsModule(courseId:number,moduleId:number,studentId:number):Promise<CoursesLessonsInstance[]>{
     const lessonsModule = await CoursesLessons.findAll({
-      where:{course_id:courseId,module_id:moduleId,visibility:1,status:1}
+      where:{course_id:courseId,module_id:moduleId,visibility:1,status:1},
+      include:{attributes:['id','student_id'],model: LessonsViewed,required: false,  where: { student_id:studentId},}
     })
     return lessonsModule
+  }
+
+ 
+
+  async nextLessonCourse(courseId:number,orderLastLesson:number){
+    const nextLesson = await CoursesLessons.findOne({
+      attributes:['id','module_id'],
+      where:{order: { [Op.gt]: orderLastLesson },course_id:courseId,visibility:1,status:1},
+      order:[['order','ASC']]
+    })
+    return nextLesson 
   }
 }
 

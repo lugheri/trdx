@@ -27,7 +27,7 @@ export const Login = () => {
         window.location.reload();
       }else{
         setErrorAuth(true)
-        setMessageErrorAuth(response.data.error.issues[0].message)
+        setMessageErrorAuth(response.data.error.issues[0].message )
         setCauseErrorAuth('Verifique seus dados e tente novamente!')
       }
     }catch(err:any) {

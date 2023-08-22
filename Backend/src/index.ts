@@ -16,6 +16,7 @@ app.use(express.urlencoded({extended:true, limit:'250mb'}));
 
 app.use(routes)
 
+
 const errorHandler: ErrorRequestHandler = (err,req,res,next) =>{
   res.status(400)
 
@@ -27,6 +28,8 @@ const errorHandler: ErrorRequestHandler = (err,req,res,next) =>{
   }
 }
 app.use(errorHandler)
+
+
 
 
 

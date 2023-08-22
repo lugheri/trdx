@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { ILessons,  IModules } from "../Dtos/courses.dto";
+import { ICourse, ILessons,  ILessonsModule,  IModules } from "../Dtos/courses.dto";
 import api from "../../services/api";
 import { Loading } from "../../components/Loading";
 import { Card } from "../../components/Cards";
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
+import * as Far from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from "../../components/Buttons";
 import useAuth from "../../hooks/useAuth";
@@ -29,11 +30,69 @@ export const ClassRoom = () => {
   const [ lessonId, setLessonId ] = useState<number>(0)
   const [ moduleOpen, setModuleOpen ] = useState<number>(moduleId)
 
+ useEffect(()=>{
+  const nextLesson = async () => {
+    try{
+      const nl = await api.get(`nextLesson/${userData ? userData.id : 0}/${courseId}`)
+      setLessonId(nl.data.response.nextLesson)
+      setModuleOpen(nl.data.response.module)
+    }catch(e){
+      console.log(e)
+    }
+  }
+  if(lessonId === 0) { nextLesson()}
+ },[])
+
+
+
+ const [infoCourse, setInfoCourse] = useState<ICourse|null>(null)
+  useEffect(()=>{
+    const getInfoCourse = async () => {
+      try{
+        const ic = await api.get(`infoCourse/${courseId}`)
+        setInfoCourse(ic.data.response)
+      }catch(e){
+        console.log(e)
+      }
+    }
+    getInfoCourse()
+  },[])
+
+  const [ progressCourse, setProgressCourse] = useState(0);
+  useEffect(()=>{
+    const getProgressCourse = async () => {
+      try{
+        const prog = await api.get(`progressCourse/${courseId}/${userData?.id}`)
+        setProgressCourse(prog.data.response)        
+      }catch(e){
+        console.log(e)
+      }
+    }
+    getProgressCourse()
+  },[])
+
   return (
     <div className="flex ">
       <div className="flex flex-1 flex-col h-[93vh] overflow-auto">
         { lessonId === 0 ? 
-          <Card component={<div className="h-[500px]">Player Aula</div>}/> 
+          <Card component={
+            <div className="flex flex-col">
+              { infoCourse == null ? <Loading/> :
+                <div className="flex justify-center item-center p-2">              
+                  <div className="flex flex-col justify-center p-4">
+                    <p className="text-slate-500 dark:text-slate-100 text-2xl font-bold">{infoCourse.name}</p>
+                    <p className="text-slate-500 dark:text-slate-100 text mt-4">{infoCourse.description}</p>
+                    <p className="text-slate-500 dark:text-slate-100 mt-4">{infoCourse.author ? `Por: ${infoCourse.author }`: false}</p>
+                    <p className="text-slate-500 dark:text-slate-100 text-sm mt-4">{infoCourse.tags ? `Tags: ${infoCourse.tags}` : false}</p>
+                   
+                    <div className="flex mt-4 items-center h-[18px] bg-slate-500 dark:bg-slate-800 w-full shadow rounded-full overflow-hidden relative">
+                      <div className="h-full bg-teal-500 duration-1000 ease-out" style={{width:`${progressCourse}%`}}></div>
+                      <p className="absolute w-full left-0 top-0 justify-center text-xs font-bold text-white h-full flex items-center">{progressCourse}% Concluido</p>
+                    </div>
+                  </div>
+                </div>
+             } 
+          </div>}/> 
         : <Player 
             courseId={courseId}
             moduleId={moduleOpen}
@@ -43,6 +102,7 @@ export const ClassRoom = () => {
       </div>
       <div className="flex w-1/3 flex-col mr-2 mt-2 relative h-[92vh] overflow-hidden">
         <SideBarCurso
+          studentId={userData ? userData.id : 0}
           courseId={courseId}
           moduleOpen={moduleOpen} setModuleOpen={setModuleOpen}
           lessonId={lessonId} setLessonId={setLessonId}/>
@@ -124,7 +184,7 @@ const Player: React.FC<{courseId:number,moduleId:number,lessonId:number,userId:n
   ) 
 }
 
-const SideBarCurso : React.FC<{courseId:number,moduleOpen:number,setModuleOpen:React.Dispatch<React.SetStateAction<number>>,lessonId:number,setLessonId:React.Dispatch<React.SetStateAction<number>>}> = (props) => {
+const SideBarCurso : React.FC<{studentId:number, courseId:number,moduleOpen:number,setModuleOpen:React.Dispatch<React.SetStateAction<number>>,lessonId:number,setLessonId:React.Dispatch<React.SetStateAction<number>>}> = (props) => {
   const [ modules, setModules ] = useState<IModules[]|null>(null)
   useEffect(()=>{
     const getModules = async () => {
@@ -142,7 +202,7 @@ const SideBarCurso : React.FC<{courseId:number,moduleOpen:number,setModuleOpen:R
     const getLessons = async () => {
       setLessonsModule(null)
       try{
-        const lm = await api.get(`/lessonsModule/${props.courseId}/${props.moduleOpen}`)
+        const lm = await api.get(`/lessonsModule/${props.courseId}/${props.moduleOpen}/${props.studentId}`)
         setLessonsModule(lm.data.response)
       }catch(e){
         console.log(e)
@@ -178,7 +238,7 @@ const SideBarCurso : React.FC<{courseId:number,moduleOpen:number,setModuleOpen:R
                   { lessonsModule === null ? <Loading/> : 
                     lessonsModule.length == 0 ? <p className="text-center w-full p-4 text-slate-400">Nenhuma aula localizada</p> : 
                     lessonsModule.map((lesson,key)=>
-                      <LessonButton key={key} lesson={lesson} lessonId={props.lessonId} setLessonId={props.setLessonId}/>
+                      <LessonButton key={key} studentId={props.studentId} lesson={lesson} lessonId={props.lessonId} setLessonId={props.setLessonId}/>
                     )} 
                 </div>
               </div>               
@@ -189,15 +249,21 @@ const SideBarCurso : React.FC<{courseId:number,moduleOpen:number,setModuleOpen:R
     </div>
   )
 }
-const LessonButton : React.FC<{lesson:ILessons, lessonId:number, setLessonId:React.Dispatch<React.SetStateAction<number>>}> = (props) => {
+const LessonButton : React.FC<{studentId:number, lesson:ILessonsModule, lessonId:number, setLessonId:React.Dispatch<React.SetStateAction<number>>}> = (props) => {
+  
+
   return(
     <button
       onClick={()=>props.setLessonId(props.lesson.id)} 
-      className={`flex hover:opacity-90 bg-slate-100 dark:bg-slate-700 border-b border-slate-500 ${props.lessonId === props.lesson.id ? "text-teal-950 dark:text-teal-500 opacity-100" : "text-slate-900 dark:text-white opacity-50" } w-full pl-2 h-[50px] justify-between items-center text-sm p-1`}>
+      className={`flex hover:opacity-90 bg-slate-100 dark:bg-slate-700 border-b border-slate-500 ${props.lessonId === props.lesson.id ? "text-teal-950 dark:text-teal-500 opacity-100" : "text-slate-900 dark:text-white opacity-50" } w-full pl-2 min-h-[50px] justify-between items-center text-sm p-1`}>
       <p className="text-left max-w-[60%] flex justify-center items-center">
-        <FontAwesomeIcon  fade={props.lessonId === props.lesson.id ? true : false } className="text-green-400 ml-1 mr-2" icon={Fas.faPlay}/>  {props.lesson.name}</p>
+        <FontAwesomeIcon  
+          fade={props.lessonId === props.lesson.id ? true : false } 
+          className="text-green-400 ml-1 mr-2" 
+          icon={props.lesson.LessonsViewed ? Far.faCheckCircle : Fas.faPlay}/>  {props.lesson.name}</p>
         {props.lessonId === props.lesson.id ? 
           <Button name="Assistindo Agora" btn="success"  border="circle" size="sm"/>
+        : props.lesson.LessonsViewed ? <Button name="Assistida" btn="success" type="outline" icon="faCheck" border="circle" size="sm"/>
         : <Button name="Assistir a aula" btn="light" type="notline" border="circle" size="sm"/> }
     </button>
   )
