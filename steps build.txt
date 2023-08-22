@@ -11,3 +11,5 @@ docker build -t frontend-v1 . &&
 docker stack deploy traefik -c /usr/src/trdx/traefik-deploy.yaml  && 
 docker stack deploy trdx-app -c /usr/src/trdx/deploy.yaml
 
+
+

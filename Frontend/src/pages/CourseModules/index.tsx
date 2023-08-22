@@ -10,6 +10,7 @@ import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useAuth from "../../hooks/useAuth";
 import { Student } from "../../contexts/Dtos/auth.dto";
+import { Button } from "../../components/Buttons";
 
 export const CourseModules = () => {
   const authenticated = useAuth();  
@@ -49,6 +50,12 @@ export const CourseModules = () => {
     getInfoCourse()
   },[])
 
+   const navigate = useNavigate();  
+  const openModule = () => {
+    const hash_lessonId: string = btoa(`[{"courseId":"${courseId}","moduleId":"0"}]`);
+    navigate(`/classRoom/course/lesson/${hash_lessonId}`)
+  }
+
   return (
     infoCourse === null ? <Loading/> :
     <div className="flex flex-col">
@@ -59,6 +66,10 @@ export const CourseModules = () => {
           <p className="text-slate-500 dark:text-slate-100 text-lg mt-4">{infoCourse.description}</p>
           <p className="text-slate-500 dark:text-slate-100 mt-4">{infoCourse.author ? `Por: ${infoCourse.author }`: false}</p>
           <p className="text-slate-500 dark:text-slate-100 text-sm mt-4">{infoCourse.tags ? `Tags: ${infoCourse.tags}` : false}</p>
+          <div className="flex">
+            { progressCourse == 0 ? <Button btn="success" type="outline" size="sm" name="Iniciar Curso" icon="faPlay" onClick={()=>openModule()}/> 
+            : <Button btn="success" type="outline" size="sm" name="Continue assistindo" icon="faForwardStep" onClick={()=>openModule()}/>}            
+          </div>
           <div className="flex mt-4 items-center h-[18px] bg-slate-500 dark:bg-slate-800 w-[90%] shadow rounded-full overflow-hidden relative">
             <div className="h-full bg-teal-500 duration-1000 ease-out" style={{width:`${progressCourse}%`}}></div>
             <p className="absolute w-full left-0 top-0 justify-center text-xs font-bold text-white h-full flex items-center">{progressCourse}% Concluido</p>

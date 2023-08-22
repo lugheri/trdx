@@ -7,6 +7,7 @@ import coursesLessonsService from '../services/coursesLessonsService';
 import lessonsViewedService from '../services/lessonsViewedService';
 import { parseISO, isAfter, format } from 'date-fns';
 import courseModulesService from '../services/courseModulesService';
+import { CoursesLessonsInstance } from '../models/CoursesLessons';
 
 class CoursesController{
   async listCourses(req:Request,res:Response){
@@ -161,8 +162,9 @@ class CoursesController{
   async lessonsModule(req:Request,res:Response){
     const courseId = parseInt(req.params.courseId)
     const moduleId = parseInt(req.params.moduleId)
+    const studentId = parseInt(req.params.studentId)
     try{
-      const lessonsModule = await coursesLessonsService.lessonsModule(courseId,moduleId);
+      const lessonsModule = await coursesLessonsService.lessonsModule(courseId,moduleId,studentId);
       res.json({"success":true,"response":lessonsModule})
     }catch(err){
       console.log(err)
@@ -220,6 +222,23 @@ class CoursesController{
     }catch(err){
       console.log(err)
       res.json({"error": err})  
+    }
+  }
+
+  async nextLesson(req:Request,res:Response){
+    const courseId = parseInt(req.params.courseId)
+    const studentId = parseInt(req.params.studentId)
+    try{
+      const lastLesson = await lessonsViewedService.lastLessonViewed(studentId,courseId)
+      const infoLesson: CoursesLessonsInstance = await coursesLessonsService.infoLesson(lastLesson)
+      const order = infoLesson ? infoLesson.order : 0
+      const  nextLesson = await coursesLessonsService.nextLessonCourse(courseId,order)
+      res.json({"success": true,"response":{"lastLesson":lastLesson,
+                                            "nextLesson":nextLesson ? nextLesson.id : 0,
+                                            "module":nextLesson ? nextLesson.module_id : 0}})  
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})
     }
   }
 
