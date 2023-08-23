@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import coursesService from '../services/coursesService';
-import { PaginationCoursesDTO, SearchCoursesDTO, CoursesDTO, CoursesPartialDTO, WatchedLessonDTO, RatingLessonDTO } from "./Dtos/courses.dto";
+import { PaginationCoursesDTO, SearchCoursesDTO, CoursesDTO, CoursesPartialDTO, WatchedLessonDTO, RatingLessonDTO, NewCommentLessonDTO } from "./Dtos/courses.dto";
 import studentCoursesServices from '../services/studentCoursesServices';
 import coursesValidityContractsService from '../services/coursesValidityContractsService';
 import coursesLessonsService from '../services/coursesLessonsService';
@@ -8,6 +8,7 @@ import lessonsViewedService from '../services/lessonsViewedService';
 import { parseISO, isAfter, format } from 'date-fns';
 import courseModulesService from '../services/courseModulesService';
 import { CoursesLessonsInstance } from '../models/CoursesLessons';
+import LessonsCommentsService from '../services/LessonsCommentsService';
 
 class CoursesController{
   async listCourses(req:Request,res:Response){
@@ -259,6 +260,62 @@ class CoursesController{
       res.json({"error": err})  
     }
 
+  }
+
+
+  //Comments Lessons
+  async commentsLesson(req:Request,res:Response){
+    const lessonId = parseInt(req.params.lessonId);
+    const page = parseInt(req.params.page)
+    try{
+      const commentsLessons = await LessonsCommentsService.getCommentsLesson(lessonId,page)
+      res.json({"success":true,"response":commentsLessons})
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})
+    }
+  }
+
+  async commentsAnswersLesson(req:Request,res:Response){
+    const commentId = parseInt(req.params.commentId);
+    const page = parseInt(req.params.page)
+    try{
+      const commentsAnswersLesson = await LessonsCommentsService.getCommentsAnswersLesson(commentId,page)
+      res.json({"success":true,"response":commentsAnswersLesson})
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})
+    }
+  }
+
+  async newCommentLesson(req:Request,res:Response){
+    const commentsData = NewCommentLessonDTO.safeParse(req.body)
+    if(!commentsData.success){
+      res.json({"error": commentsData.error})  
+      return
+    }
+    try{
+      await LessonsCommentsService.newCommentLesson(commentsData.data) 
+      res.json({"success": true,"response": true})  
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error": err})  
+    }
+
+
+
+  }
+  async commentsPendingApproval(req:Request,res:Response){
+    const studentId = parseInt(req.params.studentId)
+    const lessonId = parseInt(req.params.lessonId)
+    try{
+      const commentsPendingApproval = await LessonsCommentsService.commentsPendingApproval(studentId,lessonId)
+      res.json({"success":true,"response":commentsPendingApproval})
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})
+    }
   }
 
 }

@@ -48,6 +48,7 @@ class AuthController{
       }
       //Authenticate
       const action = 'login';
+      console.log('userdata',userdata)
       const token = await LoginService.studentAuthenticate(action,userdata)
       res.json({
         token: token,

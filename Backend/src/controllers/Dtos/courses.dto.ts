@@ -51,3 +51,10 @@ export const RatingLessonDTO = z.object({
   score: z.number()
 })
 export type RatingLessonType = z.infer<typeof RatingLessonDTO>
+
+export const NewCommentLessonDTO = z.object({
+  lesson_id:z.number(),
+  student_id:z.number(),
+  comment:z.string(),
+})
+export type NewCommentLessonType = z.infer<typeof NewCommentLessonDTO>

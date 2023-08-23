@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect,FormEvent,ChangeEvent, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { ICourse, ILessons,  ILessonsModule,  IModules } from "../Dtos/courses.dto";
+import { ICommentLessons, ICourse, ILessons,  ILessonsModule,  IModules } from "../Dtos/courses.dto";
 import api from "../../services/api";
 import { Loading } from "../../components/Loading";
 import { Card } from "../../components/Cards";
@@ -71,6 +71,66 @@ export const ClassRoom = () => {
     getProgressCourse()
   },[])
 
+  const textAreaElement = useRef<HTMLTextAreaElement>(null);
+  const [ comment, setComment ] = useState<string>("")
+  const handleTextArea = async (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const newValue = e.target.value
+    setComment(newValue)
+
+    if (newValue.split('').length > 20_000) {
+      alert('Mensagem muito longa.')
+      return;
+    }
+
+    if (!newValue.trim().length) return;
+
+    if (textAreaElement.current) {
+      textAreaElement.current.value = '';
+      const rows = Math.min(10, newValue.split('\n').length + 1)
+      const height=rows*22
+      textAreaElement.current.style.height = `${height}px`;
+    }
+  }; 
+
+  const [reloadComments, setReloadComments] = useState(true)
+  const newComment = async (e:FormEvent) => {
+    e.preventDefault()
+    try{
+      await api.post(`newCommentLesson`,{lesson_id:lessonId,student_id:userData ? userData.id : 0,comment:comment})
+      setComment("")
+      setReloadComments(true)
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+  const [ pendingComments, setPendingComments] = useState<null|ICommentLessons[]>(null) 
+  useEffect(()=>{
+    const getPendingComments = async () => {
+      try{
+        const pcm = await api.get(`commentsPendingApproval/${lessonId}/${userData ? userData.id : 0}`)
+        setPendingComments(pcm.data.response)
+        setReloadComments(false)
+      }catch(e){
+        console.log(e)
+      }
+    }
+    getPendingComments()
+  },[reloadComments,lessonId]) 
+
+  const formatDate = (dateString:string) => {
+    const date = new Date(dateString);
+    
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const year = date.getUTCFullYear().toString();
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  }
+
+
   return (
     <div className="flex ">
       <div className="flex flex-1 flex-col h-[93vh] overflow-auto">
@@ -98,7 +158,48 @@ export const ClassRoom = () => {
             moduleId={moduleOpen}
             lessonId={lessonId} 
             userId={userData ? userData.id : 0}/>}
-        <Card component={<div className="h-[1000px]">Comentarios Curso {courseId}</div>}/>
+
+        <div className="flex flex-col py-1 px-4">
+          <form onSubmit={newComment} className="bg-neutral-800 flex justify-between items-center rounded p-2">
+            <textarea 
+              rows={Math.min(10, comment.split('\n').length + 1)}
+              placeholder="Escreva o sua pergunta ou comentário" 
+              required
+              value={comment} 
+              onChange={handleTextArea} 
+              className="flex-1 min-h-[60px] text-neutral-900  bg-neutral-400 placeholder:text-gray-600 placeholder:font-normal rounded shadow border-none focus:ring-0 resize-none"
+              ref={textAreaElement}/>
+            <Button icon="faPaperPlane" btn="muted" type="notline" submit/>
+          </form>
+        </div>
+
+
+        {/*Pending Comments*/}
+        <div className="flex flex-col py-1 px-4">
+          { pendingComments === null ? false: pendingComments.length == 0 ? false : 
+            pendingComments.map((comment,key)=>
+            <div  key={key} className="flex p-2 mb-8">
+              <div className="w-[40px] h-[40px] bg-slate-500 flex justify-center items-center rounded-full mr-3">
+                <FontAwesomeIcon icon={Fas.faUser}/>
+              </div>
+              <div className="flex flex-1 flex-col capitalize">
+                <p className="text-green-400 font-bold text-xs">
+                  {comment.Student ? comment.Student.name : '-'}
+                  <b className="text-red-600 mx-1">Comentário Aguardando Aprovação</b>
+                  <span className="text-neutral-500 ml-4">{formatDate(comment.date_created)}</span>
+                </p>
+                <p className="text-slate-100 text-sm">{comment.comment}</p>
+                <Answers commentId={comment.id} page={1} />
+              </div>
+              
+            </div>
+            
+            )
+          }
+        </div>
+
+
+        <Comments courseId={courseId} lessonId={lessonId} studentId={userData ? userData.id : 0} page={1}/>
       </div>
       <div className="flex w-1/3 flex-col mr-2 mt-2 relative h-[92vh] overflow-hidden">
         <SideBarCurso
@@ -111,6 +212,106 @@ export const ClassRoom = () => {
     </div>
   )
 } 
+
+const Comments: React.FC<{courseId:number,lessonId:number,studentId:number,page:number}> = (props) => {
+  const [comments, setComments] = useState<null|ICommentLessons[]>(null) 
+  useEffect(()=>{
+    const getComments = async () => {
+      try{
+        const cm = await api.get(`lessonsComments/${props.lessonId}/${props.page}`)
+        setComments(cm.data.response)
+      }catch(e){
+        console.log(e)
+      }
+    }
+    getComments()
+  },[props.lessonId])  
+
+  const formatDate = (dateString:string) => {
+    const date = new Date(dateString);
+    
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const year = date.getUTCFullYear().toString();
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  }
+
+
+  return(
+    <div className="flex flex-col py-1 px-4">
+      { comments === null ? <Loading/> : comments.length == 0 ? <div className="flex flex-col justify-center items-center p-6"><FontAwesomeIcon className="p-2 text-4xl text-neutral-800" icon={Fas.faCommentSlash}/><p className="text-neutral-300">Esta aula ainda não possui comentários!</p></div> : 
+        comments.map((comment,key)=>
+        <div  key={key} className="flex p-2 mb-8">
+          <div className="w-[40px] h-[40px] bg-slate-500 flex justify-center items-center rounded-full mr-3">
+            <FontAwesomeIcon icon={Fas.faUser}/>
+          </div>
+          <div className="flex flex-1 flex-col capitalize">
+            <p className="text-green-400 font-bold text-xs">
+              {comment.Student ? comment.Student.name : '-'}
+              <span className="text-neutral-500 ml-4">{formatDate(comment.date_created)}</span>
+            </p>
+            <p className="text-slate-100 text-sm">{comment.comment}</p>
+            <Answers commentId={comment.id} page={1} />
+          </div>
+          
+        </div>
+        
+        )
+      }
+    </div>
+  )
+}
+
+const Answers: React.FC<{commentId:number,page:number}> = (props) => {
+  const [answers, setAnswers] = useState<null|ICommentLessons[]>(null) 
+  useEffect(()=>{
+    const getAnswers = async () => {
+      try{
+        const aw = await api.get(`lessonsCommentsAnswers/${props.commentId}/${props.page}`)
+        setAnswers(aw.data.response)
+      }catch(e){
+        console.log(e)
+      }
+    }
+    getAnswers()
+  },[props.commentId])  
+
+  const formatDate = (dateString:string) => {
+    const date = new Date(dateString);
+    
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const year = date.getUTCFullYear().toString();
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  }
+
+  return(
+    <div className="flex flex-col py-1 mt-2">
+      { answers === null ? <Loading/> : answers.length == 0 ? false : 
+        answers.map((answer,key)=>
+        <div key={key} className="flex py-2 mb-6">
+          <div className="w-[30px] h-[30px] bg-slate-500 flex justify-center items-center rounded-full mr-2">
+            <FontAwesomeIcon icon={Fas.faUser}/>
+          </div>
+          <div className="flex flex-1 flex-col capitalize">
+            <p className="text-teal-400 font-bold text-xs">
+              {answer.Student ? answer.Student.name : '-'}
+              <span className="text-neutral-500 ml-4">{formatDate(answer.date_created)}</span>
+            </p>
+            <p className="text-slate-100 text-sm">{answer.comment}</p>  
+          </div>          
+        </div>        
+        )
+      }
+    </div>
+  )
+}
 
 const Player: React.FC<{courseId:number,moduleId:number,lessonId:number,userId:number}> = (props) => {
   const [ infoLesson, setInfoLesson ] = useState<ILessons|null>(null)
@@ -158,7 +359,7 @@ const Player: React.FC<{courseId:number,moduleId:number,lessonId:number,userId:n
   return(
     infoLesson === null ? <Loading/> :
       <div className="flex flex-col p-1 w-full items-center">
-        <div className="block w-[770px] h-[442px] p-0 overflow-hidden shadow-md shadow-teal-800">
+        <div className="block w-[770px] h-[442px] p-0 overflow-hidden shadow shadow-green-950">
          
           <iframe className="w-full h-full" width="100%" height="200" allow="autoplay; fullscreen" 
             src={`https://player.vimeo.com/video/${infoLesson.link}?color=ff9933&title=0&byline=0&portrait=0&badge=0`}></iframe>
@@ -212,7 +413,7 @@ const SideBarCurso : React.FC<{studentId:number, courseId:number,moduleOpen:numb
   },[props.courseId,props.moduleOpen])
 
   return(
-    <div className="flex flex-col min-h-[500px] max-h-[550px] bg-gradient-to-b from-slate-500 dark:from-slate-950 to-slate-400 dark:to-slate-900  rounded overflow-hidden">
+    <div className="flex flex-col min-h-[500px] max-h-[550px] bg-gradient-to-b from-black to-[#070707]  rounded overflow-hidden">
       {
       modules === null ? <Loading/> : 
       modules.length == 0 ? <p>Nenhum modulo ativo</p> :
@@ -222,7 +423,7 @@ const SideBarCurso : React.FC<{studentId:number, courseId:number,moduleOpen:numb
           key={key}
           className={`flex flex-col`}>
           
-          <div className={`flex border-l-8 border-teal-800 dark:border-teal-500 justify-start items-center cursor-pointer ${module.id == props.moduleOpen ? `bg-white text-teal-800 dark:bg-slate-900 dark:text-green-400  h-[40px] `:"border-b border-b-slate-700 h-[35px] text-teal-800 dark:text-teal-500 opacity-40 bg-white dark:bg-slate-800 hover:bg-slate-50 hover:dark:bg-slate-800 hover:opacity-80"}`}
+          <div className={`flex border-l-8 border-green-500 justify-start items-center cursor-pointer ${module.id == props.moduleOpen ? `bg-black text-green-400  h-[40px] `:"border-b border-b-neutral-800 h-[35px] text-green-500 opacity-40 bg-slate-800 hover:bg-neutral-950 hover:opacity-80"}`}
                onClick={()=>props.setModuleOpen(module.id == props.moduleOpen ? 0 : module.id)}>
             <p className="font-bold text-sm">
               <FontAwesomeIcon className="ml-6 mr-4 opacity-70" icon={module.id == props.moduleOpen ? Fas.faFolderOpen : Fas.faFolder }/>
@@ -255,7 +456,7 @@ const LessonButton : React.FC<{studentId:number, lesson:ILessonsModule, lessonId
   return(
     <button
       onClick={()=>props.setLessonId(props.lesson.id)} 
-      className={`flex hover:opacity-90 bg-slate-100 dark:bg-slate-700 border-b border-slate-500 ${props.lessonId === props.lesson.id ? "text-teal-950 dark:text-teal-500 opacity-100" : "text-slate-900 dark:text-white opacity-50" } w-full pl-2 min-h-[50px] justify-between items-center text-sm p-1`}>
+      className={`flex hover:opacity-90 bg-neutral-600 border-b border-neutral-500 ${props.lessonId === props.lesson.id ? "text-green-500 opacity-100" : "text-white opacity-50" } w-full pl-2 min-h-[50px] justify-between items-center text-sm p-1`}>
       <p className="text-left max-w-[60%] flex justify-center items-center">
         <FontAwesomeIcon  
           fade={props.lessonId === props.lesson.id ? true : false } 
@@ -270,7 +471,7 @@ const LessonButton : React.FC<{studentId:number, lesson:ILessonsModule, lessonId
 }
 const SideActions = () => {
   return(
-    <div className="flex flex-col items-center bg-slate-700 h-[40px] hover:h-[200px] w-[90%] duration-500 ease-out absolute bottom-0 right-4 rounded-t-xl p-2 shadow">
+    <div className="flex flex-col items-center bg-[#101010] h-[40px] hover:h-[200px] w-[90%] duration-500 ease-out absolute bottom-0 right-4 rounded-t-xl p-2 shadow">
       <p className="font-bold text-teal-500"><FontAwesomeIcon className="text-green-500" icon={Fas.faTools}/> Ferramentas</p>
       <Button name="Anotações" block btn="success" type="outline"/>
       <Button name="Anexos" block btn="success" type="outline"/>

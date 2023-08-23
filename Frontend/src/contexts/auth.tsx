@@ -14,6 +14,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   //Validation Data
   const validation = async () => {
     if(localStorage.getItem('Token')){
+     
       try{
         const verificateValidationToken = await api.get('/validation',{
           headers: {            
@@ -21,18 +22,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
         })
         if(verificateValidationToken.data){
-          const dataToken:TokenProps = verificateValidationToken.data;       
+          const dataToken:TokenProps = verificateValidationToken.data;    
+       
           if(dataToken.typeAccess == 'Adm'){
             const getUserData = await api.get(`/getUser/${dataToken.userId}`, {
               headers: {
                 authorization: localStorage.getItem('Token')
               }
             });
+            console.log('GetUserData',getUserData.data.response,`/getUser/${dataToken.userId}`)   
             setUserData(getUserData.data.response)           
             const credential = userData ? await api.get(`/getCredential/${userData.credential}`) : null
             setLevelAccess(credential ? credential.data.response.level_id : 0)
           }else{
-            const getStudentData = await api.get(`/getUser/${dataToken.userId}`, {
+            const getStudentData = await api.get(`/getStudent/${dataToken.userId}`, {
               headers: {
                 authorization: localStorage.getItem('Token')
               }
