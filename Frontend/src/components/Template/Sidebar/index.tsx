@@ -27,9 +27,9 @@ export const Sidebar = () => {
   },[side])
 
   return (
-    <div className={`bg-cyan-900 dark:bg-slate-800 flex flex-col ${sideSize} ease-in duration-150`}>
+    <div className={`bg-[#101010] flex flex-col ${sideSize} ease-in duration-150`}>
       {/*BRAND*/}
-      <div className="bg-cyan-900 dark:bg-slate-800 h-16 flex justify-center items-center text-cyan-50 font-bold relative">
+      <div className="bg-[#101010] h-16 flex justify-center items-center text-cyan-50 font-bold relative">
         {side == 'open' ? (
           <>
             <img src={Logo} className="w-1/2 my-2"/>

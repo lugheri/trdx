@@ -17,12 +17,14 @@ import { urlBase } from '../../utils/baseUrl';
 export const CoursesGallery = () => {
   const authenticated = useAuth();  
   const userData:Student|null = authenticated ? authenticated.userData : null
-
+  
   const [ listMyCourses, setListMyCourses ] = useState<IMyCourses[]|null>(null)
 
   const getMyCourses = async () => {
     try{
       const mc = await api.get(`myCourses/${userData?.id}`)
+      console.log(`myCourses/${userData?.id}`)
+      console.log(`MC`,mc)
       setListMyCourses(mc.data.response)
     }catch(e){
       console.log(e)

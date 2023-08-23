@@ -60,7 +60,7 @@ export const CourseModules = () => {
     infoCourse === null ? <Loading/> :
     <div className="flex flex-col">
       <div className="flex justify-center item-center p-2">
-        <RenderImage className="w-[300px] bg-white p-1 rounded shadow-lg dark:shadow-teal-700" imageId={infoCourse.image}/>
+        <RenderImage className="w-[300px] bg-white m-1 rounded shadow dark:shadow-teal-950" imageId={infoCourse.image}/>
         <div className="flex flex-col justify-center p-4">
           <p className="text-slate-500 dark:text-slate-100 text-3xl font-bold">{infoCourse.name}</p>
           <p className="text-slate-500 dark:text-slate-100 text-lg mt-4">{infoCourse.description}</p>
@@ -183,13 +183,13 @@ const ModuleCard : React.FC<{module:IModules,userId:number}> = (props) => {
   return(
     <div 
       onClick={()=>openModule()}
-      className="flex flex-col justify-between py-4 items-center bg-slate-400 dark:bg-slate-900 w-[350px] mx-1 rounded shadow shadow-slate-600 dark:shadow-black h-[200px] opacity-90 hover:opacity-100 hover:scale-[1.02] cursor-pointer duration-150 ease-out">
+      className="flex flex-col justify-between py-4 items-center bg-neutral-700 w-[350px] mx-1 rounded shadow shadow-slate-600 dark:shadow-black h-[200px] opacity-90 hover:opacity-100 hover:scale-[1.02] cursor-pointer duration-150 ease-out">
       <div className="flex flex-col flex-1 w-full justify-center item-center">
-        <FontAwesomeIcon className="text-4xl mb-2 text-teal-800 dark:text-teal-500" icon={Fas.faChalkboard}/>
-        <p className="font-bold text-slate-800 dark:text-slate-300 text-center">{props.module.module}</p>
-        <p className="text-slate-800 dark:text-slate-500 text-xs text-center">{props.module.description}</p>
+        <FontAwesomeIcon className="text-4xl mb-2 text-green-500" icon={Fas.faChalkboard}/>
+        <p className="font-bold text-neutral-200 text-center">{props.module.module}</p>
+        <p className="text-black text-sm text-center">{props.module.description}</p>
       </div>
-      <div className="flex  items-center h-[18px] bg-slate-500 dark:bg-slate-800 w-[90%] shadow rounded-full overflow-hidden relative">
+      <div className="flex  items-center h-[18px] bg-neutral-800 w-[90%] shadow rounded-full overflow-hidden relative">
         <div className="h-full bg-teal-500 duration-1000 ease-out" style={{width:`${progressModule}%`}}></div>
         <p className="absolute w-full left-0 top-0 justify-center text-xs font-bold text-white h-full flex items-center">{progressModule}% Concluido</p>
       </div>
