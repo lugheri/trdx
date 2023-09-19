@@ -27,13 +27,13 @@ export const Sidebar = () => {
   },[side])
 
   return (
-    <div className={`bg-[#101010] flex flex-col ${sideSize} ease-in duration-150`}>
+    <div className={`flex flex-col ${sideSize} ease-in duration-150`}>
       {/*BRAND*/}
-      <div className="bg-[#101010] h-16 flex justify-center items-center text-cyan-50 font-bold relative">
+      <div className="h-16 flex justify-center items-center text-cyan-50 font-bold relative">
         {side == 'open' ? (
           <>
             <img src={Logo} className="w-1/2 my-2"/>
-            <div className="absolute right-2 top-5 dark:bg-cyan-950 dark:text-cyan-50 dark:hover:bg-cyan-800 bg-cyan-100 hover:bg-cyan-200 border-2 border-cyan-950 rounded-full w-6 text-cyan-950 h-6 flex justify-center items-center text-xs shadow-md cursor-pointer z-50" 
+            <div  className="absolute -right-3 top-5 flex w-[23px] h-[23px] justify-center items-center text-black rounded-[8.226px] text-sm bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow-md cursor-pointer opacity-90 hover:opacity-100" 
                  onClick={()=>setSide('closed')}>
               <FontAwesomeIcon icon={Fas.faCaretLeft}/>
             </div>
