@@ -11,5 +11,14 @@ docker build -t frontend-v1 . &&
 docker stack deploy traefik -c /usr/src/trdx/traefik-deploy.yaml  && 
 docker stack deploy trdx-app -c /usr/src/trdx/deploy.yaml
 
+docker stack rm crm-app && \
+docker stack rm traefik && \
+cd /usr/src/crm/backend/ && 
+docker build -t backend-v1 . && 
+cd /usr/src/crm/frontend && 
+docker build -t frontend-v1 . && 
+docker stack deploy traefik -c /usr/src/crm/traefik-deploy.yaml  && 
+docker stack deploy crm-app -c /usr/src/crm/deploy.yaml
+
 
 

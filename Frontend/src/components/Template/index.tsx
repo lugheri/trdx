@@ -8,8 +8,8 @@ export const Template = () => {
       <Sidebar/>
       <div className="flex flex-col w-screen overflow-auto">
         <Navbar/>
-        <div className="h-[100vh] overflow-auto">
-          <Outlet/>
+        <div className="h-[92.5vh] overflow-auto">
+          <Outlet/>  
         </div>
       </div>
     </div>
@@ -19,11 +19,11 @@ export const Template = () => {
 
 export const TemplateAdm = () => {
   return (
-    <div className="bg-blue-50  dark:bg-slate-950  flex h-screen w-screen">
+    <div className="bg-slate-950 flex h-screen w-screen">
       <SidebarAdm/>
       <div className="flex flex-col w-screen overflow-auto">
         <NavbarAdm/>
-        <div className="h-[100vh] overflow-auto">
+        <div className="h-[92.5vh] overflow-auto">
           <Outlet/>
         </div>
       </div>
