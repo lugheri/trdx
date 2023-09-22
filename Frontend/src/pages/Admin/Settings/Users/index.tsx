@@ -8,7 +8,7 @@ import api from '../../../../services/api';
 import { User } from '../../../../contexts/Dtos/auth.dto';
 import { Modal, TitleModal } from '../../../../components/Modal';
 import { InputForm, SelectForm } from '../../../../components/Inputs';
-import { CredentialType } from '../../../Dtos/credential.dto';
+import { CredentialType } from '../../../Students/Dtos/credential.dto';
 
 export const Users = () => {
 

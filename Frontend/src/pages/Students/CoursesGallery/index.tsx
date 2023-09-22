@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuth from "../../hooks/useAuth"
+import useAuth from "../../../hooks/useAuth"
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { Card } from "../../components/Cards"
-import { TitlePage } from "../../components/Template/TitlePage"
-import { Student } from '../../contexts/Dtos/auth.dto';
+import { Card } from "../../../components/Cards"
+import { TitlePage } from "../../../components/Template/TitlePage"
+import { Student } from '../../../contexts/Dtos/auth.dto';
 import { IMyCourses } from '../Dtos/courses.dto';
-import api from '../../services/api';
-import { Loading } from '../../components/Loading';
-import { urlBase } from '../../utils/baseUrl';
+import api from '../../../services/api';
+import { Loading } from '../../../components/Loading';
+import { urlBase } from '../../../utils/baseUrl';
 
 
 export const CoursesGallery = () => {

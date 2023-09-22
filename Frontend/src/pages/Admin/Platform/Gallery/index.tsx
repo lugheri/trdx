@@ -1,7 +1,7 @@
 import { useState, useEffect,FormEvent } from 'react';
 import { Button } from "../../../../components/Buttons"
 import { TitlePage } from "../../../../components/Template/TitlePage"
-import { IFileGallery } from '../../../Dtos/gallery.dto';
+import { IFileGallery } from '../../../Students/Dtos/gallery.dto';
 
 import api from '../../../../services/api';
 import { Loading } from '../../../../components/Loading';

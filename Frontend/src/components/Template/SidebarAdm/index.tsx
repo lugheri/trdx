@@ -166,7 +166,7 @@ const ModuleItem : React.FC<ModuleItemProps> = (props) => {
             <FontAwesomeIcon className="py-1" icon={Fas[props.icon] as IconProp}/>
           </div>
         ) : false}  
-        {props.name ? (<p className={`${isActiveSide ? "bg-green-800 text-white":"bg-stone-50"} min-w-[150px] h-[50px] justify-start px-4 items-center hidden group-hover:flex absolute z-10 left-[49px] text-center transition text-sm duration-150 ease-out hover:ease-in`}>{props.name}</p>) : false}         
+        {props.name ? (<p className={`${isActiveSide ? "bg-green-800 text-white":"bg-neutral-900"} min-w-[150px] h-[50px] justify-start px-4 items-center hidden group-hover:flex absolute z-10 left-[49px] text-center transition text-sm duration-150 ease-out hover:ease-in`}>{props.name}</p>) : false}         
       </NavLink>
     )
   )  
@@ -246,7 +246,7 @@ const SubModuleItem : React.FC<SubModuleItemProps> = (props) => {
             <FontAwesomeIcon className="py-1 text-xs" icon={Fas[props.icon] as IconProp}/>
           </div>
         ) : false}  
-        {props.name ? (<p className={`${isActiveSide ? "bg-green-800 text-white":"bg-stone-50"} min-w-[150px] h-[30px] justify-start px-4 items-center hidden group-hover:flex absolute z-10 left-[49px] text-center transition text-sm duration-150 ease-out hover:ease-in`}>{props.name}</p>) : false}         
+        {props.name ? (<p className={`${isActiveSide ? "bg-green-800 text-white":"bg-neutral-900"} min-w-[150px] h-[30px] justify-start px-4 items-center hidden group-hover:flex absolute z-10 left-[49px] text-center transition text-sm duration-150 ease-out hover:ease-in`}>{props.name}</p>) : false}         
       </NavLink>
     )
   )  

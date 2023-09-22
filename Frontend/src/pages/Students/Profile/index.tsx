@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { ToggleDarkMode } from "../../components/Buttons"
-import { Card } from "../../components/Cards"
+import { ToggleDarkMode } from "../../../components/Buttons"
+import { Card } from "../../../components/Cards"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import * as Fas from "@fortawesome/free-solid-svg-icons";
-import { InputForm, SelectForm } from '../../components/Inputs';
-import { TitlePage } from '../../components/Template/TitlePage';
+import { InputForm, SelectForm } from '../../../components/Inputs';
+import { TitlePage } from '../../../components/Template/TitlePage';
 
 
 

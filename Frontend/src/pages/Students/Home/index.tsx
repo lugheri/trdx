@@ -1,5 +1,5 @@
 import Banner from '/img/banner-home-2.png'
-import { Card } from '../../components/Cards';
+import { Card } from '../../../components/Cards';
 
 export const Home = () => {
   return(

@@ -1,16 +1,16 @@
 import { useState, useEffect,FormEvent,ChangeEvent, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { ICommentLessons, ICourse, ILessons,  ILessonsModule,  IModules } from "../Dtos/courses.dto";
-import api from "../../services/api";
-import { Loading } from "../../components/Loading";
-import { Card } from "../../components/Cards";
+import api from "../../../services/api";
+import { Loading } from "../../../components/Loading";
+import { Card } from "../../../components/Cards";
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import * as Far from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button } from "../../components/Buttons";
-import useAuth from "../../hooks/useAuth";
-import { Student } from "../../contexts/Dtos/auth.dto";
+import { Button } from "../../../components/Buttons";
+import useAuth from "../../../hooks/useAuth";
+import { Student } from "../../../contexts/Dtos/auth.dto";
 
 
 
