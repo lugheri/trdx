@@ -8,16 +8,14 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 export const TitlePage : React.FC<TitlePageType> = (props) => {
   return(
     <div className="flex justify-between items-center">
-      <div className="px-4 py-2 text-gray-400">
-        <p className="text-xl font-bold flex ">
+      <div className="px-4 py-2 text-stone-400">
+        <p className="text-xl flex ">
           { props.icon ? (<FontAwesomeIcon className="m-1" icon={Fas[props.icon] as IconProp}/>) : false}  
           { props.title ? props.title : false }        
         </p>
-        { props.description ? (<small className="text-sm">{props.description}</small>): false }      
+        { props.description ? (<small className="text-xs font-semibold">{props.description}</small>): false }      
       </div>
       { props.rightComponent ? props.rightComponent : false } 
     </div>
   )
-
-
 }

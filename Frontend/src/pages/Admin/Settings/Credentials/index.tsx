@@ -7,8 +7,8 @@ import api from '../../../../services/api';
 import { Card } from '../../../../components/Cards';
 import { Modal, TitleModal } from '../../../../components/Modal';
 import { InputForm, SelectForm, TextAreaForm } from '../../../../components/Inputs';
-import { CredentialType } from '../../../Dtos/credential.dto';
-import { LevelType } from '../../../Dtos/levels.dto';
+import { CredentialType } from '../../../Students/Dtos/credential.dto';
+import { LevelType } from '../../../Students/Dtos/levels.dto';
 
 export const Credentials = () => {
   const [ newCredential, setNewCredential ] = useState<boolean>(false)

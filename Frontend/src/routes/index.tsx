@@ -7,13 +7,13 @@ import { Login, LoginAdm } from '../pages/Login';
 import { ForgotPass } from '../pages/forgotPass';
 import { Error } from '../pages/Error';
 //Pages Students
-import { Home } from '../pages/Home';
-import { CoursesGallery } from '../pages/CoursesGallery';
-import { CourseModules } from '../pages/CourseModules';
-import { ClassRoom} from '../pages/ClassRoom';
-import { Profile } from '../pages/Profile';
-import { Youtube } from '../pages/Youtube';
-import { Instagram } from '../pages/Instagram';
+import { Home } from '../pages/Students/Home';
+import { CoursesGallery } from '../pages/Students/CoursesGallery';
+import { CourseModules } from '../pages/Students/CourseModules';
+import { ClassRoom} from '../pages/Students/ClassRoom';
+import { Profile } from '../pages/Students/Profile';
+import { Youtube } from '../pages/Students/Youtube';
+import { Instagram } from '../pages/Students/Instagram';
 //Page Admin
 //Dashboard
 import { Dashboard } from '../pages/Admin/Dashboard';

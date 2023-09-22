@@ -1,8 +1,8 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { urlBase } from '../../../../utils/baseUrl';
 
-import { ICourse } from '../../../Dtos/courses.dto';
-import { IFileGallery } from '../../../Dtos/gallery.dto';
+import { ICourse } from '../../../Students/Dtos/courses.dto';
+import { IFileGallery } from '../../../Students/Dtos/gallery.dto';
 
 import { Button } from "../../../../components/Buttons"
 import { TitlePage } from "../../../../components/Template/TitlePage"
