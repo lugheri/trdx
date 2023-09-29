@@ -1,7 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
 
-export interface CommunityHomeConfigInstance extends Model{
+export interface ContentHomeConfigInstance extends Model{
   id:number;
   idvideo_welcome:string;
   video_platform:string;
@@ -11,7 +11,7 @@ export interface CommunityHomeConfigInstance extends Model{
   status:number;
 }
 
-export const CommunityHomeConfig = sequelize.define<CommunityHomeConfigInstance>('CommunityHomeConfigInstance',{
+export const ContentHomeConfig = sequelize.define<ContentHomeConfigInstance>('ContentHomeConfigInstance',{
   id:{
     primaryKey:true,
     autoIncrement:true,
@@ -36,6 +36,6 @@ export const CommunityHomeConfig = sequelize.define<CommunityHomeConfigInstance>
     type:DataTypes.INTEGER
   }
 },{
-  tableName: 'community_home_configs',
+  tableName: 'content_home_configs',
   timestamps:false
 })

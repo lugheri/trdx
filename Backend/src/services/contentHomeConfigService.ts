@@ -1,9 +1,9 @@
 import { WelcomeVideoType } from "../controllers/Dtos/communityConfig.dto";
-import { CommunityHomeConfig, CommunityHomeConfigInstance } from "../models/CommunityHomeConfig";
+import { ContentHomeConfig, ContentHomeConfigInstance } from "../models/ContentHomeConfig";
 
-class communityHomeConfigService{
-  async getWelcomeVideo():Promise<boolean|CommunityHomeConfigInstance>{
-    const welcomeVideo = await CommunityHomeConfig.findOne({
+class contentHomeConfigService{
+  async getWelcomeVideo():Promise<boolean|ContentHomeConfigInstance>{
+    const welcomeVideo = await ContentHomeConfig.findOne({
       attributes:['idvideo_welcome','video_platform'],
       where:{status:1}
     })
@@ -12,7 +12,7 @@ class communityHomeConfigService{
 
  
   async createNewWelcomeVideo(videoData:WelcomeVideoType):Promise<boolean | WelcomeVideoType >{
-    const [newVideo,created] = await CommunityHomeConfig.findOrCreate({
+    const [newVideo,created] = await ContentHomeConfig.findOrCreate({
       where: { status:1},
       defaults:videoData
     });
@@ -20,4 +20,4 @@ class communityHomeConfigService{
     return newVideo.id ? newVideo : false;
   }
 }
-export default new communityHomeConfigService()
+export default new contentHomeConfigService()

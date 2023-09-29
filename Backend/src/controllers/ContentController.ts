@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import { WelcomeVideoDTO } from './Dtos/communityConfig.dto';
-import communityHomeConfigService from '../services/communityHomeConfigService';
-class CommunityController{
+import contentHomeConfigService from '../services/contentHomeConfigService';
+class ContentController{
   async getVideoWelcome(req:Request,res:Response){
     try{
-      const video = await communityHomeConfigService.getWelcomeVideo()
+      const video = await contentHomeConfigService.getWelcomeVideo()
       res.json({"success": true,"response": video})  
       return
     }catch(err){
@@ -20,7 +20,7 @@ class CommunityController{
       return
     }
     try{
-      const newVideoWelcome = await communityHomeConfigService.createNewWelcomeVideo(dataVideoWelcome.data)
+      const newVideoWelcome = await contentHomeConfigService.createNewWelcomeVideo(dataVideoWelcome.data)
       if(newVideoWelcome){
         res.json({"success": true,"response": newVideoWelcome})  
         return
@@ -58,4 +58,4 @@ class CommunityController{
 
   }
 }
-export default new CommunityController();
+export default new ContentController();
