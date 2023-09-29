@@ -6,7 +6,7 @@ import routesSystem from './routesSystem';
 import routesUsers from './routesUsers';
 import routesStudents from './routesStudents';
 import routesSecurity from './routesSecurity';
-import routesAdminCommunity from './routesAdminCommunity';
+import routesAdminCommunity from './routesAdminContent';
 
 const routes = Router();
 routesAuth(routes)

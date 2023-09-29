@@ -13,7 +13,8 @@ interface IWelcomeVideo{
   video_platform:string;
 }
 
-export const CommunitySettings = () => {
+
+export const HomePage = () => {
   const [ welcomeVideo, setWelcomeVideo ] = useState<IWelcomeVideo|null>(null)
   const getVideoWelcome = async () => {
     try{
@@ -27,16 +28,16 @@ export const CommunitySettings = () => {
   useEffect(()=>{
     getVideoWelcome()
   },[])
-
   const [ newVideo, setNewVideo ] = useState<boolean>(false)
+
   return (
     <div className="flex p-2 flex-col">
       {/*TITLE */}
       <TitlePage
-        icon="faGears" 
-        title="Comunidade | Configurações" 
-        description="Configurações da comunidade"/>
-      
+        icon="faHome" 
+        title="Home page" 
+        description="Configure as informações da página inicial da plataforma"/>
+
       <Card component={
         <div className="flex flex-col flex-1">  
           <p className="font-semibold text-stone-400">
@@ -44,13 +45,13 @@ export const CommunitySettings = () => {
           </p>
           {welcomeVideo === null ? <p>Carregando</p>:
           ! welcomeVideo ? 
-          <div className="flex flex-col flex-1 justify-center items-center p-4">
-            <Button icon="faPlus" btn="success" type='notline' name='Cadastrar Novo Vídeo' onClick={()=>setNewVideo(true)}/>
-          </div> :
-          <div className="flex">
-            <div className="">Video home {welcomeVideo.idvideo_welcome}</div>
-            <div className="">{welcomeVideo.video_platform}</div>
-          </div>
+            <div className="flex flex-col flex-1 justify-center items-center p-4">
+              <Button icon="faPlus" btn="success" type='notline' name='Cadastrar Novo Vídeo' onClick={()=>setNewVideo(true)}/>
+            </div> :
+            <div className="flex">
+              <div className="">Video home {welcomeVideo.idvideo_welcome}</div>
+              <div className="">{welcomeVideo.video_platform}</div>
+            </div>
           }         
         </div>
       }/>
@@ -59,18 +60,25 @@ export const CommunitySettings = () => {
           Novo Video
         </div>}/>}
 
-      <Card component={
-        <div className="flex">        
-         TEXTO
-        </div>
-      }/>
+      <div className="flex">
+        <Card className="flex-1" component={
+          <div className="flex flex-col flex-1">  
+            <p className="font-semibold text-stone-400"><FontAwesomeIcon className="text-green-600" icon={Fas.faFileText}/> Texto da Página</p>
+            <div className="flex">
+              Editor de texto
+            </div>
+          </div>
+        }/>
+        <Card component={
+          <div className="flex flex-col flex-1">  
+            <p className="font-semibold text-stone-400"><FontAwesomeIcon className="text-green-600" icon={Fas.faFileText}/> Texto da Página</p>
+            <div className="flex">
+              Redes Sociais
+            </div>
+          </div>
+        }/>
+      </div>  
 
-      <Card component={
-        <div className="flex">        
-         REDES SOCIAIS
-        </div>
-      }/>
-     
 
 
     </div>

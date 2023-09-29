@@ -20,6 +20,7 @@ import { Dashboard } from '../pages/Admin/Dashboard';
 import { Welcome } from '../pages/Admin/Dashboard/Welcome';
 //Content
 import { Content } from '../pages/Admin/Content';
+import { HomePage } from '../pages/Admin/Content/HomePage';
 import { Catalog } from '../pages/Admin/Content/Catalog';
 import { Teachers } from '../pages/Admin/Content/Teachers';
 import { Library } from '../pages/Admin/Content/Library';
@@ -137,6 +138,8 @@ const RoutesApp = () => {
               path: '/admin/content',
               children:[
                 { index: true, element:<Content/>},
+                
+                { path: '/admin/content/homepage', element:<HomePage/>},
                 { path: '/admin/content/catalog', element:<Catalog/>},
                 { path: '/admin/content/teachers', element:<Teachers/>},
                 { path: '/admin/content/library', element:<Library/>},
