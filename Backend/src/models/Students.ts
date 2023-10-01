@@ -12,6 +12,8 @@ export interface StudentsInstance extends Model{
   born:string;
   phone:string;
   gender:string;
+  city:string;
+  state:string;
   password:string;
   logged:number;
   reset:number;
@@ -49,6 +51,12 @@ export const Students = sequelize.define<StudentsInstance>("Students",{
     type:DataTypes.STRING
   },
   gender:{
+    type:DataTypes.STRING,
+  },
+  city:{
+    type:DataTypes.STRING,
+  },
+  state:{
     type:DataTypes.STRING,
   },
   password:{

@@ -6,6 +6,6 @@ export default (routes: Router) => {
   routes.get("/getStudent/:studentId", StudentsController.getStudent)
   routes.patch("/EditStudent/:studentId", StudentsController.editStudent)
   routes.delete("/RemoveStudent/:studentId", StudentsController.removeStudent)
-  routes.post("/listUsers", StudentsController.listStudents)
+  routes.post("/listStudents", StudentsController.listStudents)
   routes.post("/searchStudents", StudentsController.searchStudent)
 }
