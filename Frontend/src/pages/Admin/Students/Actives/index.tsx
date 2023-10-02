@@ -4,6 +4,10 @@ import { InputForm, SelectForm } from "../../../../components/Inputs"
 import { TitlePage } from "../../../../components/Template/TitlePage"
 import api from '../../../../services/api'
 
+
+import * as Fas from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+
 export const ActiveStudents = () => {  
   const [ paramsStudents, setParamsStudents ] = useState("")
   const [ valueStudents, setValueStudents ] = useState("")
@@ -118,12 +122,36 @@ const PageStudents : React.FC<IPageStudents>  = (props) => {
         {listStudents === null ? <p>Carregando</p> :
         listStudents.length == 0 ? <p>Nenhum aluno cadastrado</p>
         : listStudents.map((student,key)=>
-          <div key={key} className="bg-neutral-800 p-3 rounded mb-2">{student.name}</div>
+        <div key={key} className="bg-neutral-800 p-3 rounded mb-2 flex justify-between items-center text-neutral-300">
+        <div className="flex mr-2 w-[35px] h-[35px] justify-center items-center rounded-full text-neutral-700 bg-neutral-500">
+          <FontAwesomeIcon icon={Fas.faUser}/>
+        </div>
+        <div className="flex flex-col flex-1 justify-center items-start">
+          <p className="font-black">{student.name}</p>
+          <p className="text-xs">{student.mail}</p>
+        </div>
+        <div className="flex flex-1">
+          <p>{student.since}</p>
+        </div>
+
+        { student.comunity == 1 ?
+          <div className="flex flex-1 flex-col justify-center items-center text-teal-500">
+            <FontAwesomeIcon icon={Fas.faUsers}/>
+            <p className="font-bold text-xs">Membro da Comunidade</p>
+          </div>
+        : <div className="flex flex-1 flex-col"></div>}
+
+        
+       
+        <div className="flex">
+          <Button icon="faFolderOpen" btn="success" title="Abrir Ficha do Aluno" />
+        </div>
+      </div>
         )
         }
       </div>
       { nextPage === null ? 
-        <Button name="Carregar Mais Alunos" btn='success' type="notline" onClick={()=>setNextPage(props.page+1)}/> 
+        <Button name="Carregar Mais Alunos" btn='muted' type="notline" onClick={()=>setNextPage(props.page+1)}/> 
       : <PageStudents page={nextPage} params={props.params} value={props.value} order={props.order}/> }  
     </>
   )

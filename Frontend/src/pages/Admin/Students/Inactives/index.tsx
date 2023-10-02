@@ -117,7 +117,27 @@ const PageStudents : React.FC<IPageStudents>  = (props) => {
         {listStudents === null ? <p>Carregando</p> :
         listStudents.length == 0 ? <p>Nenhum aluno cadastrado</p>
         : listStudents.map((student,key)=>
-          <div key={key} className="bg-neutral-800 p-3 rounded mb-2">{student.name}</div>
+          <div key={key} className="bg-neutral-800 p-3 rounded mb-2 flex text-neutral-200">
+            <div className="flex">
+              
+            </div>
+            <div className="flex">
+              <p>{student.name}</p>
+              <p>{student.mail}</p>
+            </div>
+            <div className="flex">
+              <p>Cursos</p>
+            </div>
+            <div className="flex">
+              Aulas Assistidas
+            </div>
+            <div className="flex">
+              Membro Comunidade
+            </div>
+            <div className="flex">
+              Abrir
+            </div>
+          </div>
         )
         }
       </div>
