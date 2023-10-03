@@ -4,6 +4,12 @@ import { InputForm, SelectForm } from "../../../../components/Inputs"
 import { TitlePage } from "../../../../components/Template/TitlePage"
 import api from '../../../../services/api'
 
+
+import * as Fas from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { NavLink } from 'react-router-dom'
+import { StudentProfilePhoto } from '../../../../components/StudentProfilePhoto'
+
 export const InactiveStudents = () => {  
   const [ paramsStudents, setParamsStudents ] = useState("")
   const [ valueStudents, setValueStudents ] = useState("")
@@ -21,7 +27,7 @@ export const InactiveStudents = () => {
       <TitlePage
         icon="faUserXmark" 
         title="Alunos Inativos" 
-        description="Lista de alunos cadastrados na plataforma"/>
+        description="Lista de alunos com acesso inativado"/>
 
       <div className="flex item-end justify-end">
         <div className="flex w-[30%] p-2 justify-end mb-4">
@@ -117,32 +123,31 @@ const PageStudents : React.FC<IPageStudents>  = (props) => {
         {listStudents === null ? <p>Carregando</p> :
         listStudents.length == 0 ? <p>Nenhum aluno cadastrado</p>
         : listStudents.map((student,key)=>
-          <div key={key} className="bg-neutral-800 p-3 rounded mb-2 flex text-neutral-200">
-            <div className="flex">
-              
-            </div>
-            <div className="flex">
-              <p>{student.name}</p>
-              <p>{student.mail}</p>
-            </div>
-            <div className="flex">
-              <p>Cursos</p>
-            </div>
-            <div className="flex">
-              Aulas Assistidas
-            </div>
-            <div className="flex">
-              Membro Comunidade
-            </div>
-            <div className="flex">
-              Abrir
-            </div>
-          </div>
+        <div key={key} className="bg-neutral-800 p-3 rounded mb-2 flex justify-between items-center text-neutral-400">
+        <StudentProfilePhoto photo_id={student.photo} class="w-[35px] h-[35px]"/>
+        <div className="flex flex-col flex-1 justify-center items-start">
+          <p className="font-black">{student.name}</p>
+          <p className="text-xs">{student.mail}</p>
+        </div>
+        <div className="flex flex-1 text-red-500">
+          <p><FontAwesomeIcon icon={Fas.faBan}/> Acesso Inativo</p>
+        </div>       
+       
+        <div className="flex">
+          <NavLink 
+            className="flex justify-center m-1 items-center text-center cursor-pointer font-semibold bg-gray-500 text-white hover:bg-gray-600 p-2 text-sm rounded-md"
+            to={`/admin/students/actives/info/${student.id}`}
+            title="Abrir Ficha do Aluno">
+            <FontAwesomeIcon icon={Fas.faFolderOpen}/>
+          </NavLink>
+
+        </div>
+      </div>
         )
         }
       </div>
       { nextPage === null ? 
-        <Button name="Carregar Mais Alunos" btn='success' type="notline" onClick={()=>setNextPage(props.page+1)}/> 
+        <Button name="Carregar Mais Alunos" btn='muted' type="notline" onClick={()=>setNextPage(props.page+1)}/> 
       : <PageStudents page={nextPage} params={props.params} value={props.value} order={props.order}/> }  
     </>
   )

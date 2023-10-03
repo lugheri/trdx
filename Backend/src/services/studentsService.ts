@@ -1,6 +1,7 @@
 import { StudentType, StudentPartialType, PaginationStudentType, SearchStudentType } from "../controllers/Dtos/student.dto";
 import { Students, StudentsInstance } from "../models/Students"
 import { Op } from "sequelize"
+import { StudentsLogins, StudentsLoginsInstance } from "../models/StudentsLogins";
 
 class StudentsService{
   async createNewStudent(studentData:StudentType):Promise<boolean | StudentsInstance >{
@@ -23,6 +24,16 @@ class StudentsService{
     const student = await Students.findByPk(studentId)
     return student ? student : false
   }
+
+  async getLastAccessStudent(studentId:number):Promise<StudentsLoginsInstance | null>{
+    const lastAccess = await StudentsLogins.findOne({
+      where:{student_id:studentId},
+      order:[['id','DESC']],
+      limit:1
+    })
+    return lastAccess
+  }
+
   async listStudent(pagination:PaginationStudentType):Promise<StudentsInstance[]>{
     const p = pagination.page-1
     const qtdRegPage = 30

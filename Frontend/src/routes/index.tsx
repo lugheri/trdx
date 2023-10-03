@@ -55,6 +55,7 @@ import { Users } from '../pages/Admin/Settings/Users';
 import { LoadingPage } from '../pages/LoadingPage';
 import { Levels } from '../pages/Admin/Settings/Levels';
 import { Credentials } from '../pages/Admin/Settings/Credentials';
+import { StudentInfo } from '../pages/Admin/Students/StudentInfo';
 
 
 
@@ -161,6 +162,7 @@ const RoutesApp = () => {
               children:[
                 { index: true, element:<Students/>},
                 { path: '/admin/students/actives', element:<ActiveStudents/>},
+                { path: '/admin/students/actives/info/:student_id', element:<StudentInfo/>},
                 { path: '/admin/students/inactives', element:<InactiveStudents/>},
               ]
             }, 

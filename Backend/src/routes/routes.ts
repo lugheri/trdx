@@ -4,7 +4,7 @@ import routesCourses from './routesCourses';
 import routesGallery from './routesGallery';
 import routesSystem from './routesSystem';
 import routesUsers from './routesUsers';
-import routesStudents from './routesStudents';
+import routesStudents from './routesAdminStudents';
 import routesSecurity from './routesSecurity';
 import routesAdminCommunity from './routesAdminContent';
 import routesAdminIntegrations from './routesAdminIntegrations';
