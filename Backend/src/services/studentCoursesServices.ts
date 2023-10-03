@@ -13,7 +13,7 @@ class StudentCoursesService{
 
   async myCourses(studentId:number):Promise<CoursesInstance[]>{
     const myCourses = await Courses.findAll({
-      attributes: ['id','image'],
+      attributes: ['id','image','name'],
       group: ['id'],
       where: {published:1, status:1 },
       include: { attributes: [], model: StudentsCourses, where: { student_id:studentId},},     

@@ -67,5 +67,19 @@ class LessonsCommentsService{
     await redisSet(redisKey,commentsPendingApproval,60)
     return commentsPendingApproval
   }
+
+  async getRecentCommentsStudent(studentId:number):Promise<LessonsCommentsInstance[]|null>{
+    const redisKey = `recentStudentsComment:[${studentId}];`
+    const getRecentCommentsStudent = await redisGet(redisKey)
+    if(getRecentCommentsStudent!=null){return getRecentCommentsStudent}
+
+    const recentStudentComments = await LessonsComments.findAll({
+      where:{student_id:studentId,status:1},      
+      order:[['id','DESC']],
+      limit:5     
+    })
+    await redisSet(redisKey,recentStudentComments,60)
+    return recentStudentComments
+  }
 }
 export default new LessonsCommentsService()

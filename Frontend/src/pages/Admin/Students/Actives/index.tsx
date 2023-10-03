@@ -7,6 +7,8 @@ import api from '../../../../services/api'
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { NavLink } from 'react-router-dom'
+import { StudentProfilePhoto } from '../../../../components/StudentProfilePhoto'
 
 export const ActiveStudents = () => {  
   const [ paramsStudents, setParamsStudents ] = useState("")
@@ -123,9 +125,7 @@ const PageStudents : React.FC<IPageStudents>  = (props) => {
         listStudents.length == 0 ? <p>Nenhum aluno cadastrado</p>
         : listStudents.map((student,key)=>
         <div key={key} className="bg-neutral-800 p-3 rounded mb-2 flex justify-between items-center text-neutral-300">
-        <div className="flex mr-2 w-[35px] h-[35px] justify-center items-center rounded-full text-neutral-700 bg-neutral-500">
-          <FontAwesomeIcon icon={Fas.faUser}/>
-        </div>
+        <StudentProfilePhoto photo_id={student.photo} class="w-[35px] h-[35px]"/>
         <div className="flex flex-col flex-1 justify-center items-start">
           <p className="font-black">{student.name}</p>
           <p className="text-xs">{student.mail}</p>
@@ -144,7 +144,13 @@ const PageStudents : React.FC<IPageStudents>  = (props) => {
         
        
         <div className="flex">
-          <Button icon="faFolderOpen" btn="success" title="Abrir Ficha do Aluno" />
+          <NavLink 
+            className="flex justify-center m-1 items-center text-center cursor-pointer font-semibold bg-[#1abc9c] text-white hover:bg-[#16a085] border border-[#1abc9c] p-2 text-sm rounded-md"
+            to={`/admin/students/actives/info/${student.id}`}
+            title="Abrir Ficha do Aluno">
+            <FontAwesomeIcon icon={Fas.faFolderOpen}/>
+          </NavLink>
+
         </div>
       </div>
         )
