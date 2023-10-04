@@ -5,7 +5,7 @@ export const Loading = () => {
  
   return (
     <div className="flex flex-1 justify-center items-center">
-      <FontAwesomeIcon icon={Fas.faCircleNotch} pulse/>
+      <FontAwesomeIcon icon={Fas.faCircleNotch} className="text-teal-500" pulse/>
     </div>
   )
 }

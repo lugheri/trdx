@@ -28,6 +28,7 @@ export const Students = sequelize.define<StudentsInstance>("Students",{
   },
   since:{
     type:DataTypes.DATE,
+    defaultValue:DataTypes.NOW
   },
   comunity:{
     type:DataTypes.TINYINT

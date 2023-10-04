@@ -11,5 +11,6 @@ export default (routes: Router) => {
   routes.post("/searchStudents", StudentsController.searchStudent)
   //Courses
   routes.get('/studentsCourses/:studentId', StudentsController.studentsCourses)
+  routes.get('/checkCourseStudent/:studentId/:courseId', StudentsController.checkCourseStudent)
   routes.get('/recentCommentsStudentsCourses/:studentId', StudentsController.recentCommentsStudentsCourses)
 }

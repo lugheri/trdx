@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect,FormEvent } from 'react'
 import { Button } from "../../../../components/Buttons"
 import { InputForm, SelectForm } from "../../../../components/Inputs"
 import { TitlePage } from "../../../../components/Template/TitlePage"
@@ -7,10 +7,12 @@ import api from '../../../../services/api'
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { StudentProfilePhoto } from '../../../../components/StudentProfilePhoto'
+import { Modal, TitleModal } from '../../../../components/Modal'
 
 export const ActiveStudents = () => {  
+  const navigate = useNavigate()
   const [ paramsStudents, setParamsStudents ] = useState("")
   const [ valueStudents, setValueStudents ] = useState("")
   const [ orderStudents, setOrderStudents ] = useState("")
@@ -21,6 +23,29 @@ export const ActiveStudents = () => {
                          {"alias":"Gênero","field":"gender"}]
   const order_filter = [{"alias":"Crescente","order":"asc"},{"alias":"Decrescente","order":"desc"}]
 
+  const [newStudent, setNewStudent] = useState<boolean>(false)
+
+  {/*New User*/}
+  const [studentName, setStudentName] = useState("")
+  const [studentMail, setStudentMail] = useState("")
+  const createNewStudent = async (e:FormEvent) => {
+    e.preventDefault();
+    try{
+      const dataStudent = {
+        name:studentName,
+        mail:studentMail,
+        password:studentMail
+      }
+      const newStudent = await api.post("/newStudent",dataStudent)
+      if(newStudent.data.error){alert(newStudent.data.error)}else{
+        navigate(`/admin/students/actives/info/${newStudent.data.response.id}`)
+        setNewStudent(false)
+      }
+    }catch(err){
+      console.log(err)
+    }
+  }
+
   return (
     <div className="flex p-2 flex-col">
       {/*TITLE */}
@@ -28,7 +53,7 @@ export const ActiveStudents = () => {
         icon="faUserGraduate" 
         title="Alunos Ativos" 
         description="Lista de alunos cadastrados na plataforma"
-        rightComponent={<Button icon="faUserPlus" name="Cadastrar Novo Aluno" btn="success" />}/>
+        rightComponent={<Button icon="faUserPlus" name="Cadastrar Novo Aluno" btn="success" onClick={()=>setNewStudent(true)}/>}/>
 
       <div className="flex item-end justify-end">
         <div className="flex w-[30%] p-2 justify-end mb-4">
@@ -62,8 +87,24 @@ export const ActiveStudents = () => {
         { valueStudents && <button className="px-2 text-xs text-white mb-6" onClick={()=>{setValueStudents(""),setParamsStudents("")}}>Limpar Busca</button> }
        
       </div>
-
       <PageStudents page={1} params={paramsStudents} value={valueStudents} order={orderStudents}/>
+
+      { newStudent && <Modal component={<div>
+                        <TitleModal icon="faUserPlus" close={()=>setNewStudent(false)}
+                                   title="Novo Aluno"
+                                    subtitle="Cadastre um novo aluno na plataforma"/>
+
+                        <form onSubmit={(e)=>createNewStudent(e)}>
+                          <div className="py-4">
+                            <InputForm label="Nome do Aluno" placeholder='Insira o Nome do Usuário' required value={studentName} onChange={setStudentName}/>
+                            <InputForm label="E mail do Aluno" placeholder='Email' required value={studentMail} onChange={setStudentMail}/>
+                          </div>
+                          <div className="border-t border-slate-600 flex justify-end items-center pt-3">
+                            <Button name="Cancelar"  size="sm" btn="muted" type="notline" onClick={()=>setNewStudent(false)}/>
+                            <Button submit name="Criar Usuário" icon="faUserPlus" btn="success"/>
+                          </div>
+                        </form>     
+                        </div>}/>}
     </div>
   )
 }
