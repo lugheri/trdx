@@ -4,7 +4,7 @@ import routesCourses from './routesCourses';
 import routesGallery from './routesGallery';
 import routesSystem from './routesSystem';
 import routesUsers from './routesUsers';
-import routesStudents from './routesAdminStudents';
+import routesAdminStudents from './routesAdminStudents';
 import routesSecurity from './routesSecurity';
 import routesAdminCommunity from './routesAdminContent';
 import routesAdminIntegrations from './routesAdminIntegrations';
@@ -16,7 +16,7 @@ routesCourses(routes)
 //Community
 routesAdminCommunity(routes)
 //Students
-routesStudents(routes)
+routesAdminStudents(routes)
 //Support
 //Platform
 routesAdminIntegrations(routes)

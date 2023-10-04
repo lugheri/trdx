@@ -126,6 +126,19 @@ class StudentsController{
     }
   }
 
+  async checkCourseStudent(req:Request, res:Response){
+    const studentId : number = parseInt(req.params.studentId)
+    const courseId : number = parseInt(req.params.courseId)
+    try{
+      const checkCourse = await studentCoursesServices.checkCourseStudent(studentId,courseId)
+      res.json({"success": true,"response": checkCourse})  
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})  
+    }
+  }
+
   async recentCommentsStudentsCourses(req:Request, res:Response){
     const studentId : number = parseInt(req.params.studentId)
     try{

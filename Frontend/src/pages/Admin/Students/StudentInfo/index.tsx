@@ -10,8 +10,9 @@ import moment from 'moment';
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IFileGallery } from '../../../Students/Dtos/gallery.dto';
-import { urlBase } from '../../../../utils/baseUrl';
+import { Modal, TitleModal } from '../../../../components/Modal';
+import { CourseCard } from '../components/CourseCard';
+import { AddCourses } from '../components/AddCourses';
 
 interface ILastAccess{
   id:number;
@@ -68,6 +69,16 @@ export const StudentInfo = () => {
     return moment(date).format('DD/MM/YY HH:mm');
   }
 
+  /*Modal Triggers*/
+  const [addCourses, setAddCourses] = useState<number|null>(null)
+  const [editStudentInfo, setEditStudentInfo] = useState<number|null>(null)
+  const [sendAccess, setSendAccess] = useState<number|null>(null)
+  const [editComunityAccess, setEditComunityAccess] = useState<number|null>(null)
+  const [editStatusAccess, setEditStatusAccess] = useState<number|null>(null)
+
+  /*Viewer Mode Courses*/
+  const [viewModeCourses, setViewModeCourses] = useState<'cells'|'list'>('cells')
+
   return(
     infoStudent === null ? <Loading/>:
     <div className="flex h-full overflow-hidden">
@@ -122,7 +133,7 @@ export const StudentInfo = () => {
             <div className="flex flex-1 flex-col p-4 justify-center items-center">
               <FontAwesomeIcon  className="text-6xl my-4 text-green-500" icon={Fas.faVideoSlash}/>
               <p className="text-neutral-300">Esta aluno não possui nenhum curso!</p>
-              <Button className="my-2" name="Adicionar Curso" icon="faPlus" btn="success" type="outline" /> 
+              <Button className="my-2" name="Adicionar Curso" icon="faPlus" btn="success" type="outline" onClick={()=>setAddCourses(infoStudent.id)}/> 
             </div> 
           :
           <div className="flex flex-col">
@@ -131,40 +142,47 @@ export const StudentInfo = () => {
                 <p className="text-neutral-300"><FontAwesomeIcon  className="text-green-500" icon={Fas.faLaptop}/> Cursos do Aluno </p>
                 <p className="text-neutral-400 text-sm">{courses.length} Curso(s) Cadastrado(s)</p>
               </div>
-              <Button className="my-2" name="Adicionar Novo Curso" size="sm" icon="faPlus" btn="success" type="outline" />              
+              <div className="flex">
+                <Button className="mr-0 rounded-r-none mt-2 mb-3" icon="faTableCellsLarge" btn={viewModeCourses == 'cells' ? 'success' : 'muted'} type={viewModeCourses == 'cells' ? 'default' : 'outline'} onClick={()=>setViewModeCourses('cells')} size='sm' />
+                <Button className="ml-0 rounded-l-none mt-2 mb-3" icon="faList" btn={viewModeCourses == 'list' ? 'success' : 'muted'} type={viewModeCourses == 'list' ? 'default' : 'outline'} onClick={()=>setViewModeCourses('list')} size='sm' />
+              </div>
+              
+              <Button className="my-2" name="Adicionar Novo Curso" icon="faPlus" btn="success" type="outline"  onClick={()=>setAddCourses(infoStudent.id)}/>              
             </div>
             <div className="flex flex-wrap mt-2">
               {courses.map((course,key)=>
-                <CourseCard key={key} id={course.id} image={course.image} name={course.name}/>
+                <CourseCard key={key} id={course.id} image={course.image} name={course.name} studentId={infoStudent.id} studentName={infoStudent.name} viewMode={viewModeCourses} />
               )}
             </div>
           </div>          
         }/>
 
-
+        {/*Comments and Supoort Student*/}  
         <div className="flex">
           <Card className="flex-1" component={
             <div className="flex flex-col">
-              <p className="text-neutral-300"><FontAwesomeIcon  className="text-green-500" icon={Fas.faComment}/> Comentários rescentes</p>
+              <p className="text-neutral-300"><FontAwesomeIcon  className="text-green-500" icon={Fas.faComment}/> Comentários recentes</p>
               <div className="flex flex-wrap mt-2"></div>
             </div>}/>
           <Card component={<div>Help</div>}/>
         </div>
       </div>
 
+      {/*SideRight*/}  
       <div className="flex flex-col w-1/4">
         <Card className="h-full overflow-auto" component={
           <div className="flex flex-col w-full justify-between items-center">
             <div className="w-full flex flex-col justify-center items-center py-8 border-b border-b-neutral-800">
               <StudentProfilePhoto photo_id={infoStudent.photo} class="w-[125px] h-[125px] mt-2"/>
-              <p className="mt-2 text-white font-bold">{infoStudent.name}</p>
+              <p className="mt-2 text-xs font-bold text-neutral-500">Código: {infoStudent.id}</p> 
+              <p className="text-white font-bold">{infoStudent.name}</p>
               <p className="mb-2 text-xs text-neutral-300">{infoStudent.mail}</p>             
             </div>
             <div className="w-full flex-1 flex flex-col justify-start items-center py-8 ">             
-              <Button name="Alterar Dados" icon="faUserEdit" btn="info" type="outline" size="sm" block/>
-              <Button name="Reenviar Acesso" icon="faPaperPlane" btn="info" type="outline" size="sm" block/>
-              <Button name="Remover da Comunidade" icon="faUsersSlash" btn="error" type="outline" size="sm" block/>
-              <Button name="Inativar Acesso" icon="faUserSlash" btn="error" type="outline" size="sm" block/>              
+              <Button name="Alterar Dados" icon="faUserEdit" btn="info" type="outline" size="sm" block onClick={()=>setEditStudentInfo(infoStudent.id)}/>
+              <Button name="Reenviar Acesso" icon="faPaperPlane" btn="info" type="outline" size="sm" block onClick={()=>setSendAccess(infoStudent.id)}/>
+              <Button name="Remover da Comunidade" icon="faUsersSlash" btn="error" type="outline" size="sm" block onClick={()=>setEditComunityAccess(infoStudent.id)}/>
+              <Button name="Inativar Acesso" icon="faUserSlash" btn="error" type="outline" size="sm" block onClick={()=>setEditStatusAccess(infoStudent.id)}/>              
             </div>
             <div className="w-full bg-slate-500 rounded flex flex-col justify-center items-center py-8">
               <div>Avaliacao</div>
@@ -172,35 +190,37 @@ export const StudentInfo = () => {
           </div>
         }/>        
       </div>
+      {/*Modais*/}
+      { addCourses && <Modal component={<div>
+                        <TitleModal icon='faPlus' close={()=>setAddCourses(null)} 
+                                    title='Adicionar Novos Cursos'
+                                    subtitle={`Cadastre novos cursos para o aluno ${infoStudent.name}`}/>
+                        <AddCourses studentId={infoStudent.id} close={setAddCourses}/>                      
+                                       </div>}/>}
+
+      { editStudentInfo && <Modal component={<div>
+                        <TitleModal icon='faUserEdit' close={()=>setEditStudentInfo(null)} 
+                                    title='Visualizar/Editar informações do Aluno'
+                                    subtitle={`Edite ou apenas visualize as informações do aluno ${infoStudent.name}`}/>
+                                       </div>}/>}
+
+      { sendAccess && <Modal component={<div>
+                        <TitleModal icon='faPaperPlane' close={()=>setSendAccess(null)} 
+                                    title='Reenviar dados de acesso'
+                                    subtitle={`Reenvie os dados de acesso do aluno ${infoStudent.name}`}/>
+                                       </div>}/>}
+
+      { editComunityAccess && <Modal component={<div>
+                        <TitleModal icon={`${infoStudent.comunity == 0 ? 'faUsers' : 'faUsersSlash'}`} close={()=>setEditComunityAccess(null)} 
+                                    title={`${infoStudent.comunity == 0 ? 'Incluir Aluno na' : 'Remover Aluno da'} Comunidade`}
+                                    subtitle={`${infoStudent.comunity == 0 ? 'Inclua' : 'Remova'} o aluno ${infoStudent.name} da Comunidade`}/>
+                                              </div>}/>}
+
+      { editStatusAccess && <Modal component={<div>
+                        <TitleModal icon={`${infoStudent.status == 0 ? 'faUserPlus' : 'faUserSlash'}`} close={()=>setEditStatusAccess(null)} 
+                                    title={`${infoStudent.status == 0 ? 'Reativar' : 'Inativar'} Acesso`}
+                                    subtitle={`${infoStudent.status == 0 ? 'Reative' : 'Inative'} o acesso do aluno ${infoStudent.name}`}/>
+                                              </div>}/>}
     </div>
   )
-}
-
-
-const CourseCard : React.FC<ICourses> = (props) => {
-  const [ infoImage, setInfoImage ]= useState<IFileGallery|null>(null)
-  useEffect(()=>{
-    const getInfoImage = async () => {
-      try{
-        const info = await api.get(`infoFile/${props.image}`)
-        setInfoImage(info.data.response)
-      }catch(e){
-        console.log(e)
-      } 
-    }
-    getInfoImage()
-  },[])
-
-  return(
-    <div className="shadow-neutral-950 shadow overflow-hidden flex flex-col w-[24.3%] rounded bg-neutral-700 mr-1 mb-1 opacity-60 hover:opacity-100 cursor-pointer" title={props.name}>
-      { props.image !== 0 ? 
-        infoImage ? <img src={`${urlBase}/gallery/${infoImage.file}`} className='w-full'/> : <Loading/>
-        : <div className="flex flex-col w-full h-[180px] bg-neutral-500 text-neutral-800 flex justify-center items-center">
-            <FontAwesomeIcon className="text-4xl" icon={Fas.faCamera}/>
-            <p>Sem Capa</p>
-          </div>
-     }
-    </div>
-  )
-
 }

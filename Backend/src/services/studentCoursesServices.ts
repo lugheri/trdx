@@ -21,6 +21,15 @@ class StudentCoursesService{
     return myCourses
   }
 
+  async checkCourseStudent(studentId:number,courseId:number):Promise<boolean>{
+    const check = await StudentsCourses.findAll({
+      attributes: ['id'],
+      where: {student_id:studentId,course_id:courseId, status:1 }, 
+      limit:1    
+    })
+    return check.length == 1 ? true : false
+  }
+
 
  
  
