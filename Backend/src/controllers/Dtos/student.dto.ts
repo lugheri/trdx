@@ -43,3 +43,20 @@ export const SearchStudentDTO = z.object({
 })
 export type SearchStudentType = z.infer<typeof SearchStudentDTO>
 
+export const AddCourseStudentDTO = z.object({
+  student_id:z.number(),
+  course_id:z.number(),
+  data_valid:z.optional(z.string()).default('0000-00-00 00:00:00'),
+  concluded:z.optional(z.number()).default(0),
+  status:z.optional(z.number()).default(1),
+})
+export type AddCourseStudentType = z.infer<typeof AddCourseStudentDTO>
+
+export const AddContractValidityDTO = z.object({
+  student_id:z.number(),
+  course_id:z.number(),
+  start_validity:z.string(),
+  end_validity:z.string(),
+  payment_cycle:z.string()
+})
+export type AddContractValidityType = z.infer<typeof AddContractValidityDTO>

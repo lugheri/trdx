@@ -32,8 +32,18 @@ export const StudentInfo = () => {
   const location = useLocation();
   const studentId = location.pathname.split('/')[5] 
 
+  /*Modal Triggers*/
+  const [addCourses, setAddCourses] = useState<number|null>(null)
+  const [editStudentInfo, setEditStudentInfo] = useState<number|null>(null)
+  const [sendAccess, setSendAccess] = useState<number|null>(null)
+  const [editComunityAccess, setEditComunityAccess] = useState<number|null>(null)
+  const [editStatusAccess, setEditStatusAccess] = useState<number|null>(null)
+
+  /*Viewer Mode Courses*/
+  const [viewModeCourses, setViewModeCourses] = useState<'cells'|'list'>('list')
+
   const [ infoStudent, setInfoStudent ] = useState<IStudent|null>(null)
-  const [ lastAccess, setLastAccess ] = useState<ILastAccess|null>(null)
+  const [ lastAccess, setLastAccess ] = useState<ILastAccess|false|null>(false)
   const [ courses, setCourses ] = useState<ICourses[]|null>(null)
   useEffect(()=>{
     const getInfoUser = async () => {
@@ -53,6 +63,7 @@ export const StudentInfo = () => {
       }
     }
     const getCourses = async () => {
+      setCourses(null)
       try{
         const courses = await api.get(`studentsCourses/${studentId}`)
         setCourses(courses.data.response)
@@ -63,21 +74,12 @@ export const StudentInfo = () => {
     getInfoUser()
     getLastAccess()
     getCourses()
-  },[])
+  },[addCourses])
 
   const formatDate = (date:string) => {
     return moment(date).format('DD/MM/YY HH:mm');
   }
-
-  /*Modal Triggers*/
-  const [addCourses, setAddCourses] = useState<number|null>(null)
-  const [editStudentInfo, setEditStudentInfo] = useState<number|null>(null)
-  const [sendAccess, setSendAccess] = useState<number|null>(null)
-  const [editComunityAccess, setEditComunityAccess] = useState<number|null>(null)
-  const [editStatusAccess, setEditStatusAccess] = useState<number|null>(null)
-
-  /*Viewer Mode Courses*/
-  const [viewModeCourses, setViewModeCourses] = useState<'cells'|'list'>('cells')
+  
 
   return(
     infoStudent === null ? <Loading/>:
@@ -112,7 +114,7 @@ export const StudentInfo = () => {
           <Card component={
             <div className="flex flex-col">
               <p className="text-neutral-400 text-sm"><strong>Aluno Desde: </strong>{formatDate(infoStudent.since)} </p>
-              <p className="text-white"><strong>Último Acesso: </strong>{lastAccess === null ? <FontAwesomeIcon icon={Fas.faCircleNotch} className="text-green-500" pulse/> : formatDate(`${lastAccess.date} ${lastAccess.hour}`)} </p>
+              <p className="text-white"><strong>Último Acesso: </strong>{lastAccess ? <span className="text-green-500 font-bold">{formatDate(`${lastAccess.date} ${lastAccess.hour}`)}</span> : lastAccess === null ? <span className="text-teal-500"> - </span>  : <FontAwesomeIcon icon={Fas.faCircleNotch} className="text-green-500" pulse/> } </p>
             </div>
           }/>
           <NavLink 
@@ -136,7 +138,7 @@ export const StudentInfo = () => {
               <Button className="my-2" name="Adicionar Curso" icon="faPlus" btn="success" type="outline" onClick={()=>setAddCourses(infoStudent.id)}/> 
             </div> 
           :
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full">
             <div className="flex justify-between">
               <div className="flex flex-col">
                 <p className="text-neutral-300"><FontAwesomeIcon  className="text-green-500" icon={Fas.faLaptop}/> Cursos do Aluno </p>
@@ -147,7 +149,7 @@ export const StudentInfo = () => {
                 <Button className="ml-0 rounded-l-none mt-2 mb-3" icon="faList" btn={viewModeCourses == 'list' ? 'success' : 'muted'} type={viewModeCourses == 'list' ? 'default' : 'outline'} onClick={()=>setViewModeCourses('list')} size='sm' />
               </div>
               
-              <Button className="my-2" name="Adicionar Novo Curso" icon="faPlus" btn="success" type="outline"  onClick={()=>setAddCourses(infoStudent.id)}/>              
+              <Button className="my-2" name="Alterar Cursos do Aluno" icon="faPlus" btn="success" type="outline"  onClick={()=>setAddCourses(infoStudent.id)}/>              
             </div>
             <div className="flex flex-wrap mt-2">
               {courses.map((course,key)=>

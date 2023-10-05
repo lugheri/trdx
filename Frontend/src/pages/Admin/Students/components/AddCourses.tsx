@@ -72,11 +72,22 @@ const CourseItemList: React.FC<{course:ICourse;studentId:number}> = (props) => {
     getCheckCourseStudent()
   },[])
 
-  const delCourse = () => {
+  const delCourse = async () => {
+
     setCheckActiveCourse(false)
+    try{
+      await api.delete(`delCourseStudent/${checkActiveCourse}`)
+    }catch(err){
+      console.log(err)
+    }
   }
-  const addCourse = () => {
+  const addCourse = async () => {
     setCheckActiveCourse(true)
+    try{
+      await api.post('addCourseStudent',{student_id:props.studentId,course_id:props.course.id})
+    }catch(err){
+      console.log(err)
+    }
   }
 
   return(
@@ -89,7 +100,7 @@ const CourseItemList: React.FC<{course:ICourse;studentId:number}> = (props) => {
         <div className="flex flex-col justify-center items-center cursor-pointer group bg-slate-800/90 w-full h-full absolute" onClick={()=>delCourse()}>
           <FontAwesomeIcon icon={Fas.faCheckCircle} className='block group-hover:hidden text-teal-500 text-4xl py-8'/>
           <FontAwesomeIcon icon={Fas.faXmarkCircle} className='hidden group-hover:block text-red-500 text-4xl py-8'/>
-          <p className="text-xs font-bold mt-4 text-center group-hover:opacity-100 opacity-0 text-red-600"> Remover Curso</p>
+          <p className="text-xs font-bold mt-4 text-center group-hover:opacity-100 opacity-0 text-red-600"> Remover Curso </p>
         </div>
       :
         <div className="flex flex-col justify-center items-center group cursor-pointer hover:bg-slate-900/75 w-full h-full absolute" onClick={()=>addCourse()}>

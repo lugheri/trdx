@@ -20,7 +20,8 @@ export const StudentsCourses = sequelize.define<StudentsCoursesInstance>("Studen
     autoIncrement:true
   },
   date_created:{
-    type:DataTypes.DATE
+    type:DataTypes.DATE,
+    defaultValue:DataTypes.NOW,
   },
   date_validity:{
     type:DataTypes.DATE

@@ -149,7 +149,7 @@ const PageStudents : React.FC<IPageStudents>  = (props) => {
                                             "order":props.order ? props.order : 'ASC',
                                             "page":props.page,
                                             "status":1}) 
-        : await api.post('listStudents',{status:1,page:props.page})
+        : await api.post('listStudents',{status:1,page:props.page,orderBy:'id',order:'DESC'})
         
         setListStudents(students.data.response)
       }catch(err){

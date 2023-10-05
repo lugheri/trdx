@@ -12,5 +12,13 @@ export default (routes: Router) => {
   //Courses
   routes.get('/studentsCourses/:studentId', StudentsController.studentsCourses)
   routes.get('/checkCourseStudent/:studentId/:courseId', StudentsController.checkCourseStudent)
+  routes.post('/addCourseStudent',StudentsController.addCourseStudent)
+  routes.delete('/delCourseStudent/:idJoin',StudentsController.delCourseStudent)
+  //Validity Contracts Courses
+  routes.get('/validityContracts/:studentId/:courseId',StudentsController.validityContracts)
+  routes.get('/activeContract/:studentId/:courseId',StudentsController.activeContract)
+  routes.post('/addContract',StudentsController.addContract)
+  routes.delete('/removeContract/:contractId',StudentsController.removeContract)
+
   routes.get('/recentCommentsStudentsCourses/:studentId', StudentsController.recentCommentsStudentsCourses)
 }
