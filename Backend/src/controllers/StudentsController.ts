@@ -1,9 +1,9 @@
 import { Request,Response } from "express";
 import studentsService from "../services/studentsService";
-import { PaginationStudentDTO, SearchStudentDTO, StudentDTO, StudentPartialDTO } from "./Dtos/student.dto";
+import { AddContractValidityDTO, AddCourseStudentDTO, PaginationStudentDTO, SearchStudentDTO, StudentDTO, StudentPartialDTO } from "./Dtos/student.dto";
 import studentCoursesServices from "../services/studentCoursesServices";
 import LessonsCommentsService from "../services/LessonsCommentsService";
-
+import coursesValidityContractsService from "../services/coursesValidityContractsService";
 
 class StudentsController{
   async newStudent(req:Request, res:Response){ 
@@ -136,6 +136,82 @@ class StudentsController{
     }catch(err){
       console.log(err)
       res.json({"error":err})  
+    }
+  }
+
+  async addCourseStudent(req:Request, res:Response){
+    const dataNewCourse = AddCourseStudentDTO.safeParse(req.body)
+    if(!dataNewCourse.success){
+      res.json({"error":dataNewCourse.error})
+      return
+    }    
+    try{
+      const addCourseStudent = await studentCoursesServices.addCourseStudent(dataNewCourse.data)
+      res.json({"success": true,"response": addCourseStudent})  
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})  
+    }
+  }
+
+  async delCourseStudent(req:Request,res:Response){
+    const idJoin:number = parseInt(req.params.idJoin)
+    try{
+      const del = await studentCoursesServices.delCourseStudent(idJoin)
+      res.json({"success":true,"response":del})
+      return
+    }catch(err){
+      res.json({"error":err})
+    }
+  }
+
+  //Validity Contracts
+  async activeContract(req:Request,res:Response){
+    const studentId : number = parseInt(req.params.studentId)
+    const courseId : number = parseInt(req.params.courseId)
+    try{
+      const activeContract = await coursesValidityContractsService.validityCourse(courseId,studentId)
+      res.json({"success":true,"response":activeContract})
+    }catch(err){
+      res.json({"error":err})
+    }
+  }
+
+  async validityContracts(req:Request,res:Response){
+    const studentId : number = parseInt(req.params.studentId)
+    const courseId : number = parseInt(req.params.courseId)
+    try{
+      const current = await coursesValidityContractsService.validityCourse(courseId,studentId)
+      const contracts = await coursesValidityContractsService.allContrats(courseId,studentId)
+      res.json({"success":true,"response":{"contracts":contracts,"currentContract":current}})
+    }catch(err){
+      res.json({"error":err})
+    }
+  }
+
+  async addContract(req:Request,res:Response){
+    const dataContract = AddContractValidityDTO.safeParse(req.body)
+    if(!dataContract.success){
+      res.json({"error":dataContract.error})
+      return
+    }
+    try{
+      const contract = await coursesValidityContractsService.addContract(dataContract.data)
+      res.json({"success":true,"response":contract})
+    }catch(err){
+      res.json({"error":err})
+    }
+
+  }
+
+  async removeContract(req:Request,res:Response){
+    const contractId : number = parseInt(req.params.contractId)
+    try{
+      const del = await coursesValidityContractsService.removeContract(contractId)
+      res.json({"success":true,"response":del})
+    }catch(err){
+      res.json({"error":err})
     }
   }
 

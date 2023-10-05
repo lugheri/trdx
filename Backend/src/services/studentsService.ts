@@ -6,7 +6,7 @@ import { StudentsLogins, StudentsLoginsInstance } from "../models/StudentsLogins
 class StudentsService{
   async createNewStudent(studentData:StudentType):Promise<boolean | StudentsInstance >{
     const [newStudent,created] = await Students.findOrCreate({
-      where: { name: studentData.mail},
+      where: { mail: studentData.mail},
       defaults:studentData
     });
     console.log('created',created);

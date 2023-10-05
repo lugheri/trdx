@@ -9,6 +9,9 @@ import { IFileGallery } from '../../../Students/Dtos/gallery.dto';
 import { urlBase } from '../../../../utils/baseUrl';
 import { Modal, TitleModal } from '../../../../components/Modal';
 import { ICourse } from '../../Content/Dtos/courses.dto';
+import { NewValidityContract, RemoveValidityContract, ValidityContract } from './ValidityContracts';
+
+import moment from 'moment';
 
 interface ICourseCard{
   id:number;
@@ -22,6 +25,16 @@ interface ICourseCard{
 export const CourseCard : React.FC<ICourseCard> = (props) => {
   const [ infoImage, setInfoImage ]= useState<IFileGallery|null>(null)
   const [ infoCourse, setInfoCourse ]= useState<ICourse|null>(null)
+  const [ statusContract, setStatusContract ]= useState<'Expirado'|'Expira Hoje!'|'Vigente'|null>(null)
+  const [ planContract, setPlanContract ]= useState<string|null>(null)
+
+  /*Modal Triggers*/
+  const [validityContract, setValidityContract] = useState<number|null>(null)
+  const [newContract, setNewContract] = useState<number|null>(null)
+  const [removeContract, setRemoveContract] = useState<number|null>(null)
+  const [studentEvolution, setStudentEvolution] = useState<number|null>(null)
+  const [removeCourse, setRemoveCourse] = useState<number|null>(null)
+
   useEffect(()=>{
     const getInfoImage = async () => {
       try{
@@ -39,15 +52,47 @@ export const CourseCard : React.FC<ICourseCard> = (props) => {
         console.log(e)
       } 
     }
+
+    const ActiveContract = async () => {
+      try{
+        const today = moment();
+        const contract = await api.get(`activeContract/${props.studentId}/${props.id}`)
+        let status : 'Expirado'|'Expira Hoje!'|'Vigente'|null = null
+        const statusExpired = moment(contract.data.response.end_validity, 'YYYY-MM-DD');
+        if(contract.data.response.payment_cycle === "V" ){
+          status = 'Vigente';
+        }else{
+          if (statusExpired.isBefore(today)) {
+            status = 'Expirado';
+          } else if (statusExpired.isSame(today, 'day')) {
+            status = 'Expira Hoje!';
+          } else {
+            status = 'Vigente';
+          }
+        }
+        const plan = contract.data.response.payment_cycle === "A" ? "Anual"
+                   : contract.data.response.payment_cycle === "SM" ? "Semestral"
+                   : contract.data.response.payment_cycle === "T" ? "Trimestral"
+                   : contract.data.response.payment_cycle === "B" ? "Bimestral"
+                   : contract.data.response.payment_cycle === "M" ? "Mensal"
+                   : contract.data.response.payment_cycle === "Q" ? "Quinzenal"
+                   : contract.data.response.payment_cycle === "S" ? "Semanal"
+                   : "Vitalício"
+        setStatusContract(status)
+        setPlanContract(plan)
+      }catch(e){
+        console.log(e)
+      } 
+    }
     getInfoImage()
-    props.viewMode == 'list' && infoCourse()
+    if(props.viewMode == 'list'){
+      infoCourse() 
+      ActiveContract()
+    }
 
-  },[props.viewMode])
+  },[props.viewMode,validityContract])
 
-   /*Modal Triggers*/
-   const [vigency, setVigency] = useState<number|null>(null)
-   const [studentEvolution, setStudentEvolution] = useState<number|null>(null)
-   const [removeCourse, setRemoveCourse] = useState<number|null>(null)
+ 
  
 
 
@@ -83,21 +128,42 @@ export const CourseCard : React.FC<ICourseCard> = (props) => {
             </p>
           </div>
           <div className="flex justify-between items-center bg-gradient-to-r from-neutral-800 to-neutral-700 w-full p-1">
-            <p className="bg-teal-800 text-center text-sm text-white opacity-50 rounded py-1 px-2">
-              Plano
+            <p className={`${statusContract == 'Vigente' ? 'bg-teal-800' : statusContract == 'Expira Hoje!' ? 'bg-orange-800' : 'bg-red-800' } 
+                           text-center text-sm text-white opacity-50 rounded py-1 px-2`}>
+              { planContract ? `Plano ${planContract} - ${statusContract}` : 'Sem Plano'}
             </p>          
             <div className="flex">
-              <Button icon="faCalendarCheck" btn='info' name="Vigência" type="notline" size='sm' onClick={()=>setVigency(infoCourse.id)}/>
+              <Button icon="faCalendarCheck" btn='info' name="Vigência" type="notline" size='sm' onClick={()=>setValidityContract(infoCourse.id)}/>
               <Button icon="faChartLine" btn='info' name="Evolução do Aluno" type="notline" size='sm' onClick={()=>setStudentEvolution(infoCourse.id)}/>
               <Button icon="faTrash" btn='error' name="Remover Curso" type="notline" size='sm' onClick={()=>setRemoveCourse(infoCourse.id)}/>
             </div>
           </div>
         {/*Modais*/}
-        { vigency && <Modal component={<div>
-                          <TitleModal icon='faCalendarCheck' close={()=>setVigency(null)} 
+        { validityContract && <Modal component={<div>
+                          <TitleModal icon='faCalendarCheck' close={()=>setValidityContract(null)} 
                                       title='Contratos de Vigência'
                                       subtitle={`Planos de Vigência no curso ${infoCourse.name} do aluno ${props.studentName}`}/>
+                          <ValidityContract close={()=>setValidityContract(null)}
+                                            setNewContract={setNewContract} newContract={newContract}
+                                            setRemoveContract={setRemoveContract} removeContract={removeContract}
+                                            studentId={props.studentId} studentName={props.studentName}
+                                            courseId={infoCourse.id} courseName={infoCourse.name} />              
                                         </div>}/>}
+          {newContract && <Modal component={<div>
+                          <TitleModal icon='faCalendarPlus' close={()=>setNewContract(null)} 
+                                      title='Novo Contrato de Vigência'
+                                      subtitle={`Crie um novo Planos de Vigência no curso ${infoCourse.name} do aluno ${props.studentName}`}/>
+                          <NewValidityContract close={()=>setNewContract(null)}
+                                            studentId={props.studentId} studentName={props.studentName}
+                                            courseId={infoCourse.id} courseName={infoCourse.name} />              
+                                        </div>}/>}
+
+          { removeContract && <Modal component={<div>
+            <TitleModal icon='faCalendarXmark' close={()=>setRemoveContract(null)} 
+                        title='Remover Contrato de Vigência'
+                        subtitle={`Remover Plano de Vigência no curso ${infoCourse.name} do aluno ${props.studentName}`}/>
+            <RemoveValidityContract close={()=>setRemoveContract(null)} contractId={removeContract} />              
+                          </div>}/>}
 
         { studentEvolution && <Modal component={<div>
                           <TitleModal icon='faChartLine' close={()=>setStudentEvolution(null)} 
