@@ -29,7 +29,6 @@ export const ValidityContract : React.FC<IValidityContractComponent> = (props) =
         console.log(contracts.data.response)
         setCurrentContract(contracts.data.response.currentContract)
         setListContract(contracts.data.response.contracts)
-
       }catch(err){
         console.log(err)
       }
@@ -46,6 +45,7 @@ export const ValidityContract : React.FC<IValidityContractComponent> = (props) =
     if (statusExpired.isBefore(today)) {
       return 'Expirado';
     } else if (statusExpired.isSame(today, 'day')) {
+      
       return 'Expira Hoje!';
     } else {
       return 'Vigente';
@@ -97,7 +97,7 @@ export const ValidityContract : React.FC<IValidityContractComponent> = (props) =
                 </tr>
               : listContracts.map((contract,key)=>
                 currentContract?.id === contract.id ? 
-                <tr key={key} className={`${checkStatusContract(contract.end_validity,contract.payment_cycle) == 'Expirado' ? 'bg-red-500/50 text-red-300' : checkStatusContract(contract.end_validity) == 'Expira Hoje!' ? 'bg-orange-400/50 text-orange-200':'bg-teal-700 text-teal-100'} text-sm  text-center`}>                  
+                <tr key={key} className={`${checkStatusContract(contract.end_validity,contract.payment_cycle) == 'Expirado' ? 'bg-red-500/50 text-red-300' : checkStatusContract(contract.end_validity,contract.payment_cycle) == 'Expira Hoje!' ? 'bg-orange-400/50 text-orange-200':'bg-teal-700 text-teal-100'} text-sm  text-center`}>                  
                   <td className="py-2 px-1">{contract.id}</td>
                   <td>{moment(contract.start_validity).format('DD/MM/YYYY')}</td>
                   <td>{moment(contract.end_validity).format('DD/MM/YYYY')}</td>
