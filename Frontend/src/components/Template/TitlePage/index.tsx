@@ -9,7 +9,7 @@ export const TitlePage : React.FC<TitlePageType> = (props) => {
   return(
     <div className="flex justify-between items-center">
       <div className="px-4 py-2 text-stone-400">
-        <p className="text-xl flex ">
+        <p className="text-3xl flex text-white font-bold">
           { props.icon ? (<FontAwesomeIcon className="m-1" icon={Fas[props.icon] as IconProp}/>) : false}  
           { props.title ? props.title : false }        
         </p>
