@@ -4,8 +4,7 @@ import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { NavLink, useLocation } from 'react-router-dom';
-import { NavLinkProps, itemSide } from '../../Dtos/sidebar.dto';
-import api from '../../../services/api';
+import { NavLinkProps } from '../../Dtos/sidebar.dto';
 import Logo from '/img/logo.png'
 import Brand from '/img/brand.png'
 import useAuth from '../../../hooks/useAuth';
@@ -27,7 +26,7 @@ export const Sidebar = () => {
   },[side])
 
   return (
-    <div className={`flex flex-col ${sideSize} ease-in duration-150`}>
+    <div className={`flex-col ${sideSize} ease-in duration-150 hidden md:flex`}>
       {/*BRAND*/}
       <div className="h-16 flex justify-center items-center text-cyan-50 font-bold relative">
         {side == 'open' ? (
@@ -101,7 +100,7 @@ const SideProfile : React.FC<{userData:Student|null}> = (props) => {
         </div>
       </div>
       <p className="font-light text-sm mt-2 text-slate-300">{props.userData?.name}</p>
-
+    
       <div className="w-full flex flex-col justify-center items-center px-2 py-2 bg-[#30332f] rounded-md mt-4">
         <p className="font-light text-xs mb-1 text-slate-300">Seu Progresso</p>
         <div className="w-full h-[10px] p-[1px]  bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] rounded-md shadow">

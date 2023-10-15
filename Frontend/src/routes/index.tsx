@@ -10,7 +10,7 @@ import { Error } from '../pages/Error';
 import { Home } from '../pages/Students/Home';
 import { CoursesGallery } from '../pages/Students/CoursesGallery';
 import { CourseModules } from '../pages/Students/CourseModules';
-import { ClassRoom} from '../pages/Students/ClassRoom';
+import { ClassRoom} from '../pages/Students/ClassRoom/index';
 import { Profile } from '../pages/Students/Profile';
 import { Youtube } from '../pages/Students/Youtube';
 import { Instagram } from '../pages/Students/Instagram';

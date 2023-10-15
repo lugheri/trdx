@@ -19,7 +19,7 @@ export const InactiveStudents = () => {
                          {"alias":"E-mail","field":"mail"},
                          {"alias":"Telefone","field":"phone"},
                          {"alias":"Gênero","field":"gender"}]
-  const order_filter = [{"alias":"Crescente","order":"asc"},{"alias":"Decrescente","order":"desc"}]
+  //const order_filter = [{"alias":"Crescente","order":"asc"},{"alias":"Decrescente","order":"desc"}]
 
   return (
     <div className="flex p-2 flex-col">
@@ -62,7 +62,7 @@ export const InactiveStudents = () => {
        
       </div>
 
-      <PageStudents page={1} params={paramsStudents} value={valueStudents} order={orderStudents}/>
+      <PageStudents page={1} params={paramsStudents} value={valueStudents} order={orderStudents} setOrderStudents={setOrderStudents}/>
     </div>
   )
 }
@@ -71,7 +71,8 @@ type IPageStudents = {
   page: number;
   params: string;
   value: string;
-  order: string;
+  order: string;  
+  setOrderStudents: React.Dispatch<React.SetStateAction<string>>
 };
 
 const PageStudents : React.FC<IPageStudents>  = (props) => {
@@ -148,7 +149,7 @@ const PageStudents : React.FC<IPageStudents>  = (props) => {
       </div>
       { nextPage === null ? 
         <Button name="Carregar Mais Alunos" btn='muted' type="notline" onClick={()=>setNextPage(props.page+1)}/> 
-      : <PageStudents page={nextPage} params={props.params} value={props.value} order={props.order}/> }  
+      : <PageStudents page={nextPage} params={props.params} value={props.value} order={props.order} setOrderStudents={props.setOrderStudents}/> }  
     </>
   )
 }
