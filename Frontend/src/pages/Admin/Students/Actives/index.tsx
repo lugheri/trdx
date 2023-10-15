@@ -21,7 +21,7 @@ export const ActiveStudents = () => {
                          {"alias":"E-mail","field":"mail"},
                          {"alias":"Telefone","field":"phone"},
                          {"alias":"Gênero","field":"gender"}]
-  const order_filter = [{"alias":"Crescente","order":"asc"},{"alias":"Decrescente","order":"desc"}]
+  //const order_filter = [{"alias":"Crescente","order":"asc"},{"alias":"Decrescente","order":"desc"}]
 
   const [newStudent, setNewStudent] = useState<boolean>(false)
 
@@ -87,7 +87,7 @@ export const ActiveStudents = () => {
         { valueStudents && <button className="px-2 text-xs text-white mb-6" onClick={()=>{setValueStudents(""),setParamsStudents("")}}>Limpar Busca</button> }
        
       </div>
-      <PageStudents page={1} params={paramsStudents} value={valueStudents} order={orderStudents}/>
+      <PageStudents page={1} params={paramsStudents} value={valueStudents} order={orderStudents} setOrderStudents={setOrderStudents}/>
 
       { newStudent && <Modal component={<div>
                         <TitleModal icon="faUserPlus" close={()=>setNewStudent(false)}
@@ -114,6 +114,7 @@ type IPageStudents = {
   params: string;
   value: string;
   order: string;
+  setOrderStudents: React.Dispatch<React.SetStateAction<string>>
 };
 
 const PageStudents : React.FC<IPageStudents>  = (props) => {
@@ -199,7 +200,7 @@ const PageStudents : React.FC<IPageStudents>  = (props) => {
       </div>
       { nextPage === null ? 
         <Button name="Carregar Mais Alunos" btn='muted' type="notline" onClick={()=>setNextPage(props.page+1)}/> 
-      : <PageStudents page={nextPage} params={props.params} value={props.value} order={props.order}/> }  
+      : <PageStudents page={nextPage} params={props.params} value={props.value} order={props.order} setOrderStudents={props.setOrderStudents}/> }  
     </>
   )
 }

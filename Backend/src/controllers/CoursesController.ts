@@ -149,11 +149,11 @@ class CoursesController{
     }
   }
 
-  async modulesMyCourse(req:Request,res:Response){
+  async modulesCourse(req:Request,res:Response){
     const courseId = parseInt(req.params.courseId)
     try{
-      const modulesMyCourse = await courseModulesService.modulesCourse(courseId);
-      res.json({"success":true,"response":modulesMyCourse})
+      const modulesCourse = await courseModulesService.modulesCourse(courseId);
+      res.json({"success":true,"response":modulesCourse})
     }catch(err){
       console.log(err)
       res.json({"error":err})
