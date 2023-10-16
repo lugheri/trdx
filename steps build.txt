@@ -4,6 +4,8 @@ docker network create -d overlay trdx
 
 docker stack rm trdx-app && \
 docker stack rm traefik && \
+sleep 30 && \
+docker image rm -f $(docker images -q) && \
 cd /usr/src/trdx/backend/ && 
 docker build -t backend-v1 . && 
 cd /usr/src/trdx/frontend && 
@@ -13,6 +15,8 @@ docker stack deploy trdx-app -c /usr/src/trdx/deploy.yaml
 
 docker stack rm crm-app && \
 docker stack rm traefik && \
+sleep 30 && \
+docker image rm -f $(docker images -q) && \
 cd /usr/src/crm/backend/ && 
 docker build -t backend-v1 . && 
 cd /usr/src/crm/frontend && 

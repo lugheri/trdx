@@ -9,6 +9,7 @@ import { parseISO, isAfter, format } from 'date-fns';
 import courseModulesService from '../services/courseModulesService';
 import { CoursesLessonsInstance } from '../models/CoursesLessons';
 import LessonsCommentsService from '../services/LessonsCommentsService';
+import LessonsAttachmentsService from '../services/LessonsAttachmentsService';
 
 class CoursesController{
   async listCourses(req:Request,res:Response){
@@ -226,7 +227,7 @@ class CoursesController{
     }
   }
 
-  async nextLesson(req:Request,res:Response){
+  async continueCourse(req:Request,res:Response){
     const courseId = parseInt(req.params.courseId)
     const studentId = parseInt(req.params.studentId)
     try{
@@ -235,6 +236,23 @@ class CoursesController{
       const order = infoLesson ? infoLesson.order : 0
       const  nextLesson = await coursesLessonsService.nextLessonCourse(courseId,order)
       res.json({"success": true,"response":{"lastLesson":lastLesson,
+                                            "nextLesson":nextLesson ? nextLesson.id : 0,
+                                            "module":nextLesson ? nextLesson.module_id : 0}})  
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})
+    }
+  }
+
+  async nextLesson(req:Request,res:Response){    
+    const studentId = parseInt(req.params.studentId)
+    const courseId = parseInt(req.params.courseId)
+    const lessonId = parseInt(req.params.lessonId)
+    try{     
+      const infoLesson: CoursesLessonsInstance = await coursesLessonsService.infoLesson(lessonId)
+      const order = infoLesson ? infoLesson.order : 0
+      const nextLesson = await coursesLessonsService.nextLessonCourse(courseId,order)
+      res.json({"success": true,"response":{"lastLesson":lessonId,
                                             "nextLesson":nextLesson ? nextLesson.id : 0,
                                             "module":nextLesson ? nextLesson.module_id : 0}})  
     }catch(err){
@@ -263,7 +281,32 @@ class CoursesController{
   }
 
 
+  //Attachment
+  async attachmentLesson(req:Request,res:Response){
+    const lessonId = parseInt(req.params.lessonId)    
+    try{
+      const attachmentsLesson = await LessonsAttachmentsService.getAttachmentsLesson(lessonId)
+      res.json({"success":true,"response":attachmentsLesson})
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})
+    }
+  }
+
+
   //Comments Lessons
+  async totalCommentsLesson(req:Request, res:Response){
+    const lessonId = parseInt(req.params.lessonId)
+    try{
+      const totalLessons = await LessonsCommentsService.totalCommentsLesson(lessonId)
+      res.json({"success":true,"response":totalLessons})
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})
+    }
+  }
+
+
   async commentsLesson(req:Request,res:Response){
     const lessonId = parseInt(req.params.lessonId);
     const page = parseInt(req.params.page)

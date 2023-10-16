@@ -30,7 +30,7 @@ class LessonsViewedService{
 
   async setViewedLesson(viewedData:WatchedLessonType){
     const [newView,created] = await LessonsViewed.findCreateFind({
-      where: { student_id : viewedData.student_id, lesson_id : viewedData.lesson_id},
+      where: { student_id : viewedData.student_id, module_id : viewedData.module_id, lesson_id : viewedData.lesson_id},
       defaults: viewedData
     });
     await redisDel(`lessonsViewedbyCourse:[studentId:[${viewedData.student_id}],courseId:[${viewedData.course_id}]]`)
@@ -57,7 +57,7 @@ class LessonsViewedService{
     const viewed = await LessonsViewed.findOne({
       where:{student_id:studentId,lesson_id:lessonId}
     })  
-    await redisSet(redisKey,viewed)
+    await redisSet(redisKey,viewed,60)
     
     return viewed
   }
@@ -78,6 +78,7 @@ class LessonsViewedService{
   } 
 
   async setScoreLesson(lessonId:number,studentId:number,scoreData:RatingLessonType){
+    await redisDel(`lessonViewed:[studentId:[${studentId}],lessonId:[${lessonId}]]`)
     await LessonsViewed.update(scoreData,{where:{student_id:studentId,lesson_id:lessonId}})
     return true;
   }

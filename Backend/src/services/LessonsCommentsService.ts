@@ -1,9 +1,21 @@
-import { redisGet, redisSet } from "../config/redis"
+import { redisDel, redisGet, redisSet } from "../config/redis"
 import { NewCommentLessonType } from "../controllers/Dtos/courses.dto"
 import { LessonsComments, LessonsCommentsInstance } from "../models/LessonsComments"
 import { Students } from "../models/Students"
 
 class LessonsCommentsService{
+  async totalCommentsLesson(lessonId:number):Promise<number>{
+    const redisKey = `totalCommentLesson:[${lessonId}]`
+    const totalCommentsLessonRedis = await redisGet(redisKey)
+    if(totalCommentsLessonRedis!=null){return totalCommentsLessonRedis}
+
+    const totalLessons = await LessonsComments.count({
+      where:{lesson_id:lessonId,public:1,status:1}
+    })
+    await redisSet(redisKey,totalLessons,60)
+    return totalLessons
+  }
+
   async getCommentsLesson(lessonId:number,page:number):Promise<LessonsCommentsInstance[]|null>{
     const redisKey = `commentsLesson:[${lessonId}];Page:[${page}]`
     const commentsLessonRedis = await redisGet(redisKey)
@@ -43,6 +55,8 @@ class LessonsCommentsService{
   }
 
   async newCommentLesson(commentsData:NewCommentLessonType){
+    const redisKey = `commentsPendingApproval:studentId[${commentsData.student_id}]:lessonId[${commentsData.lesson_id}]`
+    await redisDel(redisKey)
     await LessonsComments.create({
       lesson_id:commentsData.lesson_id,
       student_id:commentsData.student_id,

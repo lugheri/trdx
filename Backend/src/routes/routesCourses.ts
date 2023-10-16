@@ -12,6 +12,9 @@ export default (routes:Router)=>{
   
   //Lessons
   routes.get("/lessonsModule/:courseId/:moduleId/:studentId",CoursesController.lessonsModule)
+
+  //Attachments
+  routes.get("/getAttachmentsLesson/:lessonId",CoursesController.attachmentLesson)
  
   
 
@@ -31,7 +34,9 @@ export default (routes:Router)=>{
   routes.post("/watchedLesson",CoursesController.watchedLesson)
   routes.get("/getWatchedLesson/:studentId/:lessonId",CoursesController.getWatchedLesson)
   routes.delete("/watchedLesson/:studentId/:lessonId",CoursesController.removeWatchedLesson)
-  routes.get("/nextLesson/:studentId/:courseId",CoursesController.nextLesson)
+  routes.get("/continueCourse/:studentId/:courseId",CoursesController.continueCourse)
+  routes.get("/nextLesson/:studentId/:courseId/:lessonId",CoursesController.nextLesson)
+
   
   routes.patch("/ratingLesson/:studentId/:lessonId",CoursesController.ratingLesson)
 
@@ -41,6 +46,7 @@ export default (routes:Router)=>{
 
 
   //Comments
+  routes.get("/totalCommentsLesson/:lessonId",CoursesController.totalCommentsLesson)
   routes.get("/lessonsComments/:lessonId/:page",CoursesController.commentsLesson)
   routes.get("/lessonsCommentsAnswers/:commentId/:page",CoursesController.commentsAnswersLesson)
   routes.post("/newCommentLesson",CoursesController.newCommentLesson)

@@ -50,5 +50,6 @@ export const LessonsComments = sequelize.define<LessonsCommentsInstance>('Lesson
   tableName: 'lessons_comments',
   timestamps:false
 })
-LessonsComments.belongsTo(LessonsCommentsLikes, { foreignKey: 'id', targetKey: 'comment_id'});
-LessonsComments.belongsTo(Students, {foreignKey:'student_id', targetKey: 'id'})
+//LessonsComments.belongsTo(LessonsCommentsLikes, { foreignKey: 'id', targetKey: 'comment_id'});
+//LessonsComments.belongsTo(Students, {foreignKey:'student_id', targetKey: 'id'})
+LessonsComments.hasOne(Students, { foreignKey: 'id', sourceKey: 'student_id'});
