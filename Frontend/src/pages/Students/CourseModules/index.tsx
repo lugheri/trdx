@@ -60,12 +60,12 @@ export const CourseModules = () => {
     infoCourse === null ? <Loading/> :
     <div className="flex flex-col">
       <div className="flex justify-center item-center p-2">
-        <RenderImage className="w-[300px] bg-white m-1 rounded shadow dark:shadow-teal-950" imageId={infoCourse.image}/>
+        <RenderImage className="w-[300px] bg-white m-1 rounded shadow" imageId={infoCourse.image}/>
         <div className="flex flex-col justify-center p-4">
-          <p className="text-slate-500 dark:text-slate-100 text-3xl font-bold">{infoCourse.name}</p>
-          <p className="text-slate-500 dark:text-slate-100 text-lg mt-4">{infoCourse.description}</p>
-          <p className="text-slate-500 dark:text-slate-100 mt-4">{infoCourse.author ? `Por: ${infoCourse.author }`: false}</p>
-          <p className="text-slate-500 dark:text-slate-100 text-sm mt-4">{infoCourse.tags ? `Tags: ${infoCourse.tags}` : false}</p>
+          <p className="text-neutral-300 text-3xl font-bold">{infoCourse.name}</p>
+          <p className="text-neutral-300 text-lg mt-4">{infoCourse.description}</p>
+          <p className="text-neutral-300 mt-4">{infoCourse.author ? `Por: ${infoCourse.author }`: false}</p>
+          <p className="text-neutral-300 text-sm mt-4">{infoCourse.tags ? `Tags: ${infoCourse.tags}` : false}</p>
           <div className="flex">
             { progressCourse == 0 ? <Button btn="success" type="outline" size="sm" name="Iniciar Curso" icon="faPlay" onClick={()=>openModule()}/> 
             : <Button btn="success" type="outline" size="sm" name="Continue assistindo" icon="faForwardStep" onClick={()=>openModule()}/>}            
@@ -105,7 +105,7 @@ const ModulesCourse: React.FC<{courseId:number,userId:number}> = (props) => {
   useEffect(()=>{
     const getModules = async () => {
       try{
-        const mdl = await api.get(`modulesMyCourse/${props.courseId}`) 
+        const mdl = await api.get(`modulesCourse/${props.courseId}`) 
         setModules(mdl.data.response)
       }catch(e){
         console.log(e)
@@ -134,19 +134,19 @@ const ModulesCourse: React.FC<{courseId:number,userId:number}> = (props) => {
       modules.length == 0 ? 
         <div className="flex items-center w-full flex-col p-4">
           <FontAwesomeIcon className="text-4xl text-red-400" icon={Fas.faFrown}/>
-          <p className="mt-2 text-lg text-slate-400 dark:text-slate-200">Parece que não existe nenhum módulo liberado neste curso.</p>
-          <p className="mt-1 text-sm text-slate-300 dark:text-slate-400">Entre em contato com a equipe de suporte ou tente novamente mais tarde!</p>
+          <p className="mt-2 text-lg text-neutral-400">Parece que não existe nenhum módulo liberado neste curso.</p>
+          <p className="mt-1 text-sm text-neutral-400 ">Entre em contato com a equipe de suporte ou tente novamente mais tarde!</p>
         </div> 
       :      
         <div className="flex flex-col flex-1 bg-green overflow-x-hidden">
 
           <div className="flex justify-between w-full p-2">
-            <p className="font-bold text-slate-500 dark:text-slate-300">{modules.length} Módulo(s)</p>
+            <p className="font-bold text-neutral-00">{modules.length} Módulo(s)</p>
             <div className="flex">
-              <button className="text-slate-600 dark:text-slate-50 opacity-50 hover:opacity-100 text-2xl mr-1" onClick={()=>moveLeft(modules.length)}>
+              <button className="text-neutral-600 opacity-50 hover:opacity-100 text-2xl mr-1" onClick={()=>moveLeft(modules.length)}>
                 <FontAwesomeIcon icon={Fas.faCaretLeft}/>
               </button>
-              <button className="text-slate-600 dark:text-slate-50 opacity-50 hover:opacity-100 text-2xl ml-1" onClick={()=>moveRight(modules.length)}>
+              <button className="text-neutral-600 opacity-50 hover:opacity-100 text-2xl ml-1" onClick={()=>moveRight(modules.length)}>
                 <FontAwesomeIcon icon={Fas.faCaretRight}/>
               </button>              
             </div>

@@ -102,3 +102,21 @@ export interface ICommentLessons{
     name:string;
   }
 }
+
+export interface IAttachmentsLesson{
+  id:number;
+  date_created:string;
+  course_id:number;
+  module_id:number;
+  lesson_id:number;
+  name:string;
+  description:string;
+  type:string;
+  material:string;
+  status:number;
+}
+
+
+
+
+

@@ -43,7 +43,7 @@ export const SideModule: React.FC<ISideModule> = (props) => {
       { modules === null ? 
         <div className="flex flex-col w-full px-2 text-white">
           <FontAwesomeIcon icon={Fas.faCircleNotch} pulse/> 
-          Carregando Módules 
+          Carregando Módulos 
         </div> 
         : modules.length == 0 ? 
         <div className="flex flex-col w-full px-2 text-white">

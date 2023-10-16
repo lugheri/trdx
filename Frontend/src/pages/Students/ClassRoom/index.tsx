@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import { Player } from "./components/Player";
 import { SideModule } from "./components/SideModule";
 import { Student } from '../../../contexts/Dtos/auth.dto';
-
+import api from '../../../services/api';
 
 
 export const ClassRoom = () => {
@@ -23,11 +23,30 @@ export const ClassRoom = () => {
   const [ lessonId, setLessonId ] = useState<number>(0)
   const [ moduleOpen, setModuleOpen ] = useState<number>(moduleId)
 
+  useEffect(()=>{
+    const continueLesson = async () => {
+      try{
+        const info = await api.get(`/continueCourse/${userData ? userData.id : 0}/${courseId}`)
+        console.log('INFO',info.data)
+        setModuleOpen(info.data.response['module'])
+        setLessonId(info.data.response['nextLesson'])
+      }catch(err){
+        console.log(err)
+      }
+    }
+    lessonId == 0 && continueLesson()
+  },[])
+
 
   return(
     <div className="flex h-full">
-      <div className="flex flex-1 flex-col ">       
-        <Player course_id={courseId} module_id={moduleId} lesson_id={lessonId} student_id={userData ? userData.id : 0}/>
+      <div className="flex flex-1 flex-col h-[100%] overflow-auto pb-2">        
+        <Player
+          course_id={courseId} 
+          module_id={moduleOpen} 
+          lesson_id={lessonId} setLessonId={setLessonId}
+          student_id={userData ? userData.id : 0}          
+          studentName={userData ? userData.name : ""}/>
       </div>
       <div className="flex w-1/3 flex-col overflow-auto px-2">
         <SideModule 

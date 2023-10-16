@@ -32,6 +32,7 @@ class CoursesLessonsService{
   async lessonsModule(courseId:number,moduleId:number,studentId:number):Promise<CoursesLessonsInstance[]>{
     const lessonsModule = await CoursesLessons.findAll({
       where:{course_id:courseId,module_id:moduleId,visibility:1,status:1},
+      order:[['order','ASC']],
       include:{attributes:['id','student_id'],model: LessonsViewed,required: false,  where: { student_id:studentId},}
     })
     return lessonsModule
