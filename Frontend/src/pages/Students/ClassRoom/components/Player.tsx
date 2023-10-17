@@ -8,14 +8,20 @@ import { IAttachmentsLesson, ILessons } from "../../Dtos/courses.dto"
 import api from '../../../../services/api';
 import { Loading } from '../../../../components/Loading';
 import { CommentsLesson } from './CommentsLesson';
+import { urlBase } from '../../../../utils/baseUrl';
+
 
 interface VideoPlayerProps {
   lesson_id:number,
   module_id:number,
   course_id:number,
+  nameCourse:string,
   student_id:number,
   studentName:string,
-  setLessonId:React.Dispatch<React.SetStateAction<number>>
+  setLessonId:React.Dispatch<React.SetStateAction<number>>,
+  setOpenNotePad:React.Dispatch<React.SetStateAction<boolean>>,
+  setMobileSide:React.Dispatch<React.SetStateAction<'lesson'|'tools'|'comments'|null>>,
+  mobileSide:'lesson'|'tools'|'comments'|null
 }
 
 export const Player : React.FC<VideoPlayerProps> = (props) => {
@@ -89,6 +95,14 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
     }
   }
 
+  const [ viewAttachments, setViewAttachments ] = useState(false)
+  const openAttachment = async (attachment:IAttachmentsLesson) => {
+    const link = attachment.type == 'link' ? attachment.material : `${urlBase}/docs/${attachment.material}`
+    window.open(link, '_blank');   
+  }
+
+  
+
   return(
     infoLesson === null ? <Loading/> :  
       <div className="flex flex-col w-full items-start justify-start">
@@ -99,8 +113,11 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
           src={`https://player.vimeo.com/video/${infoLesson.link}?color=ff9933&title=0&byline=0&portrait=0&badge=0`}></iframe>
         
         <div className="flex w-full flex-col mt-2 px-2">
-          <div className="flex justify-between items-center">
-            <p className="text-white font-bold text-xl">{infoLesson.name}</p>
+          <div className="flex flex-col md:flex-row justify-between items-end md:items-center">           
+            <div className="flex flex-col flex-1 mb-4 md:mb-0">
+              <p className="text-white font-bold text-xl">{infoLesson.name}</p>
+              <p className="text-[#4FFF4E] font-light text-sm">{props.nameCourse}</p>
+            </div>
             
             { watchedLesson ? 
               <div className="flex justify-between items-center">
@@ -131,24 +148,68 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
             <div dangerouslySetInnerHTML={{ __html: infoLesson.description}}/>
           </p>          
         </div>
-        {/*Tools*/}
-        <div className="flex mb-6">
+
+        {/*Tools Mobile*/}
+        <div className="flex justify-center w-full md:hidden py-2 my-2 border-b border-b-neutral-600">
+          <button
+            className={`${props.mobileSide == 'lesson' ? " bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow text-black" : "text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" } m-2 border border-[#2eff2a]  rounded-md text-sm py-2 px-3`}
+              onClick={()=>props.setMobileSide('lesson')}>
+            Aulas
+          </button>
+          <button
+            className={`${props.mobileSide == 'tools' ? " bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow text-black" : "text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" } m-2 border border-[#2eff2a]  rounded-md text-sm py-2 px-3`} 
+              onClick={()=>props.setMobileSide('tools')}>
+            Conteúdos
+          </button>
+          <button
+            className={`${props.mobileSide == 'comments' ? " bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow text-black" : "text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" } m-2 border border-[#2eff2a]  rounded-md text-sm py-2 px-3`} 
+              onClick={()=>props.setMobileSide('comments')}>
+            Comentários
+          </button>
+        </div>
+
+        {/*Tools*/}        
+        <div className={`${props.mobileSide == 'tools' ? "flex" : "hidden" } mb-6 w-full md:flex`}>
           <button
             className="m-2 border rounded-md text-xs py-2 px-3 border-[#2eff2a] text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" 
-              onClick={()=>nextLesson}>
+              onClick={()=>props.setOpenNotePad(true)}>
             <FontAwesomeIcon icon={Fas.faNoteSticky}/> Anotações
           </button>
-
           { attachmentsLesson === null ? <p>Carregando anexos</p>
-          : attachmentsLesson.length > 0 &&  
-            <button
-              className="m-2 border rounded-md text-xs py-2 px-3 border-[#2eff2a] text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" 
-                onClick={()=>nextLesson}>
-              <FontAwesomeIcon icon={Fas.faPaperclip}/> {attachmentsLesson.length} Anexo(s)
-            </button>
+          : attachmentsLesson.length > 0 && (
+              viewAttachments ? 
+                <div className="flex w-full justify-center items-start px-2 rounded-md bg-[#151515] shadow">
+                  <p className="text-neutral-400 h-full hidden md:flex justify-center items-center text-sm font-light">
+                    <FontAwesomeIcon icon={Fas.faPaperclip}/> Anexos
+                  </p> 
+                  <div className="flex flex-wrap justify-center items-center flex-1 h-full">
+                    {attachmentsLesson.map((attachment,key)=>
+                      <button key={key}
+                        className="m-2 max-w-[100%] md:max-w-[33%] border rounded-md text-xs py-2 px-3 border-[#2eff2a] text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" 
+                        title={attachment.description} 
+                        onClick={()=>openAttachment(attachment)}>
+                        <FontAwesomeIcon icon={attachment.type === 'arquivo' ? Fas.faDownload : attachment.type === 'link' ? Fas.faArrowUpRightFromSquare : Fas.faQuestionCircle}/> {attachment.name}
+                      </button>
+                    )}     
+                  </div>
+                  <button className="rounded-md text-xs mt-2 py-1 px-2 text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" 
+                      title="Fechar"  
+                      onClick={()=>setViewAttachments(false)}>
+                      <FontAwesomeIcon icon={Fas.faTimes}/>
+                  </button>
+                </div>
+              :
+                <button
+                  className="m-2 border rounded-md text-xs py-2 px-3 border-[#2eff2a] text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" 
+                    onClick={()=>setViewAttachments(true)}>
+                  <FontAwesomeIcon icon={Fas.faPaperclip}/> {attachmentsLesson.length} Anexo(s)
+                </button>)
           }          
         </div>
-        <CommentsLesson course_id={props.course_id} lesson_id={props.lesson_id} module_id={props.module_id} student_id={props.student_id} student_name={props.studentName}/>
+
+        <div className={`${props.mobileSide == 'comments' ? "flex mt-4" : "hidden" } md:flex w-full`}>       
+          <CommentsLesson  course_id={props.course_id} lesson_id={props.lesson_id} module_id={props.module_id} student_id={props.student_id} student_name={props.studentName}/>
+        </div>
       </div>  
   )
 }
