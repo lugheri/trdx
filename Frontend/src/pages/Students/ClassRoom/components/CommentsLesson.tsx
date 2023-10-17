@@ -143,7 +143,7 @@ const PageComments: React.FC<IPageComments> = (props) => {
   },[props.lesson_id])
 
   return(
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       { commentsLesson === null ? <p>Carregando Comentários</p>
       : commentsLesson.length == 0 ? <p>Nenhum comentário</p>
       : commentsLesson.map((comment,key)=>

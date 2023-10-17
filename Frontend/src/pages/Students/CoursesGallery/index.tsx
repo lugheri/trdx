@@ -107,7 +107,7 @@ const Course : React.FC<{infoCourse:IMyCourses;userId:number}> = (props) => {
 
   return(
       <div onClick={()=>openCourse()}
-           className="flex flex-col p-2 w-full px-6 mb-4 md:w-[19.5%] md:mx-[0.25%] md:mb-1">
+           className="flex flex-col p-2 w-full px-3 mb-4 md:w-[250px] md:mx-[1px] md:mb-1">
         <div className="bg-slate-300 w-full h-32 rounded-xl flex justify-center items-center">
           Capa do Curso
         </div> 

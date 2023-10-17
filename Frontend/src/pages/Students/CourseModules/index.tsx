@@ -141,7 +141,7 @@ const ModulesCourse: React.FC<{courseId:number,userId:number}> = (props) => {
         <div className="flex flex-col flex-1 bg-green overflow-x-hidden">
 
           <div className="flex justify-between w-full p-2">
-            <p className="font-bold text-neutral-00">{modules.length} Módulo(s)</p>
+            <p className="font-bold text-neutral-300">{modules.length} Módulo(s)</p>
             <div className="flex">
               <button className="text-neutral-600 opacity-50 hover:opacity-100 text-2xl mr-1" onClick={()=>moveLeft(modules.length)}>
                 <FontAwesomeIcon icon={Fas.faCaretLeft}/>
