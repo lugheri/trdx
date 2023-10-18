@@ -11,9 +11,7 @@ export const Template = () => {
       <Sidebar/>
       <div className="flex flex-col w-screen overflow-auto">
         <Navbar/>
-        <div className="h-[92.5vh] overflow-auto">
-          <Outlet/>  
-        </div>
+        <Outlet/>  
       </div>
     </div>
   )

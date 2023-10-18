@@ -10,6 +10,7 @@ import { Student } from '../../../contexts/Dtos/auth.dto';
 import { ICourse, IMyCourses } from '../Dtos/courses.dto';
 import api from '../../../services/api';
 import { Loading } from '../../../components/Loading';
+import { urlBase } from '../../../utils/baseUrl';
 
 export const CoursesGallery = () => {
   const authenticated = useAuth(); 
@@ -106,21 +107,20 @@ const Course : React.FC<{infoCourse:IMyCourses;userId:number}> = (props) => {
   
 
   return(
-      <div onClick={()=>openCourse()}
-           className="flex flex-col p-2 w-full px-3 mb-4 md:w-[250px] md:mx-[1px] md:mb-1">
-        <div className="bg-slate-300 w-full h-32 rounded-xl flex justify-center items-center">
-          Capa do Curso
-        </div> 
-        <p className="text-white text-sm mb-2 font-bold min-h-[50px] flex items-center">{dataCourse?.name}</p>
-        <p className="text-gray-100 text-xs font-light">{progressCourse}% concluido</p>
-        <div className="w-1/2 md:w-full h-[10px] p-[1px]  mb-4 bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] rounded-md shadow">
-          <div className="w-full h-full bg-neutral-900 rounded-md shadow overflow-hidden"> 
-            <div className="h-full  bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] rounded duration-1000 ease-out" style={{width:`${progressCourse}%`}}></div>
-          </div>
+    <div onClick={()=>openCourse()}
+         className="flex flex-col p-2 w-full px-3 mb-4 md:w-[24%] md:mx-[.25%] md:mb-1 opacity-90 cursor-pointer hover:opacity-100">
+      <div className="bg-slate-300 w-full h-32 rounded-xl flex justify-center items-center overflow-hidden">
+        <RenderImage className="w-full h-full" imageId={props.infoCourse.image}/>
+      </div> 
+      <p className="text-white text-sm mb-2 font-bold min-h-[50px] flex items-center">{dataCourse?.name}</p>
+      <p className="text-gray-100 text-xs font-light">{progressCourse}% concluido</p>
+      <div className="w-1/2 md:w-full h-[10px] p-[1px]  mb-4 bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] rounded-md shadow">
+        <div className="w-full h-full bg-neutral-900 rounded-md shadow overflow-hidden"> 
+          <div className="h-full  bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] rounded duration-1000 ease-out" style={{width:`${progressCourse}%`}}></div>
         </div>
-
-        <p className="text-white text-sm font-thin md:min-h-[150px] flex items-start">{dataCourse == null ? "" : dataCourse.description.length > 150 ? dataCourse.description.slice(0, 145) + ' . . . ' : dataCourse.description}</p>
       </div>
+      <p className="text-white text-sm font-thin md:min-h-[150px] flex items-start">{dataCourse == null ? "" : dataCourse.description.length > 150 ? dataCourse.description.slice(0, 145) + ' . . . ' : dataCourse.description}</p>
+    </div>
    
    
    /* <div onClick={()=>openCourse()}
@@ -140,7 +140,30 @@ const Course : React.FC<{infoCourse:IMyCourses;userId:number}> = (props) => {
   )
 }
 
+const RenderImage : React.FC<{className:string,imageId:number}> = (props) => {
+  const [ fileImage, setFileImage ] = useState(null)
 
+  useEffect(()=>{
+    const getInfoImage = async () => {
+      try{
+        const i = await api.get(`infoFile/${props.imageId}`)
+        setFileImage(i.data.response.file)
+      }catch(e){
+        console.log(e)
+      }
+    }
+    getInfoImage()
+  },[props.imageId])
+
+  return(
+    fileImage == null ? <Loading/> : 
+    <div 
+      className={props.className} 
+      style={{backgroundImage:`url(${urlBase}/gallery/${fileImage})`,
+              backgroundSize:'cover',
+              backgroundPosition:'center'}}/>
+  )
+}
 
 
 const Empty = () => {

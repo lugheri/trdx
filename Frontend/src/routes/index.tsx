@@ -96,8 +96,7 @@ const RoutesApp = () => {
                 { index: true, element:<CoursesGallery/>},
                 { path: '/classRoom/course/:course_id', element:<CourseModules/>},
                 { path: '/classRoom/course/lesson/:lesson_id', element:<ClassRoom/>},
-              ]
-             
+              ]             
             },
             {
               path:'/instagram',

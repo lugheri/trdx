@@ -42,7 +42,7 @@ export const Login = () => {
     <div className="flex flex-col">
       <div className="bg-login-bg h-[80vh] bg-cover bg-center flex flex-col justify-center items-center">
         <img src={Brand} className="w-36"/>
-        <div className="bg-[#101010] mt-4 rounded-xl w-1/4 py-4">
+        <div className="bg-[#101010] mt-4 rounded-xl w-[80%] md:w-1/4 py-4">
           <div className="p-4 text-center text-[#636363] font-semibold text-sm">FAÇA SEU LOGIN</div>
           <div className="h-1 bg-gradient-to-r from-[#3CF400] to-[#73CB00]"></div>
           <form onSubmit={sendAuth} className="p-4 flex flex-col justify-center items-center">
@@ -121,6 +121,12 @@ export const LoginAdm = () => {
       setCauseErrorAuth(err.message)
     }
   }
+
+  const requestFullscreen = () => {
+    const element = document.documentElement;
+    element.requestFullscreen && element.requestFullscreen(); 
+  };
+
   return (
     <div className="bg-cyan-950 h-screen flex justify-end items-center ">
       <div className="px-1 w-1/3 h-auto  mr-10">
@@ -145,6 +151,7 @@ export const LoginAdm = () => {
                  placeholder="Senha"/>
           <button 
             type="submit" 
+            onClick={requestFullscreen}
             className="text-cyan-950 mx-20 font-bold bg-green-500 rounded-xl p-2 text-lg shadow-md mb-5 transition duration-150 ease-out
                        hover:bg-green-600 hover:text-cyan-100 hover:ease-in">
             LOGIN           

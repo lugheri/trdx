@@ -13,16 +13,20 @@ export const Navbar = () => {
   const authenticated = useAuth();  
   const userData:Student|null = authenticated ? authenticated.userData : null
 
+  const location = useLocation();  
+  const component = location.pathname.split('/')[1]
+  const lesson = location.pathname.split('/')[4]
+
 
   const [mobileNav, setMobileNav ] = useState<'open'|'closed'>('closed')
   return (
     <>
       {/*Mobile*/}
-      <div className="text-white flex h-[60px] flex-col md:hidden relative">
+      <div className="text-white flex h-[60px] z-20 flex-col md:hidden relative">
         <div className="flex px-4 justify-between bg-[#1B1B1B] items-center flex-1">
           <img src={Logo} className="w-1/4 my-2"/>
           <div className="flex flex-1 items-center justify-end">
-            <div className="flex mx-1 w-[30px] h-[30px] hover:w-full justify-center items-center text-white rounded-full text-sm bg-[#353535] cursor-pointer opacity-90 hover:opacity-100">
+            <div className="flex mx-1 w-[30px] h-[30px] hover:flex-1 justify-center items-center text-white rounded-full text-sm bg-[#353535] cursor-pointer opacity-90 hover:opacity-100">
               <FontAwesomeIcon icon={Fas.faSearch}/>
             </div>
             <div className="flex ml-1 w-[30px] h-[30px] justify-center items-center text-black rounded-[8.226px] text-sm bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow-md cursor-pointer opacity-90 hover:opacity-100" 
@@ -82,17 +86,16 @@ export const Navbar = () => {
      
      
       {/*Web*/}
-      <div className="text-white  justify-end items-center px-4 h-14  hidden md:flex">
-        {/*ACTIONS*/}
-        <div className="flex justify-center items-center">                 
-          <div className="group opacity-50 text-xl p-2 hover:opacity-100 cursor-pointer mx-2 flex justify-center items-center">
-            <FontAwesomeIcon className="text-gray-300 block group-hover:hidden" icon={Fas.faDoorClosed}/>
-            <FontAwesomeIcon className="text-red-800 hidden group-hover:block" icon={Fas.faDoorOpen}/>
-            <p className="mx-2 text-sm group-hover:text-red-500">Sair</p>
-          </div>
-          {/*PROFILE*/}         
-          
-        </div>  
+      <div className="hidden md:flex h-14 px-4 items-center">
+        {/* Load Option */}
+        { component === "classRoom" && !lesson &&
+          <NavLink to={'/coursesGallery'} className="text-white font-light pr-8 pl-2">
+            <FontAwesomeIcon className="px-2" icon={Fas.faArrowLeft}/> Voltar para Meus cursos {lesson}
+          </NavLink>
+        }
+        <div className="flex mx-1 w-[30px] h-[30px] hover:flex-1 justify-center items-center text-white rounded-full text-sm bg-[#353535] cursor-pointer opacity-90 hover:opacity-100">
+          <FontAwesomeIcon icon={Fas.faSearch}/>         
+        </div>
       </div>
       
     </>
@@ -110,6 +113,7 @@ const SideItem : React.FC<{to:string;icon:keyof typeof Fas|null;name?:string;onC
   return(
      <NavLink
       to={props.to}
+      onClick={props.onClick}
       className={({ isActive, isPending }) =>isActive ? navActive : isPending ? navDefault : navDefault}>
       {props.icon ? (<FontAwesomeIcon className={`px-4 ml-3 opacity-60 ${isActiveNav ? "text-black":"text-[#00ff00]"}`} icon={Fas[props.icon] as IconProp}/>) : false}
       {props.name ? (<p className="text-xs">{props.name}</p>) : false}      

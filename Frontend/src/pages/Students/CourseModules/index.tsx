@@ -1,16 +1,14 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ICourse, IModules } from "../Dtos/courses.dto";
+import useAuth from "../../../hooks/useAuth";
+import { Student } from "../../../contexts/Dtos/auth.dto";
 import api from "../../../services/api";
+import { ICourse, IModules } from "../Dtos/courses.dto";
 import { Loading } from "../../../components/Loading";
-import { Card } from "../../../components/Cards";
 import { urlBase } from "../../../utils/baseUrl";
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useAuth from "../../../hooks/useAuth";
-import { Student } from "../../../contexts/Dtos/auth.dto";
-import { Button } from "../../../components/Buttons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const CourseModules = () => {
   const authenticated = useAuth();  
@@ -50,7 +48,7 @@ export const CourseModules = () => {
     getInfoCourse()
   },[])
 
-   const navigate = useNavigate();  
+  const navigate = useNavigate();  
   const openModule = () => {
     const hash_lessonId: string = btoa(`[{"courseId":"${courseId}","moduleId":"0"}]`);
     navigate(`/classRoom/course/lesson/${hash_lessonId}`)
@@ -58,49 +56,36 @@ export const CourseModules = () => {
 
   return (
     infoCourse === null ? <Loading/> :
-    <div className="flex flex-col">
-      <div className="flex justify-center item-center p-2">
-        <RenderImage className="w-[300px] bg-white m-1 rounded shadow" imageId={infoCourse.image}/>
-        <div className="flex flex-col justify-center p-4">
-          <p className="text-neutral-300 text-3xl font-bold">{infoCourse.name}</p>
-          <p className="text-neutral-300 text-lg mt-4">{infoCourse.description}</p>
-          <p className="text-neutral-300 mt-4">{infoCourse.author ? `Por: ${infoCourse.author }`: false}</p>
-          <p className="text-neutral-300 text-sm mt-4">{infoCourse.tags ? `Tags: ${infoCourse.tags}` : false}</p>
-          <div className="flex">
-            { progressCourse == 0 ? <Button btn="success" type="outline" size="sm" name="Iniciar Curso" icon="faPlay" onClick={()=>openModule()}/> 
-            : <Button btn="success" type="outline" size="sm" name="Continue assistindo" icon="faForwardStep" onClick={()=>openModule()}/>}            
-          </div>
-          <div className="flex mt-4 items-center h-[18px] bg-slate-500 dark:bg-slate-800 w-[90%] shadow rounded-full overflow-hidden relative">
-            <div className="h-full bg-teal-500 duration-1000 ease-out" style={{width:`${progressCourse}%`}}></div>
-            <p className="absolute w-full left-0 top-0 justify-center text-xs font-bold text-white h-full flex items-center">{progressCourse}% Concluido</p>
-          </div>
+    <div className="flex flex-col h-[92vh]">
+      <div className="flex h-[20%] md:h-[40%] m-2 bg-green-500 rounded-md overflow-hidden relative">
+        <RenderImage className="w-full h-auto" imageId={infoCourse.image}/>
+        <div 
+          className="flex z-10 absolute cursor-pointer px-4 py-2 bg-black/70 hover:bg-black top-[50%] md:top-[40%] right-0 text-white font-light"
+          onClick={()=>openModule()}>
+          { progressCourse == 0 ?
+            <div className="flex w-full h-full items-center">
+              <div className="w-[60px] h-[35px] md:w-[100px] md:h-[55px] bg-slate-300 pr-4">
+                <RenderImage className="w-full h-full" imageId={infoCourse.image}/>
+              </div>
+              <p className="px-2 md:px-6 text-sm">Iniciar Curso <FontAwesomeIcon className="pl-4" icon={Fas.faChevronRight}/></p>
+            </div>
+          : <div className="flex w-full h-full items-center">           
+              <div className="w-[60px] h-[35px] md:w-[100px] md:h-[55px] bg-slate-300 pr-4"></div>
+              <p className="px-2 md:px-6 text-sm">Continuar Curso <FontAwesomeIcon className="pl-4" icon={Fas.faChevronRight}/></p>
+            </div>
+          }
         </div>
+        <div className="bg-gradient-to-b from-transparent via-[#070707]/80 to-[#070707] absolute w-full h-1/2 bottom-0"/>
       </div>
-      <Card component={<ModulesCourse courseId={parseInt(courseId, 10)} userId={userData ? userData.id : 0}/>}/>
+      <div className="flex flex-1 m-2">
+        <ModulesCourse courseId={parseInt(courseId, 10)} userId={userData ? userData.id : 0}/>
+      </div>
     </div>
   )
 }
 
-const RenderImage : React.FC<{imageId:number,className:string}> = (props) => {
-  const [ fileImage, setFileImage ] = useState(null)
 
-  useEffect(()=>{
-    const getInfoImage = async () => {
-      try{
-        const i = await api.get(`infoFile/${props.imageId}`)
-        setFileImage(i.data.response.file)
-      }catch(e){
-        console.log(e)
-      }
-    }
-    getInfoImage()
-  },[props.imageId])
-
-  return(
-    fileImage ? <img className={props.className} src={`${urlBase}/gallery/${fileImage}`}/> : <Loading/>
-  )
-}
-const ModulesCourse: React.FC<{courseId:number,userId:number}> = (props) => {
+const ModulesCourse : React.FC<{courseId:number,userId:number}> = (props) => {
   const [ modules, setModules ] = useState<IModules[]|null>(null)
   useEffect(()=>{
     const getModules = async () => {
@@ -113,53 +98,55 @@ const ModulesCourse: React.FC<{courseId:number,userId:number}> = (props) => {
     }
     getModules()
   },[])
-
-  
   const [ margin, setMargin ] = useState<number>(0)  
   const moveLeft = (modules:number) => {
-    const maxLeft = modules * 350
+    const maxLeft = modules * 300
     console.log(maxLeft)
-    const newPosition = margin + 350 >= 0 ? 0 : margin + 550
+    const newPosition = margin + 300 >= 0 ? 0 : margin + 600
     setMargin(newPosition)
   }
   const moveRight = (modules:number) => {
-    const maxLeft = (modules-1) * 350
+    const maxLeft = (modules-1) * 300
 
-    const newPosition = margin - 350 <= -maxLeft ? -maxLeft : margin - 350
+    const newPosition = margin - 300 <= -maxLeft ? -maxLeft : margin - 300
     setMargin(newPosition)
   }
 
   return(
     modules === null ? <Loading/> :
-      modules.length == 0 ? 
-        <div className="flex items-center w-full flex-col p-4">
-          <FontAwesomeIcon className="text-4xl text-red-400" icon={Fas.faFrown}/>
-          <p className="mt-2 text-lg text-neutral-400">Parece que não existe nenhum módulo liberado neste curso.</p>
-          <p className="mt-1 text-sm text-neutral-400 ">Entre em contato com a equipe de suporte ou tente novamente mais tarde!</p>
-        </div> 
-      :      
-        <div className="flex flex-col flex-1 bg-green overflow-x-hidden">
-
-          <div className="flex justify-between w-full p-2">
-            <p className="font-bold text-neutral-300">{modules.length} Módulo(s)</p>
-            <div className="flex">
-              <button className="text-neutral-600 opacity-50 hover:opacity-100 text-2xl mr-1" onClick={()=>moveLeft(modules.length)}>
-                <FontAwesomeIcon icon={Fas.faCaretLeft}/>
-              </button>
-              <button className="text-neutral-600 opacity-50 hover:opacity-100 text-2xl ml-1" onClick={()=>moveRight(modules.length)}>
-                <FontAwesomeIcon icon={Fas.faCaretRight}/>
-              </button>              
+    modules.length == 0 ? 
+      <div className="flex items-center w-full flex-col p-4">
+        <FontAwesomeIcon className="text-4xl text-red-400" icon={Fas.faFrown}/>
+        <p className="mt-2 text-lg text-neutral-400">Parece que não existe nenhum módulo liberado neste curso.</p>
+        <p className="mt-1 text-sm text-neutral-400 ">Entre em contato com a equipe de suporte ou tente novamente mais tarde!</p>
+      </div> 
+    :      
+      <div className="flex flex-col flex-1 bg-green overflow-x-hidden">
+        <div className="flex h-full overflow-hidden">
+          <div className="w-[10%] md:w-[5%] absolute md:relative h-[70vh] md:h-full flex z-10 justify-center items-center">
+            <button
+              className="border w-9 h-9 rounded-full border-[#2eff2a] bg-[#2eff2a22] text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" 
+                onClick={()=>moveLeft(modules.length)}>
+                <FontAwesomeIcon icon={Fas.faChevronLeft}/>
+            </button>
+          </div>
+          <div className="flex w-[90%] overflow-hidden">
+            <div className="flex w-auto p-1 duration-300 ease-out" style={{marginLeft:`${margin}px`,width:`${modules.length*350}px`}}>
+              {modules.map((module,key) =><ModuleCard key={key} module={module} userId={props.userId} />)}
             </div>
           </div>
-          
-          <div className="flex w-auto p-1 duration-300 ease-out" style={{marginLeft:`${margin}px`,width:`${modules.length*350}px`}}>
-            {modules.map((module,key) =>
-              <ModuleCard key={key} module={module} userId={props.userId} />
-            )}
-          </div>
+          <div className="w-[10%] md:w-[5%] absolute right-2 md:relative h-[70vh] md:h-full flex z-10 justify-center items-center">
+            <button
+              className="border w-9 h-9 rounded-full border-[#2eff2a] bg-[#2eff2a22] text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" 
+                onClick={()=>moveRight(modules.length)}>
+                <FontAwesomeIcon icon={Fas.faChevronRight}/>
+            </button>
+          </div>          
         </div>
-    )
+      </div>
+  )
 }
+
 const ModuleCard : React.FC<{module:IModules,userId:number}> = (props) => {
   const [ progressModule, setProgressModule] = useState(0);
   useEffect(()=>{
@@ -183,19 +170,44 @@ const ModuleCard : React.FC<{module:IModules,userId:number}> = (props) => {
   return(
     <div 
       onClick={()=>openModule()}
-      className="flex flex-col justify-between py-4 items-center bg-neutral-700 w-[350px] mx-1 rounded shadow shadow-slate-600 dark:shadow-black h-[200px] opacity-90 hover:opacity-100 hover:scale-[1.02] cursor-pointer duration-150 ease-out">
+      className="flex flex-col justify-between py-4 items-center bg-neutral-700 w-[300px] mx-1 rounded shadow shadow-slate-600 dark:shadow-black h-full opacity-90 hover:opacity-100 hover:scale-[1.02] cursor-pointer duration-150 ease-out">
       <div className="flex flex-col flex-1 w-full justify-center item-center">
-        <FontAwesomeIcon className="text-4xl mb-2 text-green-500" icon={Fas.faChalkboard}/>
+        <FontAwesomeIcon className="text-4xl mb-2 text-[#2eff2a]" icon={Fas.faChalkboard}/>
         <p className="font-bold text-neutral-200 text-center">{props.module.module}</p>
         <p className="text-black text-sm text-center">{props.module.description}</p>
       </div>
-      <div className="flex  items-center h-[18px] bg-neutral-800 w-[90%] shadow rounded-full overflow-hidden relative">
-        <div className="h-full bg-teal-500 duration-1000 ease-out" style={{width:`${progressModule}%`}}></div>
-        <p className="absolute w-full left-0 top-0 justify-center text-xs font-bold text-white h-full flex items-center">{progressModule}% Concluido</p>
+      <div className="flex rounded-full overflow-hidden bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] h-[18px] w-[90%] p-[1px]">
+        <div className="flex items-center h-full w-full bg-neutral-700  shadow rounded-full overflow-hidden relative">
+          <div className="h-full bg-gradient-to-l from-[#24ff0055] to-[#2eff2a] duration-1000 ease-out" style={{width:`${progressModule}%`}}></div>
+          <p className="absolute w-full left-0 top-0 justify-center text-xs font-bold text-black h-full flex items-center">{progressModule}% Concluido</p>
+        </div>
       </div>
+      
     </div>
   )
-
 }
 
+const RenderImage : React.FC<{className:string,imageId:number}> = (props) => {
+  const [ fileImage, setFileImage ] = useState(null)
 
+  useEffect(()=>{
+    const getInfoImage = async () => {
+      try{
+        const i = await api.get(`infoFile/${props.imageId}`)
+        setFileImage(i.data.response.file)
+      }catch(e){
+        console.log(e)
+      }
+    }
+    getInfoImage()
+  },[props.imageId])
+
+  return(
+    fileImage == null ? <Loading/> : 
+    <div 
+      className={props.className} 
+      style={{backgroundImage:`url(${urlBase}/gallery/${fileImage})`,
+              backgroundSize:'cover',
+              backgroundPosition:'center'}}/>
+  )
+}
