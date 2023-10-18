@@ -67,10 +67,7 @@ export const ClassRoom = () => {
           setOpenNotePad={setOpenNotePad}
           setMobileSide={setMobileSide} mobileSide={mobileSide}          
           />
-          {/*Load Mobile Side */}
-
-
-        
+          {/*Load Mobile Side */}        
       </div>
      
       <div className={`${mobileSide == 'lesson' ? "flex" : "hidden"} md:overflow-auto md:flex flex-col md:w-1/3 relative px-2`}>
