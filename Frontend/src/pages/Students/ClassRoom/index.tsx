@@ -6,6 +6,7 @@ import { SideModule } from "./components/SideModule";
 import { Student } from '../../../contexts/Dtos/auth.dto';
 import api from '../../../services/api';
 import { ICourse } from '../Dtos/courses.dto';
+import { NotePad } from './components/NotePad';
 
 
 export const ClassRoom = () => {
@@ -78,6 +79,7 @@ export const ClassRoom = () => {
           lessonId={lessonId} setLessonId={setLessonId}/>         
         { openNotePad && <NotePad 
                             course_id={courseId} 
+                            nameCourse={infoCourse ? infoCourse.name : ""}
                             module_id={moduleOpen}
                             lesson_id={lessonId}
                             student_id={userData ? userData.id : 0}
@@ -88,34 +90,3 @@ export const ClassRoom = () => {
   )
 }
 
-
-type INote = {
-  course_id:number,
-  module_id:number,
-  lesson_id:number,
-  student_id:number,
-  setClose:React.Dispatch<React.SetStateAction<boolean>>,
-  
-}
-
-const NotePad : React.FC<INote> = (props) => {
- 
-
-  return(
-    <div
-      className="flex flex-col w-[95%] right-0 h-[95%] absolute rounded-lg overflow-hidden justify-center m-2">
-        <div className="bg-red-500 p-4 flex justify-between">
-          Header 
-          <button onClick={()=>props.setClose(false)}>Close</button>
-        </div>
-        <div className="bg-orange-500 flex flex-1">
-          <div className="bg-green-500 w-1/4">
-            side
-          </div>
-          <div className="flex flex-1 bg-blue-500">
-            body
-          </div>
-        </div>      
-    </div>
-  )
-}

@@ -52,6 +52,16 @@ export const RatingLessonDTO = z.object({
 })
 export type RatingLessonType = z.infer<typeof RatingLessonDTO>
 
+//Notes
+export const NewNoteLessonDTO = z.object({
+  student_id:z.number(),
+  course_id:z.number(),
+  module_id:z.number(),
+  lesson_id:z.number(),
+  note:z.string(),
+})
+export type NewNoteLessonType = z.infer<typeof NewNoteLessonDTO>
+
 export const NewCommentLessonDTO = z.object({
   lesson_id:z.number(),
   student_id:z.number(),

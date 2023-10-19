@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import coursesService from '../services/coursesService';
-import { PaginationCoursesDTO, SearchCoursesDTO, CoursesDTO, CoursesPartialDTO, WatchedLessonDTO, RatingLessonDTO, NewCommentLessonDTO } from "./Dtos/courses.dto";
+import { PaginationCoursesDTO, SearchCoursesDTO, CoursesDTO, CoursesPartialDTO, WatchedLessonDTO, RatingLessonDTO, NewCommentLessonDTO, NewNoteLessonDTO } from "./Dtos/courses.dto";
 import studentCoursesServices from '../services/studentCoursesServices';
 import coursesValidityContractsService from '../services/coursesValidityContractsService';
 import coursesLessonsService from '../services/coursesLessonsService';
@@ -10,6 +10,7 @@ import courseModulesService from '../services/courseModulesService';
 import { CoursesLessonsInstance } from '../models/CoursesLessons';
 import LessonsCommentsService from '../services/LessonsCommentsService';
 import LessonsAttachmentsService from '../services/LessonsAttachmentsService';
+import LessonsNotesService from '../services/LessonsNotesService';
 
 class CoursesController{
   async listCourses(req:Request,res:Response){
@@ -245,7 +246,7 @@ class CoursesController{
   }
 
   async nextLesson(req:Request,res:Response){    
-    const studentId = parseInt(req.params.studentId)
+    //const studentId = parseInt(req.params.studentId)
     const courseId = parseInt(req.params.courseId)
     const lessonId = parseInt(req.params.lessonId)
     try{     
@@ -293,6 +294,45 @@ class CoursesController{
     }
   }
 
+  //Notes
+  async lessonsNotes(req:Request, res:Response){
+    const courseId = parseInt(req.params.courseId)    
+    const studentId = parseInt(req.params.studentId)    
+    const page = parseInt(req.params.pag)
+    try{
+      const notesCourse = await LessonsNotesService.lessonsNotes(courseId,studentId,page)
+      res.json({"success":true,"response":notesCourse})
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})
+    }    
+  }
+
+  async newNote(req:Request, res:Response){
+    const noteLesson = NewNoteLessonDTO.safeParse(req.body)
+    if(!noteLesson.success){
+      res.json({"error": noteLesson.error})  
+      return
+    }  
+    try{
+      const note = await LessonsNotesService.newNote(noteLesson.data) 
+      res.json({"success": true,"response": note})  
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error": err})  
+    }
+  }
+
+  async editNote(req:Request, res:Response){
+
+  }
+
+  async deleteNote(req:Request, res:Response){
+
+  }
+
+  
 
   //Comments Lessons
   async totalCommentsLesson(req:Request, res:Response){
