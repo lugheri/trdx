@@ -51,21 +51,24 @@ export const SideModule: React.FC<ISideModule> = (props) => {
           Nenhum Módulo Cadastrado 
         </div> 
         : modules.map((module,key)=>
-          props.moduleOpen === module.id ?
-          <>
-          <div key={key} className="bg-gradient-to-l from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow-md text-black mb-2 h-12 rounded-md
-                                    flex justify-between items-center px-2 cursor-pointer"
-               onClick={()=>props.setModuleOpen(module.id)}>
-            <p className="text-xs">{module.module}</p>
-            <FontAwesomeIcon className="text-xs" icon={Fas.faChevronUp}/> 
-          </div>
-          <LessonsModule course_id={props.courseId} module_id={props.moduleOpen} student_id={props.studentId}  lesson_id={props.lessonId} setLessonId={props.setLessonId}/>
-          </>
-          : 
-          <div key={key} className="bg-[#101010] text-white flex justify-between items-center mb-2 px-2 h-12 font-light hover:font-semibold opacity-80 hover:opacity-100 cursor-pointer"
-               onClick={()=>props.setModuleOpen(module.id)}>
-            <p className="text-xs">{module.module}</p>
-            <FontAwesomeIcon className="text-xs" icon={Fas.faChevronDown}/> 
+          <div key={key}>
+            { props.moduleOpen === module.id ?
+            <>
+            <div  className="bg-gradient-to-l from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow-md text-black mb-2 h-12 rounded-md
+                                      flex justify-between items-center px-2 cursor-pointer"
+                onClick={()=>props.setModuleOpen(module.id)}>
+              <p className="text-xs">{module.module}</p>
+              <FontAwesomeIcon className="text-xs" icon={Fas.faChevronUp}/> 
+            </div>
+            <LessonsModule course_id={props.courseId} module_id={props.moduleOpen} student_id={props.studentId}  lesson_id={props.lessonId} setLessonId={props.setLessonId}/>
+            </>
+            : 
+            <div key={key} className="bg-[#101010] text-white flex justify-between items-center mb-2 px-2 h-12 font-light hover:font-semibold opacity-80 hover:opacity-100 cursor-pointer"
+                onClick={()=>props.setModuleOpen(module.id)}>
+              <p className="text-xs">{module.module}</p>
+              <FontAwesomeIcon className="text-xs" icon={Fas.faChevronDown}/> 
+            </div>
+            }
           </div>
         )
       }

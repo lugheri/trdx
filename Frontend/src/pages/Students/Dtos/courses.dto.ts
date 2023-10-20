@@ -103,6 +103,18 @@ export interface ICommentLessons{
   }
 }
 
+
+export interface INoteLesson{
+  id:number;
+  date_created:string;
+  student_id:number;
+  course_id:number;
+  module_id:number;
+  lesson_id:number;
+  note:string;
+}
+
+
 export interface IAttachmentsLesson{
   id:number;
   date_created:string;
