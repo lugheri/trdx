@@ -1,17 +1,15 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../instances/mysql';
 
-export interface LessonsNotesInstance extends Model{
+export interface StudentsNotesInstance extends Model{
   id:number;
   date_created:string;
   student_id:number;
   course_id:number;
-  module_id:number;
-  lesson_id:number;
   note:string;
 }
 
-export const LessonsNotes = sequelize.define<LessonsNotesInstance>('LessonsNotes',{
+export const StudentsNotes = sequelize.define<StudentsNotesInstance>('StudentsNotes',{
   id:{
     primaryKey:true,
     autoIncrement:true,
@@ -27,16 +25,10 @@ export const LessonsNotes = sequelize.define<LessonsNotesInstance>('LessonsNotes
   course_id:{
     type:DataTypes.INTEGER
   },
-  module_id:{
-    type:DataTypes.INTEGER
-  },
-  lesson_id:{
-    type:DataTypes.INTEGER
-  },
   note:{
     type:DataTypes.STRING
   }
 },{
-  tableName: 'lessons_notes',
+  tableName: 'students_notes',
   timestamps:false
 })

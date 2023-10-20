@@ -51,6 +51,9 @@ export const ClassRoom = () => {
   },[])
 
   const [ openNotePad, setOpenNotePad ] = useState(false)
+  const [ openNotePadMobile, setOpenNotePadMobile ] = useState(false)
+  console.log("NOTE PAD MOBILE",openNotePadMobile)
+  console.log("NOTE PAD",openNotePad)
 
   //Mobile Side
   const [ mobileSide, setMobileSide ] = useState<'lesson'|'tools'|'comments'|null>(null)
@@ -65,10 +68,21 @@ export const ClassRoom = () => {
           lesson_id={lessonId} setLessonId={setLessonId}
           student_id={userData ? userData.id : 0}          
           studentName={userData ? userData.name : ""}
-          setOpenNotePad={setOpenNotePad}
+          setOpenNotePad={setOpenNotePad} setOpenNotePadMobile={setOpenNotePadMobile}
           setMobileSide={setMobileSide} mobileSide={mobileSide}          
           />
-          {/*Load Mobile Side */}        
+          {/*Load Mobile Side */} 
+
+          { openNotePadMobile && <NotePad 
+                            course_id={courseId} 
+                            nameCourse={infoCourse ? infoCourse.name : ""}
+                            module_id={moduleOpen}
+                            lesson_id={lessonId}
+                            student_id={userData ? userData.id : 0}
+                            setClose={setOpenNotePad} 
+                            setCloseMobile={setOpenNotePadMobile}
+                            
+                            />}         
       </div>
      
       <div className={`${mobileSide == 'lesson' ? "flex" : "hidden"} md:overflow-auto md:flex flex-col md:w-1/3 relative px-2`}>
@@ -84,6 +98,7 @@ export const ClassRoom = () => {
                             lesson_id={lessonId}
                             student_id={userData ? userData.id : 0}
                             setClose={setOpenNotePad} 
+                            setCloseMobile={setOpenNotePadMobile}
                             />}        
         </div>
     </div>

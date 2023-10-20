@@ -17,11 +17,9 @@ export default (routes:Router)=>{
   routes.get("/getAttachmentsLesson/:lessonId",CoursesController.attachmentLesson)
  
   //Notes
-  routes.get("/lessonsNotes/:courseId/:studentId/:pag",CoursesController.lessonsNotes)
-  routes.post("/newNote",CoursesController.newNote)
-  routes.patch("/editNote/:noteId",CoursesController.editNote)
-  routes.delete("/deleteNote/:noteId",CoursesController.deleteNote)
-
+  routes.get("/studentsNotes/:courseId/:studentId",CoursesController.studentsNotes)
+  routes.post("/editNote",CoursesController.editNote)
+  
 
 
 

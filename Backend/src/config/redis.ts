@@ -37,28 +37,6 @@ export const redisGet = async (key:string) => {
   }
 }
 
-export const redisDeleteByPrefix = async (prefix:string,limit:number) => {
-  const test = await client.scan(0);
-  
-  /*try{
-    let cursor: number = 0;
-    do {
-      const [newCursor, keys] = await client.scan(cursor, 'MATCH', `${prefix}*`, 'COUNT', limit) as [any, any];
-  
-      for (const key of keys) {
-        await client.del(key); // Exclui a chave
-      }
-  
-      cursor = newCursor;
-    } while (cursor !== 0);
-  }catch(e){
-    console.log('Redis delete prefix Error',e)
-    return false 
-  }*/
-  
- 
-}
-
 export const redisDel = async (key:string) => {
   try{
     await client.del(key)

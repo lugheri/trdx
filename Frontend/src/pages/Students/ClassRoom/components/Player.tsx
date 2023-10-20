@@ -20,6 +20,7 @@ interface VideoPlayerProps {
   studentName:string,
   setLessonId:React.Dispatch<React.SetStateAction<number>>,
   setOpenNotePad:React.Dispatch<React.SetStateAction<boolean>>,
+  setOpenNotePadMobile:React.Dispatch<React.SetStateAction<boolean>>,
   setMobileSide:React.Dispatch<React.SetStateAction<'lesson'|'tools'|'comments'|null>>,
   mobileSide:'lesson'|'tools'|'comments'|null
 }
@@ -171,8 +172,13 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
         {/*Tools*/}        
         <div className={`${props.mobileSide == 'tools' ? "flex" : "hidden" } mb-6 w-full md:flex`}>
           <button
-            className="m-2 border rounded-md text-xs py-2 px-3 border-[#2eff2a] text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" 
+            className="hidden md:inline m-2 border rounded-md text-xs py-2 px-3 border-[#2eff2a] text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" 
               onClick={()=>props.setOpenNotePad(true)}>
+            <FontAwesomeIcon icon={Fas.faNoteSticky}/> Anotações
+          </button>
+          <button
+            className="relative md:hidden m-2 border rounded-md text-xs py-2 px-3 border-[#2eff2a] text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" 
+              onClick={()=>props.setOpenNotePadMobile(true)}>
             <FontAwesomeIcon icon={Fas.faNoteSticky}/> Anotações
           </button>
           { attachmentsLesson === null ? <p>Carregando anexos</p>
