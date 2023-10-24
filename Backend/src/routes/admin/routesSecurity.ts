@@ -1,5 +1,5 @@
 import { Router } from "express";
-import SecurityController from "../controllers/SecurityController";
+import SecurityController from "../../controllers/SecurityController";
 
 export default (routes : Router) => {
   /*routes.get("/getModulesLevel/:levelId",SecurityController.getModuleLevel);*/

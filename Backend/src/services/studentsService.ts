@@ -2,6 +2,7 @@ import { StudentType, StudentPartialType, PaginationStudentType, SearchStudentTy
 import { Students, StudentsInstance } from "../models/Students"
 import { Op } from "sequelize"
 import { StudentsLogins, StudentsLoginsInstance } from "../models/StudentsLogins";
+import { redisDel, redisGet, redisSet } from "../config/redis";
 
 class StudentsService{
   async createNewStudent(studentData:StudentType):Promise<boolean | StudentsInstance >{
@@ -13,16 +14,25 @@ class StudentsService{
     return newStudent.id ? newStudent : false;
   }
   async editStudent(studentId:number,studentData:StudentPartialType):Promise<boolean>{   
+    await redisDel(`infoStudent:[${studentId}]`)
     await Students.update(studentData,{where:{id:studentId}})   
     return true;
   }
   async removeStudent(studentId:number):Promise<boolean>{
+    await redisDel(`infoStudent:[${studentId}]`)
     await Students.destroy({where:{id:studentId}})
     return true;
   }
   async getStudent(studentId:number):Promise<boolean | StudentsInstance >{
+    const redisKey = `infoStudent:[${studentId}]`
+    const infoStudentRedis = await redisGet(redisKey)
+    console.log("GET STUDENT REDIS",infoStudentRedis)
+    if(infoStudentRedis!==null){ return infoStudentRedis }   
     const student = await Students.findByPk(studentId)
-    return student ? student : false
+    const infoStudent = student ? student : false
+    await redisSet(redisKey,infoStudent)
+    console.log("GET STUDENT MYSQL",infoStudent)
+    return infoStudent
   }
 
   async getLastAccessStudent(studentId:number):Promise<StudentsLoginsInstance | null>{

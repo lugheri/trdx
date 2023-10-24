@@ -8,6 +8,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { NavLink, useLocation} from 'react-router-dom';
 import Logo from '/img/logo.png'
 import { Student } from "../../../contexts/Dtos/auth.dto";
+import { StudentProfilePhoto } from "../../StudentProfilePhoto";
 
 export const Navbar = () => {
   const authenticated = useAuth();  
@@ -41,12 +42,8 @@ export const Navbar = () => {
             {/*PROFILE*/}
             <div className="flex flex-col flex-1">
               <div className="flex justify-start items-center">
-                <div className="w-[40px] h-[40px] rounded-full p-[1px] mr-2 bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] ">
-                  <div className="w-full h-full rounded-full flex justify-center items-center bg-gray-300 text-gray-600">
-                  <FontAwesomeIcon icon={Fas.faUser}/>
-                  </div>
-                </div>
-                <p className="font-light text-sm text-slate-300">{userData?.name}</p>
+                <StudentProfilePhoto student_id={userData ? userData.id : 0} photo_id={0} autoUpdate={true} class="w-[40px] h-[40px]"/>
+                <p className="ml-2 font-light text-sm text-slate-300">{userData?.name}</p>
               </div>
               <div className="flex w-[70%] justify-start items-center mt-2">
                 <div className="w-[80%] h-[10px] p-[1px]  bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] rounded-md shadow">

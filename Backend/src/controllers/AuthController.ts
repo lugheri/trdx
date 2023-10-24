@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { z } from "zod";
 import LoginService from "../services/loginService";
 import { UserAccessDTO } from './Dtos/usersAccess.dto';
 import { StudentAccessDTO } from './Dtos/student.dto';
+import studentsService from '../services/studentsService';
+import md5 from 'md5';
 
 class AuthController{
   async live(req: Request,res: Response){  
@@ -73,6 +74,25 @@ class AuthController{
       console.log(error)
       res.json({"error":error})
     }
+  }
+
+  async resetPass(req: Request,res: Response){
+    const userdata = await LoginService.checkStudent({password:req.body.password,username:req.body.username})
+    if(!userdata){
+      res.json({"error":'Senha de acesso invalida!'})
+      return
+    }
+    try{
+      const studentId : number = parseInt(req.params.student_id)
+      console.log('studentId',studentId)
+      console.log({password:md5(req.body.password)})
+      const edit = await studentsService.editStudent(studentId, {password:md5(req.body.newPass)})
+      console.log('edit',edit)
+      res.json({success: true})
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})
+    }   
   }
 
   async logout(req: Request,res: Response){

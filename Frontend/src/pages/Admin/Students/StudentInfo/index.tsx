@@ -175,7 +175,7 @@ export const StudentInfo = () => {
         <Card className="h-full overflow-auto" component={
           <div className="flex flex-col w-full justify-between items-center">
             <div className="w-full flex flex-col justify-center items-center py-8 border-b border-b-neutral-800">
-              <StudentProfilePhoto photo_id={infoStudent.photo} class="w-[125px] h-[125px] mt-2"/>
+              <StudentProfilePhoto autoUpdate={false} student_id={infoStudent.id} photo_id={infoStudent.photo} class="w-[125px] h-[125px] mt-2"/>
               <p className="mt-2 text-xs font-bold text-neutral-500">Código: {infoStudent.id}</p> 
               <p className="text-white font-bold">{infoStudent.name}</p>
               <p className="mb-2 text-xs text-neutral-300">{infoStudent.mail}</p>             

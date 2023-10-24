@@ -1,25 +1,37 @@
 import { Router } from 'express';
 import routesAuth from './routesAuth';
-import routesCourses from './routesCourses';
-import routesGallery from './routesGallery';
-import routesSystem from './routesSystem';
-import routesUsers from './routesUsers';
-import routesAdminStudents from './routesAdminStudents';
-import routesSecurity from './routesSecurity';
-import routesAdminCommunity from './routesAdminContent';
-import routesAdminIntegrations from './routesAdminIntegrations';
+//ADMIN
+import routesIntegrations from './admin/routesIntegrations';
+import routesContent from './admin/routesContent';
+import routesStudents from './admin/routesStudents';
+//PLATFORM
+import routesCourses from './admin/routesCourses';
+import routesClassRoom from './platform/routesClassRoom';
+import routesGallery from './admin/routesGallery';
+import routesSystem from './admin/routesSystem';
+import routesUsers from './admin/routesUsers';
+import routesProfileStudents from './platform/routesProfileStudent';
+
+import routesSecurity from './admin/routesSecurity';
 
 const routes = Router();
 routesAuth(routes)
+//ADMIN
+routesIntegrations(routes)
+routesContent(routes)
+routesStudents(routes)
+//PLATFORM
+routesClassRoom(routes)
+
+
+
 //Content
 routesCourses(routes)
 //Community
-routesAdminCommunity(routes)
 //Students
-routesAdminStudents(routes)
+routesProfileStudents(routes)
 //Support
 //Platform
-routesAdminIntegrations(routes)
 routesGallery(routes)
 //Reports
 //Configs

@@ -9,6 +9,7 @@ import Logo from '/img/logo.png'
 import Brand from '/img/brand.png'
 import useAuth from '../../../hooks/useAuth';
 import { Student } from '../../../contexts/Dtos/auth.dto';
+import { StudentProfilePhoto } from '../../StudentProfilePhoto';
 
 
 export const Sidebar = () => {
@@ -94,11 +95,8 @@ export const Sidebar = () => {
 const SideProfile : React.FC<{userData:Student|null}> = (props) => {
   return(
     <div className="flex flex-col justify-center items-center mb-4">
-      <div className="w-[80px] h-[80px] rounded-full p-[1px]  mt-6 bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] ">
-        <div className="w-full h-full rounded-full flex justify-center items-center bg-gray-300 text-gray-600">
-        <FontAwesomeIcon icon={Fas.faUser}/>
-        </div>
-      </div>
+      
+      <StudentProfilePhoto student_id={props.userData ? props.userData.id : 0} photo_id={0} autoUpdate={true} class="w-[80px] h-[80px]"/>
       <p className="font-light text-sm mt-2 text-slate-300">{props.userData?.name}</p>
     
       <div className="w-full flex flex-col justify-center items-center px-2 py-2 bg-[#30332f] rounded-md mt-4">

@@ -15,7 +15,7 @@ class LessonsNotesService{
       where:{student_id:studentId,course_id:courseId}
     })
     const note = noteStudent ? noteStudent.note : ""
-    await redisSet(redisKey,noteStudent)
+    await redisSet(redisKey,note)
     return note
   } 
 

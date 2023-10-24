@@ -4,7 +4,7 @@ import { sequelize } from "../instances/mysql";
 import { LessonsViewed, LessonsViewedInstance } from "../models/LessonsViewed";
 
 class LessonsViewedService{
-   async lessonsViewed(studentId:number,courseId:number):Promise<number>{
+  async lessonsViewed(studentId:number,courseId:number):Promise<number>{
     const redisKey = `lessonsViewedbyCourse:[studentId:[${studentId}],courseId:[${courseId}]]`
     const lessonViewedRedis = await redisGet(redisKey)
     if(lessonViewedRedis!==null){return lessonViewedRedis}
@@ -14,6 +14,22 @@ class LessonsViewedService{
     })
     await redisSet(redisKey,totalViewed,30)
     return totalViewed 
+  }
+
+  async lastLessonStudent(studentId:number):Promise<LessonsViewedInstance | null>{
+    const redisKey = `nextLessonStudent:[${studentId}]`
+    const nextLastStudentRedis = await redisGet(redisKey)
+    if(nextLastStudentRedis!==null){ return nextLastStudentRedis}
+
+    const results = await LessonsViewed.findOne({
+      attributes:['course_id','module_id','lesson_id'],
+      where:{student_id:studentId},
+      order:[['id','DESC']]
+    })
+
+    if(!results) return null
+    await redisSet(nextLastStudentRedis,results)
+    return results;
   }
 
   async lessonsViewedByModule(studentId:number,moduleId:number):Promise<number>{
@@ -35,7 +51,7 @@ class LessonsViewedService{
     });
     await redisDel(`lessonsViewedbyCourse:[studentId:[${viewedData.student_id}],courseId:[${viewedData.course_id}]]`)
     await redisDel(`lessonsViewedByModule:[studentId:[${viewedData.student_id}],moduleId:[${viewedData.module_id}]]`)
-
+    await redisDel(`nextLessonStudent:[${viewedData.student_id}]`)
     await redisSet(`lastLessonViewed:[studentId:[${viewedData.student_id}],courseId:[${viewedData.lesson_id}]]`,newView.id)
     await redisSet(`lessonViewed:[studentId:[${viewedData.student_id}],lessonId:[${viewedData.lesson_id}]]`,newView)
     console.log('New',newView)
@@ -46,6 +62,7 @@ class LessonsViewedService{
   async removeViewedLesson(lessonId:number,studentId:number){
     await LessonsViewed.destroy({where:{ student_id : studentId, lesson_id : lessonId}})
     await redisDel(`lessonViewed:[studentId:[${studentId}],lessonId:[${lessonId}]]`)
+    await redisDel(`nextLessonStudent:[${studentId}]`)
     return true;
   }
 
@@ -79,6 +96,7 @@ class LessonsViewedService{
 
   async setScoreLesson(lessonId:number,studentId:number,scoreData:RatingLessonType){
     await redisDel(`lessonViewed:[studentId:[${studentId}],lessonId:[${lessonId}]]`)
+    await redisDel(`nextLessonStudent:[${studentId}]`)
     await LessonsViewed.update(scoreData,{where:{student_id:studentId,lesson_id:lessonId}})
     return true;
   }

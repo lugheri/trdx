@@ -25,8 +25,9 @@ export const NotePad : React.FC<INote> = (props) => {
   useEffect(()=>{
     const getNote = async () => {
       try{
+        setNote('')
         const noteStudent = await api.get(`studentsNotes/${props.course_id}/${props.student_id}`)
-        setNote(noteStudent.data.response)
+        setNote(noteStudent.data.response ? noteStudent.data.response : '')
       }catch(err){
         console.log(err)
       }

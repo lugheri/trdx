@@ -125,7 +125,7 @@ const PageStudents : React.FC<IPageStudents>  = (props) => {
         listStudents.length == 0 ? <p>Nenhum aluno cadastrado</p>
         : listStudents.map((student,key)=>
         <div key={key} className="bg-neutral-800 p-3 rounded mb-2 flex justify-between items-center text-neutral-400">
-        <StudentProfilePhoto photo_id={student.photo} class="w-[35px] h-[35px]"/>
+        <StudentProfilePhoto autoUpdate={false} student_id={student.id} photo_id={student.photo} class="w-[35px] h-[35px]"/>
         <div className="flex flex-col flex-1 justify-center items-start">
           <p className="font-black">{student.name}</p>
           <p className="text-xs">{student.mail}</p>
