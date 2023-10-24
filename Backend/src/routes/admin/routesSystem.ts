@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { SystemController } from "../controllers/system";
-
+import { SystemController } from "../../controllers/system";
 
 export default (routes: Router) => {
   //Levels
@@ -21,5 +20,4 @@ export default (routes: Router) => {
   routes.patch("/EditModule/:moduleId", SystemController.editModule)
   routes.delete("/RemoveModule/:moduleId", SystemController.removeModule)
   routes.get("/listModules/:status", SystemController.listModules)
-
 }

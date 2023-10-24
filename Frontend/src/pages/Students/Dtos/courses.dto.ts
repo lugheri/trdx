@@ -16,6 +16,7 @@ export interface ICourse{
 export interface IMyCourses{
   id:number;
   image:number;
+  name:string;
 }
 
 export interface IModules{

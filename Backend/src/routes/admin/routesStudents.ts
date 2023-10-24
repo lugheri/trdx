@@ -1,5 +1,5 @@
 import { Router } from "express";
-import StudentsController from '../controllers/StudentsController'
+import StudentsController from '../../controllers/StudentsController'
 
 export default (routes: Router) => {
   routes.post('/newStudent',StudentsController.newStudent)

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import ContentController from "../controllers/ContentController";
+import ContentController from "../../controllers/ContentController";
 
 export default (routes:Router)=>{
   routes.get("/getVideoWelcome",ContentController.getVideoWelcome)

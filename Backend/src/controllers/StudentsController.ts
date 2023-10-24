@@ -54,6 +54,7 @@ class StudentsController{
   
   async editStudent(req:Request, res:Response){
     const studentId : number = parseInt(req.params.studentId)
+    
     const dataStudent = StudentPartialDTO.safeParse(req.body)
     if(!dataStudent.success){
       res.json({"error": dataStudent.error})  

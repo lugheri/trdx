@@ -1,13 +1,43 @@
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import api from "../../services/api";
+import { useEffect, useState } from "react";
+import { urlBase } from "../../utils/baseUrl";
 
-export const StudentProfilePhoto : React.FC<{photo_id:number,class:string}> = (props)=> {
+export const StudentProfilePhoto : React.FC<{student_id:number,photo_id:number,class:string,autoUpdate:boolean}> = (props)=> {
+  const [ urlPhoto, setUrlPhoto ] = useState<string|null>(null)
+  const [ reload, setReload ] = useState(0)
+  
+
+  useEffect(()=>{
+    const getPhoto = async () => {
+      try{  
+        let photoStudent = props.photo_id
+        if(!photoStudent){ 
+          const info = (await api.get(`getInfoStudent/${props.student_id}`)).data.response 
+          photoStudent = info.photo
+        }
+        const photo = await api.get(`photoProfile/${photoStudent}`)
+        setUrlPhoto(`${photo.data.response.file}`)
+      }catch(e){console.log(e)}
+    }
+    getPhoto()   
+    props.autoUpdate && setTimeout(()=>{
+      const time = reload+1
+      setReload(time)
+    },15000) 
+  },[reload])
+
   return(
-    props.photo_id ? 
-      <div className={`${props.class} flex mr-2 justify-center items-center rounded-full text-neutral-800 bg-neutral-600`}>
-        <FontAwesomeIcon icon={Fas.faUser}/>
-      </div> 
+    urlPhoto ? 
+      <div>
+        <div className={`${props.class} rounded-full p-[1px] bg-gradient-to-r from-[#24ff0055] to-[#2eff2a]`}>
+          <div className="w-full h-full rounded-full flex justify-center items-center bg-gray-300 text-gray-600 overflow-hidden">
+            <img src={`${urlBase}/gallery/${urlPhoto}`} alt="Foto do Aluno" style={{ maxWidth: '100%' }} />
+          </div>
+       </div>
+     </div>
     : 
       <div>
         <div className={`${props.class} rounded-full p-[1px] bg-gradient-to-r from-[#24ff0055] to-[#2eff2a]`}>

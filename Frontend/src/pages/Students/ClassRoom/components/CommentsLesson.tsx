@@ -49,7 +49,7 @@ export const CommentsLesson : React.FC<ICommentLesson> = (props) => {
 
       <div className="flex flex-col gap-2 py-3 px-5 items-center bg-[#151515] rounded-md">
         <div className="flex gap-2 py-4 px-5 items-center bg-[#333333] rounded-md w-full">
-            <StudentProfilePhoto photo_id={0} class="w-[40px] h-[40px]"/>
+            <StudentProfilePhoto autoUpdate={false} student_id={props.student_id} photo_id={0} class="w-[40px] h-[40px]"/>
             <div className="flex flex-col w-full">
               <p className="text-neutral-300 text-sm">{props.student_name}</p>
               <textarea value={comment} onChange={(e)=>setComment(e.target.value)} className="bg-[#333] max-h-6 focus:max-h-max  p-0 text-sm text-white font-light focus:ring-0 focus:border-white border-x-0 border-t-0" placeholder="Digite o seu comentário..."/>
@@ -106,7 +106,7 @@ const PendingApprovalComments : React.FC<IPendingApprovalComments> = (props) => 
         <div key={key} className="flex flex-col w-full justify-start items-start gap-2 mb-6">
           <div className="flex gap-2 w-full">
             <div className="flex w-[5%] h-[40px] justify-center items-center">
-              <StudentProfilePhoto photo_id={0} class="w-[30px] h-[30px]"/>
+              <StudentProfilePhoto autoUpdate={false} student_id={comment.Student ? comment.Student.id : 0} photo_id={0} class="w-[30px] h-[30px]"/>
             </div>
             <div className="flex flex-col w-[93.5%]">
               <div className="mb-4">
@@ -150,7 +150,7 @@ const PageComments: React.FC<IPageComments> = (props) => {
         <div key={key} className="flex flex-col justify-start items-start gap-2 mb-6">
           <div className="flex gap-2 w-full">
             <div className="flex w-[5%] h-[40px] justify-center items-center">
-              <StudentProfilePhoto photo_id={0} class="w-[30px] h-[30px]"/>
+              <StudentProfilePhoto autoUpdate={false} student_id={comment.Student ? comment.Student.id : 0} photo_id={0} class="w-[30px] h-[30px]"/>
             </div>
             <div className="flex flex-col w-[93.5%]">
               <div className="mb-4">
@@ -189,7 +189,7 @@ const AnswersComments : React.FC<IAnswersComments> = (props) => {
         commentsAnswers.map((comment,key)=>
           <div key={key} className="flex justify-start items-start gap-2 mb-6">
             <div className="flex w-[5%] h-[40px] justify-center items-center">
-              <StudentProfilePhoto photo_id={0} class="w-[30px] h-[30px]"/>
+              <StudentProfilePhoto autoUpdate={false} student_id={comment.Student ? comment.Student.id : 0} photo_id={0} class="w-[30px] h-[30px]"/>
             </div>
             <div className="flex flex-col w-[93.5%]">
               <p className="text-white text-sm">{comment.Student ? comment.Student.name : 'Aluno'}</p>
@@ -199,5 +199,3 @@ const AnswersComments : React.FC<IAnswersComments> = (props) => {
         )}
     </>)
 }
-
-

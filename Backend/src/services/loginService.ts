@@ -30,6 +30,7 @@ class LoginService {
       attributes: ['id','name','password'],
       where: {mail: accessStudent.username, status:1}
     })
+    
     if(!userdata){
       return false
     }
@@ -38,6 +39,8 @@ class LoginService {
     }
     return userdata
   }
+
+  
 
   async userAuthenticate(action:string,userdata?:UserInstance,authHeader?:string){
     if(action=='login'){

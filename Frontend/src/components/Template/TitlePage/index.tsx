@@ -13,7 +13,7 @@ export const TitlePage : React.FC<TitlePageType> = (props) => {
           { props.icon ? (<FontAwesomeIcon className="m-1" icon={Fas[props.icon] as IconProp}/>) : false}  
           { props.title ? props.title : false }        
         </p>
-        { props.description ? (<small className="text-xs font-semibold">{props.description}</small>): false }      
+        { props.description ? (<small className="text-xs font-light">{props.description}</small>): false }      
       </div>
       { props.rightComponent ? props.rightComponent : false } 
     </div>

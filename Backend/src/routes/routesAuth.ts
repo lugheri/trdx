@@ -10,5 +10,6 @@ export default (routes: Router) => {
   routes.post('/loginStudent',AuthController.loginStudent)
   routes.use(authMiddleware);
   routes.get('/validation',AuthController.validation)
+  routes.patch('/resetPass/:student_id',AuthController.resetPass)
   routes.post('/logout',AuthController.logout)
 }

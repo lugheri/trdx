@@ -121,6 +121,11 @@ class CoursesController{
     }
   }
 
+  async progressStudent(req:Request, res:Response){
+    //const studentId = parseInt(req.params.studentId)
+    res.json({"success":true})
+  }
+
   async progressCourse(req:Request, res:Response){
     const studentId = parseInt(req.params.studentId)
     const courseId = parseInt(req.params.courseId)
@@ -186,6 +191,27 @@ class CoursesController{
     }
   }
 
+  async lastLessonViewed(req:Request,res:Response){
+    const studentId = parseInt(req.params.studentId)
+    try{
+      const infoNextLesson = await lessonsViewedService.lastLessonStudent(studentId)
+      if(!infoNextLesson){       
+        res.json({"success":true,"response":null})
+        return 
+      }  
+      const courseId = infoNextLesson.course_id
+      const infoLesson: CoursesLessonsInstance = await coursesLessonsService.infoLesson(infoNextLesson.lesson_id)
+      const order = infoLesson ? infoLesson.order : 0
+      const  nextCourseLesson = await coursesLessonsService.nextLessonCourse(courseId,order)
+      const nextLessonId = nextCourseLesson ? nextCourseLesson.id : infoNextLesson.lesson_id
+      //Info Next Lesson
+      res.json({"success": true,"response":nextLessonId})  
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})    
+    }
+  }
+  
   async watchedLesson(req:Request,res:Response){
     const watch = WatchedLessonDTO.safeParse(req.body)
     if(!watch.success){

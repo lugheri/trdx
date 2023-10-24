@@ -7,10 +7,10 @@ export const StudentAccessDTO = z.object({
 export type StudentAccessType = z.infer<typeof StudentAccessDTO>;
 
 
-
 export const StudentDTO = z.object({
   comunity:z.optional(z.literal(1).or(z.literal(0))).default(1),
   type:z.optional(z.string()).default('student'),
+  photo:z.optional(z.number()),
   name:z.string(),
   mail:z.string().email('O Email não tem um formato válido'),
   born:z.optional(z.string()),
@@ -60,3 +60,28 @@ export const AddContractValidityDTO = z.object({
   payment_cycle:z.string()
 })
 export type AddContractValidityType = z.infer<typeof AddContractValidityDTO>
+
+
+export const PhotoProfileStudentDTO = z.object({
+  name_student:z.string(),
+  student_id:z.number().or(z.string())
+  
+})
+export type PhotoProfileStudentType = z.infer<typeof PhotoProfileStudentDTO>;
+
+
+
+//New File Photo
+export const PhotoProfileDTO = z.object({ 
+  name:z.string(),
+  description:z.optional(z.string()).default('Sem Descrição'),
+  file:z.string(),
+  extension:z.string(),
+  size:z.number(),
+  status: z.optional(z.literal(1).or(z.literal(0))).default(1)
+})
+export type PhotoProfileType = z.infer<typeof PhotoProfileDTO>;
+
+//Optional values for edit functions
+export const PhotoProfilePartialDTO = PhotoProfileDTO.partial();
+export type PhotoProfilePartialType = z.infer<typeof PhotoProfilePartialDTO>;
