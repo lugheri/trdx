@@ -39,6 +39,86 @@ export const Login = () => {
   }
 
   return (
+    <div className="flex flex-col bg-login-mobile-bg bg-center md:bg-top md:bg-login-bg bg-cover bg-no-repeat h-screen justify-center items-center">
+       <img src={Brand} className="w-[50%] md:w-[12%] mb-8"/>
+       <form onSubmit={sendAuth}  className="blur-background w-[80%] md:w-[25%] p-4 flex flex-col items-center">
+        <p className="my-6 text-white text-xl">FAÇA SEU LOGIN</p>
+        <div className="w-[80%] mt-2 overflow-hidden rounded-md flex input_login justify-between items-center">
+          <div className="flex w-[50px] justify-center items-center p-2 text-gray-400">
+            <FontAwesomeIcon icon={Fas.faUser}/>
+          </div>              
+          <input 
+            type="text"  
+            placeholder="Email de Cadastro"   
+            value={username} onChange={(e)=>{setUsername(e.target.value)}}
+            required             
+            className="w-full bg-transparent text-white font-light text-sm placeholder:text-gray-400 border-0 focus:border-0 focus:ring-0"/>
+        </div>
+        <div className="w-[80%] mt-2 overflow-hidden rounded-md flex input_login justify-between items-center">
+          <div className="flex w-[50px] justify-center items-center p-2 text-gray-400">
+            <FontAwesomeIcon icon={Fas.faKey}/>
+          </div>              
+          <input 
+            type="password"  
+            placeholder="Senha"
+            value={password} onChange={(e)=>{setPassword(e.target.value)}}
+            required                
+            className="w-full bg-transparent text-white font-light text-sm placeholder:text-gray-400 border-0 focus:border-0 focus:ring-0"/>
+        </div>  
+        <div className="flex w-[80%] px-2 justify-center">
+          <Link  
+            to={`/forgotPass`} 
+            className="text-white hover:text-[#999999] text-sm cursor-pointer my-4" >
+            Esqueceu a senha?
+          </Link>           
+        </div>    
+        <button 
+          type="submit" 
+          className="w-[80%] text-sm rounded-md font-semibold mb-4 p-3 bg-gradient-to-r from-[#3CF400] to-[#73CB00]">
+          Acessar comunidade
+        </button>  
+        {ErrorAuth ? ( 
+          <strong 
+            title={causeErrorAuth} 
+            className="border-red-800 border-2 rounded text-center text-xs mx-8 text-red-700 py-4 px-3 rounded-full shadow-md mb-4">
+            <FontAwesomeIcon icon={Fas.faExclamationTriangle}/> { messageErrorAuth }
+          </strong>)
+        :false} 
+      </form>   
+    </div>
+  )
+}
+
+export const LoginOldStudent = () => {
+  const [ username, setUsername ] = useState<string>('')
+  const [ password, setPassword ] = useState<string>('')
+
+  const [ ErrorAuth, setErrorAuth ] = useState<boolean>(false)
+  const [ messageErrorAuth, setMessageErrorAuth ] = useState<string>('')
+  const [ causeErrorAuth, setCauseErrorAuth ] = useState<string>('')
+  const sendAuth = async (e:FormEvent) => {
+    e.preventDefault()
+    try{
+      const response = await api.post('/loginStudent', {
+        username: username,
+        password: password
+      });
+      if(response.data.success){
+        localStorage.setItem('Token', response.data.token);
+        window.location.reload();
+      }else{
+        setErrorAuth(true)
+        setMessageErrorAuth(response.data.error.issues[0].message )
+        setCauseErrorAuth('Verifique seus dados e tente novamente!')
+      }
+    }catch(err:any) {
+      console.log(err)
+      setErrorAuth(true)
+      setMessageErrorAuth('Não foi possível efetuar o login')
+      setCauseErrorAuth(err.message)
+    }
+  }
+  return(
     <div className="flex flex-col">
       <div className="bg-login-bg h-[80vh] bg-cover bg-center flex flex-col justify-center items-center">
         <img src={Brand} className="w-36"/>

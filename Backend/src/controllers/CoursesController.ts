@@ -122,8 +122,22 @@ class CoursesController{
   }
 
   async progressStudent(req:Request, res:Response){
-    //const studentId = parseInt(req.params.studentId)
-    res.json({"success":true})
+    const studentId = parseInt(req.params.studentId)
+    const coursesStudents = await studentCoursesServices.myCourses(studentId)
+    let totalLessons = 0
+    let viewedLessons = 0
+    for(const course of coursesStudents){
+      const lessons = await coursesLessonsService.lessonsCourse(course.id)
+      totalLessons += lessons
+      viewedLessons += await lessonsViewedService.lessonsViewed(studentId,course.id)
+
+      console.log('lessons course',course.id,'lessons',lessons) 
+    }
+
+    const progress = viewedLessons == 0 ? 0 : Math.round((viewedLessons/totalLessons)*100)  
+
+
+    res.json({"success":true,"response":progress})
   }
 
   async progressCourse(req:Request, res:Response){

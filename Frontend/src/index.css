@@ -22,6 +22,20 @@
   -webkit-border-radius: 6px;
 }
 
+.blur-background {
+  border-radius: 10.313px;
+  border: 0.645px solid rgba(255, 255, 255, 0.33);  
+  background: rgba(115, 115, 115, 0.2);  
+  backdrop-filter: blur(2.9004738330841064px);
+}
+
+.input_login{
+  border-radius: 5.156px;
+  border: 0.645px solid #4D4D4D;
+  background: rgba(255, 255, 255, 0.21);
+}
+
+
 /*
 ::-webkit-scrollbar-button:start:decrement,
 ::-webkit-scrollbar-button:end:increment  {

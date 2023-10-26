@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import * as Fas from "@fortawesome/free-solid-svg-icons";
+import * as Fab from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { NavLink, useLocation } from 'react-router-dom';
@@ -10,6 +11,7 @@ import Brand from '/img/brand.png'
 import useAuth from '../../../hooks/useAuth';
 import { Student } from '../../../contexts/Dtos/auth.dto';
 import { StudentProfilePhoto } from '../../StudentProfilePhoto';
+import api from '../../../services/api';
 
 
 export const Sidebar = () => {
@@ -64,12 +66,12 @@ export const Sidebar = () => {
               name='Meus Cursos' 
               icon='faChalkboard'/>  
             <SideItem 
-              to={`/instagram`} 
+              to={`https://www.instagram.com/guilhermecardosox/`} 
               side={side} 
               name='Instagram' 
               icon='faCameraRetro'/>  
             <SideItem 
-              to={`/youtube`} 
+              to={`https://www.youtube.com/c/GuilhermeCardoso`} 
               side={side} 
               name='Canal do Youtube' 
               icon='faPlay'/>  
@@ -93,6 +95,19 @@ export const Sidebar = () => {
 }
 
 const SideProfile : React.FC<{userData:Student|null}> = (props) => {
+  const [ progress, setProgress] = useState(0);
+  useEffect(()=>{
+    const getProgress = async () => {
+      try{
+        const prog = await api.get(`progressStudent/${props.userData ? props.userData.id : 0}`)
+        setProgress(prog.data.response)      
+        console.log(progress)  
+      }catch(e){
+        console.log(e)
+      }
+    }
+    getProgress()
+  },[])
   return(
     <div className="flex flex-col justify-center items-center mb-4">
       
@@ -101,9 +116,11 @@ const SideProfile : React.FC<{userData:Student|null}> = (props) => {
     
       <div className="w-full flex flex-col justify-center items-center px-2 py-2 bg-[#30332f] rounded-md mt-4">
         <p className="font-light text-xs mb-1 text-slate-300">Seu Progresso</p>
-        <div className="w-full h-[10px] p-[1px]  bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] rounded-md shadow">
-        <div className="w-full h-full bg-slate-500 rounded-md shadow"> </div>
-        </div>
+        <div className="w-full h-[10px] p-[1px]  bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] rounded-md shadow" title={`${progress}%`}>
+          <div className="w-full h-full bg-slate-500 rounded-md shadow">
+            <div className="h-full  bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] rounded duration-1000 ease-out" style={{width:`${progress}%`}}></div>
+          </div>
+        </div>        
       </div>
     </div>
   )
@@ -123,16 +140,17 @@ const SideItem : React.FC<NavLinkProps> = (props) => {
   return(
     props.side == 'open' ? (
       <NavLink
-        to={props.to}
+        to={props.to} 
+        target={props.name == "Instagram" ? "_blank" : props.name == "Canal do Youtube" ? "_blank" : ""}
         className={({ isActive, isPending }) =>isActive ? navActive : isPending ? navDefault : navDefault}>
-        {props.icon ? (<FontAwesomeIcon className={`px-4 ml-3 opacity-60 ${isActiveNav ? "text-black":"text-[#00ff00]"}`} icon={Fas[props.icon] as IconProp}/>) : false}
+        {props.icon ? (<FontAwesomeIcon className={`px-4 ml-3 opacity-60 ${isActiveNav ? "text-black":"text-[#00ff00]"}`} icon={ props.name == 'Instagram' ? Fab.faInstagram : Fas[props.icon] as IconProp}/>) : false}
         {props.name ? (<p className="text-xs">{props.name}</p>) : false}      
       </NavLink>
     ):(
       <NavLink
         className={({ isActive, isPending }) =>isActive ? navActiveClosed : isPending ? navDefaultClosed : navDefaultClosed}
         to={props.to}>
-        {props.icon ? (<FontAwesomeIcon className={`py-1 ${isActiveNav ? "text-black":"text-[#00ff00]"}`} icon={Fas[props.icon] as IconProp}/>) : false}  
+        {props.icon ? (<FontAwesomeIcon className={`py-1 ${isActiveNav ? "text-black":"text-[#00ff00]"}`} icon={ props.name == 'Instagram' ? Fab.faInstagram : Fas[props.icon] as IconProp}/>) : false}  
         {props.name ? (<p className={`hidden group-hover:inline text-[.7rem] ${isActiveNav ? "text-black":"text-[#00ff00]"} text-center font-light transition duration-150 ease-out hover:ease-in`}>{props.name}</p>) : false}         
       </NavLink>
     )

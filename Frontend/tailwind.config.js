@@ -20,6 +20,7 @@ export default {
       },
       backgroundImage:{
         'login-bg':"url('/public/img/bg-login.jpg')",
+        'login-mobile-bg':"url('/public/img/bg-login-mobile.jpg')",
       },
     },
   },
