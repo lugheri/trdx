@@ -8,8 +8,10 @@ import { Loading } from '../../../components/Loading';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import * as Fas from "@fortawesome/free-solid-svg-icons";
+import { faTelegram, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { urlBase } from '../../../utils/baseUrl';
 import { useNavigate } from 'react-router-dom';
+
 
 
 export const Home = () => {
@@ -119,20 +121,54 @@ export const Home = () => {
 
   return(
     <div className="flex flex-col items-center py-2 p-4">    
-      <div className="w-full h-[275px] rounded-t-3xl relative overflow-hidden">
+      <div className="w-full h-[120px] md:h-[275px]  rounded-t-3xl relative overflow-hidden">
         <img src={Banner} className="w-full my-2 rounded-t-3xl absolute"/> 
         <div className="bg-gradient-to-b from-transparent via-transparent to-[#070707] w-full flex absolute z-10 absolute h-full">
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row my-8 w-full">
-        <div className="w-full md:w-[40%]">
-          <iframe 
-            className="h-full min-h-[40vh] rounded-md overflow-hidden" 
-            width="100%" 
-            allow="autoplay; fullscreen" 
-            src={`https://player.vimeo.com/video/${homeVideo}?color=ff9933&title=0&byline=0&portrait=0&badge=0`}></iframe>
-        </div>
+      <div className="flex flex-col items-center md:flex-row my-8 w-full">
+        <div className="flex flex-col w-full md:w-[40%]">
+       
+          <div className=" h-[25vh] md:h-[40vh]">
+            <iframe 
+              className="h-full rounded-xl overflow-hidden" 
+              width="100%"
+              allow="autoplay; fullscreen" 
+              src={`https://player.vimeo.com/video/${homeVideo}?color=ff9933&title=0&byline=0&portrait=0&badge=0`}></iframe>
+          </div>
+
+          {/*BUTTONS*/}
+          <div className="flex flex-col py-2">
+            <div className="bg-gray-700 rounded my-1 px-4 h-14 flex justify-between items-center">
+              <FontAwesomeIcon className="text-5xl text-slate-800" icon={faTelegram}/>
+              <p className="text-white font-light text-sm">Grupo no Telegram</p>
+              <button onClick={()=>window.open('https://t.me/+SB4xj2nbssNjMWZh', '_blank')}
+                className="text-white bg-sky-600 px-4 py-2 rounded text-sm opacity-90 hover:opacity-100">
+                Acesse
+              </button>
+            </div>
+            <div className="bg-gray-700 rounded my-1 px-4 h-14 flex justify-between items-center">
+              <FontAwesomeIcon className="text-5xl text-slate-800" icon={faWhatsapp}/> 
+              <p className="text-white font-light text-sm">WhatsApp de Suporte</p>
+              <button onClick={()=>window.open('https://bit.ly/suportegc', '_blank')}
+                className="text-white bg-teal-500 px-4 py-2 rounded text-sm opacity-90 hover:opacity-100">
+                Acesse
+              </button>
+            </div>
+            <button onClick={()=>window.open('https://forms.gle/3siEWVTB8R9cyRHM8', '_blank')}
+            className="bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055]  shadow-lg py-3 px-4 text-center my-1 rounded shadown text-sm font-semibold opacity-90 hover:opacity-100">
+              Preencher a Pesquisa
+            </button>
+            <button onClick={()=>window.open('mailto:suporte@otraderquemultiplica.com.br', '_blank')}
+               className="bg-gray-700 my-1 rounded-full flex justify-center items-center p-2 hover:bg-gray-800">
+              <p className="text-white text-sm font-light">
+                <FontAwesomeIcon className="mr-2" icon={Fas.faEnvelope}/>suporte@otraderquemultiplica.com.br
+              </p>
+            </button>
+          </div>  
+        </div>          
+        
         <div className="flex flex-1 p-4">
           <div dangerouslySetInnerHTML={{ __html:textHtml}}/>
         </div>
@@ -155,14 +191,27 @@ const NextLesson: React.FC<{lessonId:number}> = ({lessonId}) => {
     }
     infoNextLesson()
   },[])
+
+  const navigate = useNavigate();  
+  const openModule = () => {
+    const hash_lessonId: string = btoa(`[{"courseId":"${infoLesson?.course_id}","moduleId":"0"}]`);
+    navigate(`/classRoom/course/lesson/${hash_lessonId}`)
+  }
+
   return (
     <div className="flex flex-col md:flex-row w-full my-8 justify-start items-center">
-      <div className="w-full mb-4 md:w-[40%] h-[200px] flex justify-center items-center bg-slate-900 mx-4 text-neutral-600">CAPA</div>
+      <div className="w-full mb-4 md:w-[40%] h-[200px] rounded-xl relative flex justify-center items-center bg-slate-900 mx-4 text-neutral-600">
+        <p className="p-2 bg-neutral-800 text-white text-xs font-light rounded-md absolute top-4 left-4 shadow">
+          Continue de onde parou  
+        </p>
+        CAPA
+      </div>
       <div className="flex flex-col justify-start items-center md:items-start">
         <p className="text-neutral-100 font-bold text-xl w-full text-center md:text-left">{infoLesson?.name}</p>
-        <p className="text-neutral-100 font-light mt-4 w-full text-center md:text-left">{infoLesson?.description} sem descrição de curso</p>
-        <button 
-                className="bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow-lg py-2 px-4 text-center my-2 rounded shadown text-sm font-semibold">
+        <p className="text-neutral-100 font-light mt-4 w-full text-center md:text-left">{infoLesson?.description}</p>
+        <button
+          onClick={()=>openModule()}
+          className="bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow-lg py-2 px-4 text-center my-2 rounded shadown text-sm font-semibold">
           <FontAwesomeIcon className="opacity-50" icon={Fas.faPlay}/> Continuar Conteúdo
         </button>
       </div>        
