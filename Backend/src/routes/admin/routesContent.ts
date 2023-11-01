@@ -2,12 +2,16 @@ import { Router } from "express";
 import ContentController from "../../controllers/ContentController";
 
 export default (routes:Router)=>{
+  //Video Home Community
   routes.get("/getVideoWelcome",ContentController.getVideoWelcome)
   routes.post("/updateVideoWelcome",ContentController.updateVideoWelcome)
-  routes.get("/getButtonInitCTA",ContentController.getButtonInitCTA)
-  routes.post("/updateButtonInitCTA",ContentController.updateButtonInitCTA)
-  routes.get("/getButtonInitLink",ContentController.getButtonInitLink)
-  routes.post("/updateButtonInitLink",ContentController.updateButtonInitLink)
-  routes.get("/getInformationText",ContentController.getInformationText)
-  routes.post("/updateInformationText",ContentController.updateInformationText)
+  //Text Home Community
+  routes.get("/getTextHomeCommunity",ContentController.getTextHomeCommunity)
+  routes.post("/updateTextHomeCommunity",ContentController.updateTextHomeCommunity)
+  //Buttons Home Community
+  routes.post("/newButton",ContentController.newButton)
+  routes.get("/getButtons",ContentController.getButtons)
+  routes.get("/infoButton/:button_id",ContentController.infoButton)
+  routes.patch("/updateButton/:button_id",ContentController.updateButton)
+  routes.delete("/deleteButton/:button_id",ContentController.deleteButton)
 }

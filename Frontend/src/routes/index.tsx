@@ -3,7 +3,7 @@ import useAuth from '../hooks/useAuth';
 import { PrivateProps } from '../contexts/Dtos/auth.dto';
 //Templates
 import { Template, TemplateAdm } from '../components/Template';
-import { Login, LoginAdm } from '../pages/Login';
+import { Login, LoginAdm, Logoff } from '../pages/Login';
 import { ForgotPass } from '../pages/forgotPass';
 import { Error } from '../pages/Error';
 //Pages Students
@@ -109,6 +109,9 @@ const RoutesApp = () => {
             {
               path:'/Profile',
               element:<Profile/>,
+            },{
+              path:'/Logoff',
+              element:<Logoff/>,
             }
           ]
         }

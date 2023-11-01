@@ -1,11 +1,12 @@
-import { FormEvent,useState } from "react"
+import { FormEvent,useState,useEffect } from "react"
 import api from "../../services/api"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 
 import Brand from '/img/logo.png'
 import LogoX from '/img/logoFooter.png'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Loading } from "../../components/Loading";
 
 export const Login = () => {
   const [ username, setUsername ] = useState<string>('')
@@ -14,6 +15,12 @@ export const Login = () => {
   const [ ErrorAuth, setErrorAuth ] = useState<boolean>(false)
   const [ messageErrorAuth, setMessageErrorAuth ] = useState<string>('')
   const [ causeErrorAuth, setCauseErrorAuth ] = useState<string>('')
+
+   const requestFullscreen = () => {
+    const element = document.documentElement;
+    element.requestFullscreen && element.requestFullscreen(); 
+  };
+
 
   const sendAuth = async (e:FormEvent) => {
     e.preventDefault()
@@ -74,7 +81,13 @@ export const Login = () => {
         </div>    
         <button 
           type="submit" 
-          className="w-[80%] text-sm rounded-md font-semibold mb-4 p-3 bg-gradient-to-r from-[#3CF400] to-[#73CB00]">
+           onClick={requestFullscreen}
+          className="w-[80%] md:hidden text-sm rounded-md font-semibold mb-4 p-3 bg-gradient-to-r from-[#3CF400] to-[#73CB00]">
+          Acessar comunidade
+        </button>  
+         <button 
+          type="submit" 
+          className="w-[80%] hidden md:inline text-sm rounded-md font-semibold mb-4 p-3 bg-gradient-to-r from-[#3CF400] to-[#73CB00]">
           Acessar comunidade
         </button>  
         {ErrorAuth ? ( 
@@ -202,11 +215,7 @@ export const LoginAdm = () => {
     }
   }
 
-  const requestFullscreen = () => {
-    const element = document.documentElement;
-    element.requestFullscreen && element.requestFullscreen(); 
-  };
-
+ 
   return (
     <div className="bg-cyan-950 h-screen flex justify-end items-center ">
       <div className="px-1 w-1/3 h-auto  mr-10">
@@ -230,8 +239,7 @@ export const LoginAdm = () => {
                             
                  placeholder="Senha"/>
           <button 
-            type="submit" 
-            onClick={requestFullscreen}
+            type="submit"            
             className="text-cyan-950 mx-20 font-bold bg-green-500 rounded-xl p-2 text-lg shadow-md mb-5 transition duration-150 ease-out
                        hover:bg-green-600 hover:text-cyan-100 hover:ease-in">
             LOGIN           
@@ -257,4 +265,16 @@ export const LoginAdm = () => {
       </div>
     </div>
   )
+}
+
+export const Logoff = () => {
+  const navigate = useNavigate();
+  useEffect(()=>{
+    localStorage.removeItem('Token')
+    navigate(`/`)
+    setTimeout(()=>{window.location.reload();},1000)
+  },[])
+
+
+  return(<Loading/>)
 }

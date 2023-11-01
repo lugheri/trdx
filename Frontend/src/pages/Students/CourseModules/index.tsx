@@ -56,8 +56,8 @@ export const CourseModules = () => {
 
   return (
     infoCourse === null ? <Loading/> :
-    <div className="flex flex-col h-[92vh]">
-      <div className="flex h-[20%] md:h-[40%] m-2 bg-green-500 rounded-md overflow-hidden relative">
+    <div className="flex flex-col overflow-hidden h-[92vh]">
+      <div className="flex h-[20%] md:h-[60%] m-2 bg-green-500 rounded-md overflow-hidden relative">
         <RenderImage className="w-full h-auto" imageId={infoCourse.image}/>
         <div 
           className="flex z-10 absolute cursor-pointer px-4 py-2 bg-black/70 hover:bg-black top-[50%] md:top-[40%] right-0 text-white font-light"
@@ -77,7 +77,7 @@ export const CourseModules = () => {
         </div>
         <div className="bg-gradient-to-b from-transparent via-[#070707]/80 to-[#070707] absolute w-full h-1/2 bottom-0"/>
       </div>
-      <div className="flex flex-1 m-2">
+      <div className="flex flex-1 m-2 md:absolute md:w-[84vw] h-[50vh] bottom-0">
         <ModulesCourse courseId={parseInt(courseId, 10)} userId={userData ? userData.id : 0}/>
       </div>
     </div>
@@ -121,21 +121,21 @@ const ModulesCourse : React.FC<{courseId:number,userId:number}> = (props) => {
         <p className="mt-1 text-sm text-neutral-400 ">Entre em contato com a equipe de suporte ou tente novamente mais tarde!</p>
       </div> 
     :      
-      <div className="flex flex-col flex-1 bg-green overflow-x-hidden">
-        <div className="flex h-full overflow-hidden">
-          <div className="w-[10%] md:w-[5%] absolute md:relative h-[70vh] md:h-full flex z-10 justify-center items-center">
+      <div className="flex flex-col flex-1 overflow-x-hidden">
+        <div className="flex h-full w-full overflow-hidden relative">
+          <div className="w-[10%] md:w-[5%] absolute bg-gradient-to-r from-[#070707] to-transparent  h-[70vh] md:h-full flex z-10 justify-center items-center">
             <button
               className="border w-9 h-9 rounded-full border-[#2eff2a] bg-[#2eff2a22] text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" 
                 onClick={()=>moveLeft(modules.length)}>
                 <FontAwesomeIcon icon={Fas.faChevronLeft}/>
             </button>
           </div>
-          <div className="flex w-[90%] overflow-hidden">
+          <div className="flex w-[100%] mx-1 overflow-hidden ">
             <div className="flex w-auto p-1 duration-300 ease-out" style={{marginLeft:`${margin}px`,width:`${modules.length*350}px`}}>
               {modules.map((module,key) =><ModuleCard key={key} module={module} userId={props.userId} />)}
             </div>
           </div>
-          <div className="w-[10%] md:w-[5%] absolute right-2 md:relative h-[70vh] md:h-full flex z-10 justify-center items-center">
+          <div className="w-[10%] md:w-[5%] absolute right-0 bg-gradient-to-l  from-[#070707] to-transparent h-[70vh] md:h-full flex z-10 justify-center items-center">
             <button
               className="border w-9 h-9 rounded-full border-[#2eff2a] bg-[#2eff2a22] text-[#2eff2a] hover:bg-[#2eff2a] hover:text-black" 
                 onClick={()=>moveRight(modules.length)}>
@@ -170,11 +170,11 @@ const ModuleCard : React.FC<{module:IModules,userId:number}> = (props) => {
   return(
     <div 
       onClick={()=>openModule()}
-      className="flex flex-col justify-between py-4 items-center bg-neutral-700 w-[300px] mx-1 rounded shadow shadow-slate-600 dark:shadow-black h-full opacity-90 hover:opacity-100 hover:scale-[1.02] cursor-pointer duration-150 ease-out">
+      className="blur-background flex flex-col justify-between py-4 items-center w-[300px] md:w-[300px] mr-2 rounded shadow shadow-slate-600 h-full  hover:bg-neutral-800 hover:scale-[1.02] cursor-pointer duration-150 ease-out">
       <div className="flex flex-col flex-1 w-full justify-center item-center">
         <FontAwesomeIcon className="text-4xl mb-2 text-[#2eff2a]" icon={Fas.faChalkboard}/>
         <p className="font-bold text-neutral-200 text-center">{props.module.module}</p>
-        <p className="text-black text-sm text-center">{props.module.description}</p>
+        <p className="text-neutral-400 text-sm mx-2 mt-2 font-light text-center">{props.module.description}</p>
       </div>
       <div className="flex rounded-full overflow-hidden bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] h-[18px] w-[90%] p-[1px]">
         <div className="flex items-center h-full w-full bg-neutral-700  shadow rounded-full overflow-hidden relative">
@@ -208,6 +208,6 @@ const RenderImage : React.FC<{className:string,imageId:number}> = (props) => {
       className={props.className} 
       style={{backgroundImage:`url(${urlBase}/gallery/${fileImage})`,
               backgroundSize:'cover',
-              backgroundPosition:'center'}}/>
+              backgroundPosition:'top center'}}/>
   )
 }

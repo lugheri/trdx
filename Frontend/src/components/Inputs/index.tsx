@@ -13,8 +13,7 @@ export const InputForm: React.FC<InputType> = (props) => {
         </label>)}
       <input 
         type={props.inputType ? props.inputType : "text"} 
-        className={`${props.className} shadow border rounded-md p-2 placeholder:italic mb-4 bg-white text-neutral-800 placeholder:text-zinc-400 
-                   border-slate-700 focus:border-b-4 focus:ring-0 focus:border-teal-600`} 
+        className={`${props.className} shadow text-white border rounded-md p-2 placeholder:italic placeholder:font-light placeholder:text-neutral-400 mb-4 bg-neutral-900 border-slate-700 focus:border-b-4 focus:border-x-0 focus:border-t-0 focus:ring-0 focus:border-teal-600`} 
         placeholder={props.placeholder} 
         value={props.value}
         required={props.required}

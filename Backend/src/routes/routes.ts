@@ -16,9 +16,14 @@ import routesSecurity from './admin/routesSecurity';
 
 const routes = Router();
 routesAuth(routes)
-//ADMIN
-routesIntegrations(routes)
+// ::::::::::::::::::::::::::::::::::::::::::  A D M I N   A R E A  ::::::::::::::::::::::::::::::::::::::::::
 routesContent(routes)
+
+// ::::::::::::::::::::::::::::::::::::::::  S T U D E N T   A R E A  ::::::::::::::::::::::::::::::::::::::::
+
+
+
+routesIntegrations(routes)
 routesStudents(routes)
 //PLATFORM
 routesClassRoom(routes)

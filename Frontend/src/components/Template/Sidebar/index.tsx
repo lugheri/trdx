@@ -23,9 +23,9 @@ export const Sidebar = () => {
 
   
   const [ side, setSide ] = useState<'open'|'closed'>('open')
-  const [ sideSize, setSideSize ] = useState<'w-60'|'w-20'>('w-60')
+  const [ sideSize, setSideSize ] = useState<'w-60'|'w-24'>('w-60')
   useEffect(()=>{
-    side == 'open' ? setSideSize('w-60') : setSideSize('w-20')    
+    side == 'open' ? setSideSize('w-60') : setSideSize('w-24')    
   },[side])
 
   return (
@@ -84,6 +84,11 @@ export const Sidebar = () => {
               side={side} 
               name='Minha Conta' 
               icon='faUserCircle'/>  
+            <SideItem 
+              to={`/Logoff`} 
+              side={side} 
+              name='Sair' 
+              icon='faArrowRightFromBracket'/>  
         </ul>
       </div>
       {/*FOOTER
@@ -143,7 +148,7 @@ const SideItem : React.FC<NavLinkProps> = (props) => {
         to={props.to} 
         target={props.name == "Instagram" ? "_blank" : props.name == "Canal do Youtube" ? "_blank" : ""}
         className={({ isActive, isPending }) =>isActive ? navActive : isPending ? navDefault : navDefault}>
-        {props.icon ? (<FontAwesomeIcon className={`px-4 ml-3 opacity-60 ${isActiveNav ? "text-black":"text-[#00ff00]"}`} icon={ props.name == 'Instagram' ? Fab.faInstagram : Fas[props.icon] as IconProp}/>) : false}
+        {props.icon ? (<FontAwesomeIcon className={`pl-2 pr-3 ml-3 opacity-60 ${isActiveNav ? "text-black":"text-[#00ff00]"}`} icon={ props.name == 'Instagram' ? Fab.faInstagram : Fas[props.icon] as IconProp}/>) : false}
         {props.name ? (<p className="text-xs">{props.name}</p>) : false}      
       </NavLink>
     ):(
@@ -151,7 +156,7 @@ const SideItem : React.FC<NavLinkProps> = (props) => {
         className={({ isActive, isPending }) =>isActive ? navActiveClosed : isPending ? navDefaultClosed : navDefaultClosed}
         to={props.to}>
         {props.icon ? (<FontAwesomeIcon className={`py-1 ${isActiveNav ? "text-black":"text-[#00ff00]"}`} icon={ props.name == 'Instagram' ? Fab.faInstagram : Fas[props.icon] as IconProp}/>) : false}  
-        {props.name ? (<p className={`hidden group-hover:inline text-[.7rem] ${isActiveNav ? "text-black":"text-[#00ff00]"} text-center font-light transition duration-150 ease-out hover:ease-in`}>{props.name}</p>) : false}         
+        {props.name ? (<p className={`hidden group-hover:inline text-[.7rem] ${isActiveNav ? "text-black":"text-[#00ff00]"} text-center font-light transition duration-150 ease-out hover:ease-in`}>{props.name === 'Instagram' ? 'insta' : props.name }</p>) : false}         
       </NavLink>
     )
   )
