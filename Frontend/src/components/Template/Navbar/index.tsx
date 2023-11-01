@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import * as Fas from "@fortawesome/free-solid-svg-icons";
+import * as Fab from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { NavLink, useLocation} from 'react-router-dom';
@@ -56,7 +57,7 @@ export const Navbar = () => {
               <FontAwesomeIcon icon={Fas.faCog}/>
             </NavLink>                 
           </div>
-          <div className="flex flex-wrap">
+          <div className="flex flex-wrap justify-end">
             <SideItem 
                 to={`/`} 
                 name='Inicio' 
@@ -68,15 +69,21 @@ export const Navbar = () => {
                 icon='faChalkboard'
                 onClick={()=>setMobileNav('closed')}/>  
               <SideItem 
-                to={`/instagram`} 
+                to={`https://www.instagram.com/guilhermecardosox/`} 
                 name='Instagram' 
                 icon='faCameraRetro'
                 onClick={()=>setMobileNav('closed')}/>  
               <SideItem 
-                to={`/youtube`} 
+                to={`https://www.youtube.com/c/GuilhermeCardoso`} 
                 name='Canal do Youtube' 
                 icon='faPlay'
                 onClick={()=>setMobileNav('closed')}/>  
+              <NavLink
+                to={'/Logoff'}
+                onClick={()=>setMobileNav('closed')}
+                className="">
+                  <FontAwesomeIcon className="p-4 mt-2 mr-3 text-lg text-neutral-400  opacity-60" icon={Fas.faArrowRightFromBracket}/>
+              </NavLink>
             </div>
           </div>}
       </div>
@@ -112,7 +119,7 @@ const SideItem : React.FC<{to:string;icon:keyof typeof Fas|null;name?:string;onC
       to={props.to}
       onClick={props.onClick}
       className={({ isActive, isPending }) =>isActive ? navActive : isPending ? navDefault : navDefault}>
-      {props.icon ? (<FontAwesomeIcon className={`px-4 ml-3 opacity-60 ${isActiveNav ? "text-black":"text-[#00ff00]"}`} icon={Fas[props.icon] as IconProp}/>) : false}
+      {props.icon ? (<FontAwesomeIcon className={`px-4 ml-3 opacity-60 ${isActiveNav ? "text-black":"text-[#00ff00]"}`} icon={ props.name == 'Instagram' ? Fab.faInstagram : Fas[props.icon] as IconProp}/>) : false}
       {props.name ? (<p className="text-xs">{props.name}</p>) : false}      
     </NavLink>
   )
