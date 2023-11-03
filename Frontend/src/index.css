@@ -22,6 +22,24 @@
   -webkit-border-radius: 6px;
 }
 
+.side-blur{
+  background: rgba(0, 0, 0, 0.3);  
+  backdrop-filter: blur(7px);  
+}
+
+.text-shadow-custom {
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.9),3px 3px 3px rgba(0, 0, 0, 0.9);
+}
+
+.defaultButton{
+  border-radius: 8.663px;
+  border-right: 1.302px solid #565656;
+  background: linear-gradient(88deg, #28D11F 18.68%, #8FFF00 115.07%);
+  box-shadow: 0px 0px 29.94331px 0px rgba(36, 255, 0, 0.51);
+}
+
+
+
 .blur-background {
   border-radius: 10.313px;
   border: 0.645px solid rgba(255, 255, 255, 0.33);  

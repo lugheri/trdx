@@ -6,15 +6,337 @@ import { Student } from '../../../contexts/Dtos/auth.dto';
 import api from '../../../services/api';
 import { Loading } from '../../../components/Loading';
 
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { faTelegram, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { urlBase } from '../../../utils/baseUrl';
 import { useNavigate } from 'react-router-dom';
-
-
+import { ButtonDefault } from '../../../components/Buttons';
 
 export const Home = () => {
+  const authenticated = useAuth();  
+  const userData:Student|null = authenticated ? authenticated.userData : null 
+  const [ nextLessonId, setNextLessonId ] = useState<number|null>(null)
+  useEffect(()=>{
+    const getNextLesson = async () => {
+      try{
+        const nextLesson = await api.get(`lastLessonViewed/${userData ? userData.id : 0}`)          
+        setNextLessonId(nextLesson.data.response)
+      }catch(err){
+        console.log(err)
+      }
+    }
+    getNextLesson()
+  },[])
+
+  const [ listMyCourses, setListMyCourses ] = useState<IMyCourses[]|null>(null)
+  const getMyCourses = async () => {
+    try{
+      const mc = await api.get(`myCourses/${userData ? userData.id : 0}`)
+      setListMyCourses(mc.data.response)
+    }catch(e){
+      console.log(e)
+    }    
+  }
+  useEffect(()=>{ getMyCourses()},[])   
+
+
+  return(
+    <HomePageCarousel 
+      component={
+        <div className="flex flex-col">
+          <Welcome/>          
+          { nextLessonId && <NextLesson lessonId={nextLessonId}/> } 
+          { listMyCourses === null ? <Loading/> : listMyCourses.length == 0 ? <Empty/> 
+          : <AllCourses listMyCourses={listMyCourses} studentId={userData ? userData.id : 0}/>}
+        </div>
+    }/>
+  )
+}
+
+type HomePageCarouselComponent = {
+  component: React.ReactNode;
+  className?:string;
+}
+export const HomePageCarousel : React.FC<HomePageCarouselComponent> = (props) => {
+  return(
+  <div 
+    className={`${props.className} relative`} 
+    style={{
+            background: `linear-gradient(to bottom,rgba(0, 0, 0, 0),rgba(0, 0, 0, 0.4),rgba(0, 0, 0, 0.6),rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 1)),
+                         url(${urlBase}/gallery/bg-text-1.jpg)`,
+            backgroundSize:'100% auto',
+            backgroundRepeat:'no-repeat',
+            backgroundAttachment:'fixed'
+            }}>
+        {props.component}
+      
+     
+  </div>)
+}
+
+const Welcome = () => {
+  const homeVideo = '359281775'
+  return(
+    <div className="flex mt-[300px] 2xl:mt-[600px] justify-center items-center ml-28 mr-4">
+      <iframe 
+        className="bg-slate-900 rounded-xl  shadow-md shadow-black
+                  w-[500px] h-[270px]
+                  2xl:w-[1000px] 2xl:h-[540px]        
+                  " 
+        width="100%" 
+        allow="autoplay; fullscreen" 
+        src={`https://player.vimeo.com/video/${homeVideo}?color=ff9933&title=0&byline=0&portrait=0&badge=0`}>
+      </iframe>
+      
+      <div className="flex flex-col flex-1 justify-start items-start px-4">
+        <p className="text-white font-black  mb-4 text-shadow-custom
+                      text-xl 2xl:text-5xl ">
+          PROGRAMAÇÃO DAS SALAS DE TRADE AO VIVO
+        </p>
+        <p className="text-slate-300 font-light text-shadow-custom my-2
+                     text-sm 2xl:text-3xl  ">
+          SALA DE TRADE AO VIVO - DIURNA de Segunda a Sexta às 10h de Brasília.<br/>
+          Clique no botão abaixo para assistir no dia e hora marcado.
+        </p>
+        <ButtonDefault icon="faPlay" className="mb-3 text-xs" name="Assista de Segunda a Sexta às 10h"/>
+
+        <p className="text-slate-300  text-sm font-light text-shadow-custom my-2">
+          SALA DE TRADE AO VIVO - NOTURNA de Quarta-feira 01/11 às 22h de Brasília.<br/>
+          Clique no botão abaixo para assistir no dia e hora marcado.
+        </p> 
+        <ButtonDefault icon="faPlay" className="mb-3 text-xs" name="Assista de Quarta-feira 01/11 às 22h"/>
+
+        <p className="text-slate-300 text-sm font-light text-shadow-custom my-2">
+          Obs.: Todas as salas são gravadas, para assistir acesse "Gravações Sala" disponível aqui na área de alunos.
+        </p>              
+      </div>
+    </div>
+  )
+} 
+
+const NextLesson: React.FC<{lessonId:number}> = ({lessonId}) => {
+  const [infoLesson, setInfoLesson] = useState<ILessons | null>(null); // Inicializa com null ou um valor padrão apropriado
+
+  useEffect(()=>{
+    const infoNextLesson = async () => {
+      const info = await api.get(`/infoLesson/${lessonId}`)
+      setInfoLesson(info.data.response)
+    }
+    infoNextLesson()
+  },[])
+
+  const navigate = useNavigate();  
+  const openModule = () => {
+    const hash_lessonId: string = btoa(`[{"courseId":"${infoLesson?.course_id}","moduleId":"0"}]`);
+    navigate(`/classRoom/course/lesson/${hash_lessonId}`)
+  }
+
+  return (
+    <div className="flex mt-[100px] justify-center items-center ml-28 mr-4">
+      <div className="w-[500px] h-[270px] mb-4 rounded-xl relative flex justify-center items-center bg-slate-900 text-neutral-600">
+        <p className="p-2 bg-neutral-800 text-white text-xs font-light rounded-md absolute top-4 left-4 shadow">
+          Continue de onde parou  
+        </p>
+        CAPA
+      </div>
+      <div className="flex flex-col flex-1 justify-start items-center md:items-start px-4">
+        <p className="text-neutral-100 font-bold text-xl w-full text-center md:text-left">{infoLesson?.name}</p>
+        <p className="text-neutral-100 font-light mt-4 w-full text-center md:text-left">{infoLesson?.description}</p>
+        <ButtonDefault icon="faPlay" className="mb-3" onClick={()=>openModule()} name="Continuar Conteúdo"/>        
+      </div>        
+    </div>
+  )
+}
+
+type AllCoursesComponent={
+  studentId:number,
+  listMyCourses:IMyCourses[]
+}
+const AllCourses : React.FC<AllCoursesComponent> = (props) => {
+
+  const settings = {
+    dots:true,
+    centerMode: true,
+    infinite: true, // Torna o carrossel infinito
+    slidesToShow: 3, // Número de slides visíveis de cada vez
+    slidesToScroll: 1, // Número de slides a rolar por vez  
+    autoplay: true,
+    autoplaySpeed: 2000,
+    pauseOnHover: true, 
+    appendDots: (dots: React.ReactNode) => (
+      <div
+        style={{         
+          borderRadius: "10px",
+          padding: "10px"
+        }}
+      >
+        <ul style={{ margin: "0px" }}> {dots} </ul>
+      </div>
+    ),
+      customPaging: () => (
+        <div
+          style={{
+            width: "5px",
+            height: "5px",
+            marginTop:"30px",
+            color: "green",
+            border: "1px green solid"
+          }}
+        >
+        </div>
+      ),
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
+  };
+
+  return(
+    <div className=" w-full h-[300px] mt-[100px] mb-[100px]">
+       <h2>Carousel Infinito</h2>
+       
+      <Slider {...settings}>        
+        { props.listMyCourses.map((course,key)=>
+          <Course key={key} infoCourse={course} userId={props.studentId}/>)}     
+      </Slider>
+      
+    </div>
+  )
+}
+
+
+const Course : React.FC<{infoCourse:IMyCourses;userId:number}> = (props) => {
+  //const [ fileImage, setFileImage ] = useState(null)
+  const [ dataCourse, setDataCourse ] = useState< ICourse | null>(null)
+  useEffect(()=>{
+    const getDataCourse = async () => {
+      try{
+        const prog = await api.get(`infoCourse/${props.infoCourse.id}`)
+        setDataCourse(prog.data.response)        
+      }catch(e){
+        console.log(e)
+      }
+    }
+    getDataCourse()
+  },[])
+
+
+  const [ validityCourse, setValidityCourse] = useState(null);
+  useEffect(()=>{
+    const checkValidity = async () => {
+      try{
+        const contract = await api.get(`validityCourse/${props.infoCourse.id}/${props.userId}`)
+        setValidityCourse(contract.data.response)    
+        console.log(validityCourse)    
+      }catch(e){
+        console.log(e)
+      }
+    }
+    checkValidity()
+  },[props.infoCourse])
+
+  const navigate = useNavigate();
+  
+  const openCourse = () => {
+    const hash_CourseId: string = btoa(`[{"courseId":"${props.infoCourse.id}"}]`);
+    navigate(`/classRoom/course/${hash_CourseId}`)
+  }  
+
+  return(
+    <div onClick={()=>openCourse()}
+         className="flex flex-col p-2 w-full px-3 mb-4  md:mb-1 opacity-90 cursor-pointer hover:opacity-100">
+      <div className="bg-slate-300 w-full h-[250px] rounded-xl flex justify-center items-center overflow-hidden">
+        <RenderImage className="w-full h-full" imageId={props.infoCourse.image}/>
+      </div> 
+      <p className="text-white text-sm mb-2 font-bold min-h-[50px] flex items-center">{dataCourse?.name}</p>
+      
+    </div>
+  )
+}
+
+const RenderImage : React.FC<{className:string,imageId:number}> = (props) => {
+  const [ fileImage, setFileImage ] = useState(null)
+
+  useEffect(()=>{
+    const getInfoImage = async () => {
+      try{
+        const i = await api.get(`infoFile/${props.imageId}`)
+        setFileImage(i.data.response.file)
+      }catch(e){
+        console.log(e)
+      }
+    }
+    getInfoImage()
+  },[props.imageId])
+
+  return(
+    fileImage == null ? <Loading/> : 
+    <div 
+      className={props.className} 
+      style={{backgroundImage:`url(${urlBase}/gallery/${fileImage})`,
+              backgroundSize:'cover',
+              backgroundPosition:'center'}}/>
+  )
+}
+
+
+
+const Empty = () => {
+  return (
+    <div className="flex flex-col justify-center items-center w-full  text-slate-400 dark:text-slate-200">
+      <FontAwesomeIcon className="text-3xl opacity-60 mb-2" icon={Fas.faFaceFrown}/> 
+      <p>Parece que você ainda não possui nenhum curso</p>
+    </div>
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const HomeOld = () => {
   const authenticated = useAuth();  
   const userData:Student|null = authenticated ? authenticated.userData : null  
 
@@ -181,43 +503,6 @@ export const Home = () => {
   )
 }
 
-const NextLesson: React.FC<{lessonId:number}> = ({lessonId}) => {
-  const [infoLesson, setInfoLesson] = useState<ILessons | null>(null); // Inicializa com null ou um valor padrão apropriado
-
-  useEffect(()=>{
-    const infoNextLesson = async () => {
-      const info = await api.get(`/infoLesson/${lessonId}`)
-      setInfoLesson(info.data.response)
-    }
-    infoNextLesson()
-  },[])
-
-  const navigate = useNavigate();  
-  const openModule = () => {
-    const hash_lessonId: string = btoa(`[{"courseId":"${infoLesson?.course_id}","moduleId":"0"}]`);
-    navigate(`/classRoom/course/lesson/${hash_lessonId}`)
-  }
-
-  return (
-    <div className="flex flex-col md:flex-row w-full my-8 justify-start items-center">
-      <div className="w-full mb-4 md:w-[40%] h-[200px] rounded-xl relative flex justify-center items-center bg-slate-900 mx-4 text-neutral-600">
-        <p className="p-2 bg-neutral-800 text-white text-xs font-light rounded-md absolute top-4 left-4 shadow">
-          Continue de onde parou  
-        </p>
-        CAPA
-      </div>
-      <div className="flex flex-col justify-start items-center md:items-start">
-        <p className="text-neutral-100 font-bold text-xl w-full text-center md:text-left">{infoLesson?.name}</p>
-        <p className="text-neutral-100 font-light mt-4 w-full text-center md:text-left">{infoLesson?.description}</p>
-        <button
-          onClick={()=>openModule()}
-          className="bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow-lg py-2 px-4 text-center my-2 rounded shadown text-sm font-semibold">
-          <FontAwesomeIcon className="opacity-50" icon={Fas.faPlay}/> Continuar Conteúdo
-        </button>
-      </div>        
-    </div>
-  )
-}
 
 const MyCourses: React.FC<{studentId:number}> = ({studentId}) => {
   const [ listMyCourses, setListMyCourses ] = useState<IMyCourses[]|null>(null)
@@ -239,86 +524,5 @@ const MyCourses: React.FC<{studentId:number}> = ({studentId}) => {
   )
 }
 
-const Course : React.FC<{infoCourse:IMyCourses;userId:number}> = (props) => {
-  //const [ fileImage, setFileImage ] = useState(null)
-  const [ dataCourse, setDataCourse ] = useState< ICourse | null>(null)
-  useEffect(()=>{
-    const getDataCourse = async () => {
-      try{
-        const prog = await api.get(`infoCourse/${props.infoCourse.id}`)
-        setDataCourse(prog.data.response)        
-      }catch(e){
-        console.log(e)
-      }
-    }
-    getDataCourse()
-  },[])
 
 
-  const [ validityCourse, setValidityCourse] = useState(null);
-  useEffect(()=>{
-    const checkValidity = async () => {
-      try{
-        const contract = await api.get(`validityCourse/${props.infoCourse.id}/${props.userId}`)
-        setValidityCourse(contract.data.response)    
-        console.log(validityCourse)    
-      }catch(e){
-        console.log(e)
-      }
-    }
-    checkValidity()
-  },[props.infoCourse])
-
-  const navigate = useNavigate();
-  
-  const openCourse = () => {
-    const hash_CourseId: string = btoa(`[{"courseId":"${props.infoCourse.id}"}]`);
-    navigate(`/classRoom/course/${hash_CourseId}`)
-  }  
-
-  return(
-    <div onClick={()=>openCourse()}
-         className="flex flex-col p-2 w-full px-3 mb-4 md:w-[24%] md:mx-[.25%] md:mb-1 opacity-90 cursor-pointer hover:opacity-100">
-      <div className="bg-slate-300 w-full h-32 rounded-xl flex justify-center items-center overflow-hidden">
-        <RenderImage className="w-full h-full" imageId={props.infoCourse.image}/>
-      </div> 
-      <p className="text-white text-sm mb-2 font-bold min-h-[50px] flex items-center">{dataCourse?.name}</p>
-      
-    </div>
-  )
-}
-
-const RenderImage : React.FC<{className:string,imageId:number}> = (props) => {
-  const [ fileImage, setFileImage ] = useState(null)
-
-  useEffect(()=>{
-    const getInfoImage = async () => {
-      try{
-        const i = await api.get(`infoFile/${props.imageId}`)
-        setFileImage(i.data.response.file)
-      }catch(e){
-        console.log(e)
-      }
-    }
-    getInfoImage()
-  },[props.imageId])
-
-  return(
-    fileImage == null ? <Loading/> : 
-    <div 
-      className={props.className} 
-      style={{backgroundImage:`url(${urlBase}/gallery/${fileImage})`,
-              backgroundSize:'cover',
-              backgroundPosition:'center'}}/>
-  )
-}
-
-
-const Empty = () => {
-  return (
-    <div className="flex flex-col justify-center items-center w-full  text-slate-400 dark:text-slate-200">
-      <FontAwesomeIcon className="text-3xl opacity-60 mb-2" icon={Fas.faFaceFrown}/> 
-      <p>Parece que você ainda não possui nenhum curso</p>
-    </div>
-  )
-}
