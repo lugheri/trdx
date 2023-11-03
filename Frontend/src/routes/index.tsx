@@ -12,8 +12,7 @@ import { CoursesGallery } from '../pages/Students/CoursesGallery';
 import { CourseModules } from '../pages/Students/CourseModules';
 import { ClassRoom} from '../pages/Students/ClassRoom/index';
 import { Profile } from '../pages/Students/Profile';
-import { Youtube } from '../pages/Students/Youtube';
-import { Instagram } from '../pages/Students/Instagram';
+import { CommunityStudent } from '../pages/Students/CommunityStudent';
 //Page Admin
 //Dashboard
 import { Dashboard } from '../pages/Admin/Dashboard';
@@ -99,13 +98,9 @@ const RoutesApp = () => {
               ]             
             },
             {
-              path:'/instagram',
-              element:<Instagram/>,
-            },
-            {
-              path:'/youtube',
-              element:<Youtube/>,
-            },
+              path:'/communityStudent',
+              element:<CommunityStudent/>,
+            },          
             {
               path:'/Profile',
               element:<Profile/>,

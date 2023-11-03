@@ -43,6 +43,27 @@ export const ToggleDarkMode: React.FC = () => {
 
 }
 
+export type ButtonDefaultComponent = {
+  submit?: boolean;  
+  name?: string;
+  title?: string;
+  icon?:null | keyof typeof Fas ;
+  className?:string;
+  onClick?:() => void;
+};
+export const ButtonDefault : React.FC<ButtonDefaultComponent> = (props) =>{
+  return (
+    <button 
+      type={ props.submit ? "submit" : "button" }
+      className={props.className + " defaultButton hover:bg-gradient-to-r from-[#8FFF00] to-[#28D11F] px-4 py-2 text-sm flex justify-center items-center rounded-md"}
+      title={ props.title ? props.title : ""}
+      onClick={props.onClick}>
+        { props.icon ? (<FontAwesomeIcon className="m-1" icon={Fas[props.icon] as IconProp}/>) : false}  
+        { props.name ? props.name : false}
+    </button>
+  )
+}
+
 export const Button : React.FC<ButtonType> = (props) => {
   const { btn, type, size, border } = props;
   const getClassNames = () => {
