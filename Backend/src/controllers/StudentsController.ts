@@ -114,6 +114,18 @@ class StudentsController{
     }
   }
 
+  async checkCommunityStatusStudent(req:Request, res:Response){
+    const studentId : number = parseInt(req.params.studentId)
+    try{
+      const communityStatusStudent = await studentsService.checkCommunityStatusStudent(studentId)
+      res.json({"success": true,"response": communityStatusStudent})  
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error":err})  
+    }
+  }
+
   async studentsCourses(req:Request, res:Response){
     const studentId : number = parseInt(req.params.studentId)
     try{

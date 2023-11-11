@@ -28,7 +28,7 @@ export const CoursesGallery = () => {
   useEffect(()=>{ userData ? getMyCourses() : false },[userData])
 
   return(
-    <div>
+    <div className="ml-28 mr-4">
       <TitlePage title="Meus cursos"/>
       <div className="flex">
         <div className="overflow-x-hidden overflow-y-auto w-full h-[77vh] flex flex-wrap">

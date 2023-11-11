@@ -9,7 +9,7 @@ class CoursesService{
     const offset = qtdRegPage * p 
 
     const listCourses = await Courses.findAll({
-      where: {status: pagination.status},
+      where: {status: pagination.status,published: pagination.published},
       order:[[pagination.orderedBy,pagination.order]],
       offset:offset,
       limit:qtdRegPage

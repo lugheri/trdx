@@ -2,6 +2,7 @@ export interface ICourse{
   id:number;
   date_created:string;
   image:number;
+  background_image:number;
   author:string;
   name:string;
   description:string;
@@ -16,6 +17,7 @@ export interface ICourse{
 export interface IMyCourses{
   id:number;
   image:number;
+  background_image:number;
   name:string;
 }
 

@@ -1,6 +1,7 @@
 import { ButtonType, ToggleType } from "../Dtos/buttons.dto"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import * as Fas from "@fortawesome/free-solid-svg-icons";
+import * as Fab from "@fortawesome/free-brands-svg-icons";
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import useTheme from '../../hooks/useTheme';
 
@@ -48,6 +49,7 @@ export type ButtonDefaultComponent = {
   name?: string;
   title?: string;
   icon?:null | keyof typeof Fas ;
+  iconBrand?:null | keyof typeof Fab ;
   className?:string;
   onClick?:() => void;
 };
@@ -59,6 +61,7 @@ export const ButtonDefault : React.FC<ButtonDefaultComponent> = (props) =>{
       title={ props.title ? props.title : ""}
       onClick={props.onClick}>
         { props.icon ? (<FontAwesomeIcon className="m-1" icon={Fas[props.icon] as IconProp}/>) : false}  
+        { props.iconBrand ? (<FontAwesomeIcon className="m-1" icon={Fab[props.iconBrand] as IconProp}/>) : false} 
         { props.name ? props.name : false}
     </button>
   )
@@ -69,9 +72,9 @@ export const Button : React.FC<ButtonType> = (props) => {
   const getClassNames = () => {
     const btnDefault = "bg-[#2ecc71] text-white hover:bg-[#27ae60]"
 
-    const btnLight = "bg-[#ececec] text-slate-900 hover:bg-[#777] border border-[#ececec]"
-    const btnOutlineLight = "border border-[#ececec] text-white hover:bg-[#ececec] hover:text-slate-600"
-    const btnNotlineLight = "text-[#ececec] hover:bg-[#ececec] hover:text-slate-600"
+    const btnLight = "bg-[#ececec] text-neutral-900 hover:bg-[#777] border border-[#ececec]"
+    const btnOutlineLight = "border border-[#ececec] text-white hover:bg-[#ececec] hover:text-neutral-600"
+    const btnNotlineLight = "text-[#ececec] hover:bg-[#ececec] hover:text-neutral-600"
 
     const btnInfo = "bg-[#3498db] text-white hover:bg-[#2980b9] border border-[#3498db]"
     const btnOutlineInfo = "border border-[#3498db] text-[#3498db] hover:bg-[#3498db] hover:text-white"
@@ -89,9 +92,9 @@ export const Button : React.FC<ButtonType> = (props) => {
     const btnOutlineError = "border border-[#e74c3c] text-[#e74c3c] hover:bg-[#e74c3c] hover:text-white"
     const btnNotlineError = "text-[#e74c3c] hover:bg-[#e74c3c] hover:text-white"
 
-    const btnMuted = "bg-[#bdc3c7] text-white hover:bg-[#95a5a6] border border-[#bdc3c7]"
-    const btnOutlineMuted = "border border-slate-500 text-slate-500 hover:bg-[#bdc3c7] hover:text-slate-800"
-    const btnNotlineMuted = "text-slate-400 dark:text-[#bdc3c7] hover:bg-[#bdc3c7] hover:text-slate-600 dark:hover:text-slate-800"
+    const btnMuted = "bg-neutral-600 text-white hover:bg-[#95a5a6] border border-[#bdc3c7]"
+    const btnOutlineMuted = "border border-neutral-500 text-neutral-500 hover:bg-[#bdc3c7] hover:text-neutral-800"
+    const btnNotlineMuted = "text-neutral-400 dark:text-[#bdc3c7] hover:bg-[#bdc3c7] hover:text-neutral-600"
 
     const sizeSM= props.name ? "py-1 px-2 text-xs" : "py-1 px-2 text-xs"
     const sizeMD= props.name ? "py-2 px-3 text-sm" :"p-2 text-sm"
@@ -128,6 +131,7 @@ export const Button : React.FC<ButtonType> = (props) => {
       title={ props.title ? props.title : ""}
       onClick={props.onClick}>
         { props.icon ? (<FontAwesomeIcon className="m-1" icon={Fas[props.icon] as IconProp}/>) : false}  
+        { props.iconBrand ? (<FontAwesomeIcon className="m-1" icon={Fab[props.iconBrand] as IconProp}/>) : false} 
         { props.name ? props.name : false}
     </button>
   )

@@ -39,6 +39,27 @@
 }
 
 
+.slick-dots > ul> li.slick-active>.dot{  
+  margin-top: 29px;
+  width: 10px;
+  height: 10px;
+  background-color: green;
+  opacity: .9;
+}
+
+.slick-dots > ul> li >.dot{
+  width: 8px;
+  height: 8px;
+  border-radius:100px;
+  margin-top:30px;
+  font-weight: bold;
+  border: 1px green solid;
+  opacity: .5;
+}
+.slick-dots > ul> li >.dot:hover{
+  opacity: 1;
+}
+
 
 .blur-background {
   border-radius: 10.313px;

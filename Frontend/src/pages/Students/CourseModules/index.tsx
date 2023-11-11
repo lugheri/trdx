@@ -9,6 +9,7 @@ import { urlBase } from "../../../utils/baseUrl";
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { RenderImageGallery } from "../../../components/RenderImageGallery";
 
 export const CourseModules = () => {
   const authenticated = useAuth();  
@@ -57,20 +58,22 @@ export const CourseModules = () => {
   return (
     infoCourse === null ? <Loading/> :
     <div className="flex flex-col overflow-hidden h-[92vh]">
-      <div className="flex h-[20%] md:h-[60%] m-2 bg-green-500 rounded-md overflow-hidden relative">
-        <RenderImage className="w-full h-auto" imageId={infoCourse.image}/>
+      <div className="flex h-[20%] md:h-[100%] m-2 bg-green-500 rounded-md overflow-hidden relative">
+        <RenderImage className="w-full h-auto" imageId={infoCourse.background_image ? infoCourse.background_image : infoCourse.image}/>
         <div 
           className="flex z-10 absolute cursor-pointer px-4 py-2 bg-black/70 hover:bg-black top-[50%] md:top-[40%] right-0 text-white font-light"
           onClick={()=>openModule()}>
           { progressCourse == 0 ?
             <div className="flex w-full h-full items-center">
-              <div className="w-[60px] h-[35px] md:w-[100px] md:h-[55px] bg-slate-300 pr-4">
-                <RenderImage className="w-full h-full" imageId={infoCourse.image}/>
+              <div className="w-[60px] h-[35px] md:w-[100px] md:h-[55px] bg-slate-300 ">
+                <RenderImageGallery className="w-full h-full" imageId={infoCourse.image}/>
               </div>
               <p className="px-2 md:px-6 text-sm">Iniciar Curso <FontAwesomeIcon className="pl-4" icon={Fas.faChevronRight}/></p>
             </div>
           : <div className="flex w-full h-full items-center">           
-              <div className="w-[60px] h-[35px] md:w-[100px] md:h-[55px] bg-slate-300 pr-4"></div>
+              <div className="w-[60px] h-[35px] md:w-[100px] md:h-[55px] bg-slate-300">
+                <RenderImageGallery className="w-full h-full" imageId={infoCourse.image}/>
+              </div>
               <p className="px-2 md:px-6 text-sm">Continuar Curso <FontAwesomeIcon className="pl-4" icon={Fas.faChevronRight}/></p>
             </div>
           }
@@ -115,13 +118,13 @@ const ModulesCourse : React.FC<{courseId:number,userId:number}> = (props) => {
   return(
     modules === null ? <Loading/> :
     modules.length == 0 ? 
-      <div className="flex items-center w-full flex-col p-4">
+      <div className="flex items-center w-full flex-col p-4 ml-28 mr-4">
         <FontAwesomeIcon className="text-4xl text-red-400" icon={Fas.faFrown}/>
         <p className="mt-2 text-lg text-neutral-400">Parece que não existe nenhum módulo liberado neste curso.</p>
         <p className="mt-1 text-sm text-neutral-400 ">Entre em contato com a equipe de suporte ou tente novamente mais tarde!</p>
       </div> 
     :      
-      <div className="flex flex-col flex-1 overflow-x-hidden">
+      <div className="flex flex-col flex-1 overflow-x-hidden ml-28 mr-4">
         <div className="flex h-full w-full overflow-hidden relative">
           <div className="w-[10%] md:w-[5%] absolute bg-gradient-to-r from-[#070707] to-transparent  h-[70vh] md:h-full flex z-10 justify-center items-center">
             <button
@@ -206,8 +209,13 @@ const RenderImage : React.FC<{className:string,imageId:number}> = (props) => {
     fileImage == null ? <Loading/> : 
     <div 
       className={props.className} 
-      style={{backgroundImage:`url(${urlBase}/gallery/${fileImage})`,
-              backgroundSize:'cover',
-              backgroundPosition:'top center'}}/>
+      style={{
+        background: `linear-gradient(to bottom,rgba(9, 9, 9, 0),rgba(9, 9, 9, 0.4),rgba(9, 9, 9, 0.6),rgba(9, 9, 9, 0.9), rgba(9, 9, 9, 1), rgba(9, 9, 9, 1), rgba(9, 9, 9, 1)),
+                    url(${urlBase}/gallery/${fileImage})`,
+        backgroundSize:'cover',
+        backgroundRepeat:'no-repeat'
+        }}
+    
+              />
   )
 }

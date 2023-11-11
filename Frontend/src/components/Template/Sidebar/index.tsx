@@ -16,8 +16,6 @@ import Insta from '/img/svg/insta.svg';
 import InstaActive from '/img/svg/insta_active.svg';
 import Ytube from '/img/svg/youtube.svg';
 import YtubeActive from '/img/svg/youtube_active.svg';
-import Community from '/img/svg/comunidade.svg';
-import CommunityActive from '/img/svg/comunidade_active.svg';
 import Exit from '/img/svg/exit.svg';
 
 export const Sidebar = () => {
@@ -42,19 +40,18 @@ export const Sidebar = () => {
     {to:"/coursesGallery",icon:Book,iconActive:BookActive,target:"",name:"Meus Cursos"},
     {to:"https://www.instagram.com/guilhermecardosox/",icon:Insta,iconActive:InstaActive,target:"_blank",name:"Instagram"},
     {to:"https://www.youtube.com/c/GuilhermeCardoso",icon:Ytube,iconActive:YtubeActive,target:"_blank",name:"Canal do Youtube"},
-    {to:"/communityStudent",icon:Community,iconActive:CommunityActive,target:"",name:"Comunidade"},
     {to:"/Profile",icon:"Profile",iconActive:"",target:"",name:"Minha Conta"},
     {to:"/Logoff",icon:Exit,iconActive:Exit,target:"",name:"Sair"},
   ]
   
   return(
-    <div className="h-full fixed z-20 group overflow-auto transition-all 
+    <div className="h-full fixed z-20 group overflow-auto hover:transition-all duration-500 
                      /*Mobile**/ w-[16%] hover:w-[80%]
                      /*Tablet*/ md:w-20 md:hover:w-[35%]
-                     /*Desktop*/ lg:w-20 lg:hover:w-[16%]
-                     /*TV******/ 2xl:w-24 2xl:hover:w-[16%]">
+                     /*Desktop*/ lg:w-20 lg:hover:w-[18%]
+                     /*TV******/ 2xl:w-24 2xl:hover:w-[18%]">
       <div className="side-blur absolute w-full h-full"/>
-      <div className="absolute w-full h-full flex flex-col justify-center items-center">
+      <div className="absolute w-full h-full flex flex-col justify-center items-center hover:px-4">
         <img src={Logo} className="w-[80%] group-hover:w-[50%] h-auto"/>
         <StudentProfilePhoto 
           student_id={userData ? userData.id : 0} 
@@ -65,9 +62,9 @@ export const Sidebar = () => {
         <ProfileInfo 
           userData={userData} 
           progress={progress}
-          className="hidden group-hover:flex"/>
+          className="hidden group-hover:flex group-hover:transition-all group-hover:duration-1000 "/>
 
-        <div className="flex flex-col w-full px-4">
+        <div className="flex flex-col w-full px-4 group-hover:px-8">
           <ul>
             {side.map((item,key)=>
               <ItemSide 
@@ -95,7 +92,7 @@ type ProfileComponent = {
 }
 const ProfileInfo:React.FC<ProfileComponent> = (props) => {
   return(
-    <div className={`${props.className} flex flex-col justify-center items-center my-4 w-full px-4`}>
+    <div className={`${props.className} transition-all duration-1000 flex flex-col justify-center items-center my-4 w-full px-4`}>
       <StudentProfilePhoto 
         student_id={props.userData ? props.userData.id : 0} 
         photo_id={0} 

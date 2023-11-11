@@ -9,6 +9,7 @@ export default {
     extend: {
       animation: {
         modalUp: 'modalUp .5s',
+        slideUp: 'slideUp .5s',
       },
       keyframes: {
         modalUp: {
@@ -16,6 +17,10 @@ export default {
           '30%':{ marginTop: '-10%'},
           '60%':{ marginTop: '5%'},
           '100%':{ marginTop:'0', opacity: '1'},
+        },
+        slideUp: {
+          '0%':{ bottom: '0', opacity: '0'},
+          '100%':{ bottom:'10px', opacity: '1'},
         }
       },
       backgroundImage:{
