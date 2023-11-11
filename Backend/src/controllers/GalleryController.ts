@@ -82,7 +82,7 @@ class GalleryController{
     if(req.file){
       const filename = `${req.file.filename}.jpg`
       await sharp(req.file.path)
-            .resize(512)
+            /*.resize(512)*/
             .toFormat('jpeg')
             .toFile(`./public/gallery/${filename}`);
       await unlink(req.file.path)

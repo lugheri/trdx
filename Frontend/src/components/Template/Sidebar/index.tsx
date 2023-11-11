@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
-import Logo from '/img/logo.png'
+import Brand from '/img/brand.png'
 import useAuth from '../../../hooks/useAuth';
 import { Student } from '../../../contexts/Dtos/auth.dto';
 import { StudentProfilePhoto } from '../../StudentProfilePhoto';
@@ -52,7 +52,7 @@ export const Sidebar = () => {
                      /*TV******/ 2xl:w-24 2xl:hover:w-[18%]">
       <div className="side-blur absolute w-full h-full"/>
       <div className="absolute w-full h-full flex flex-col justify-center items-center hover:px-4">
-        <img src={Logo} className="w-[80%] group-hover:w-[50%] h-auto"/>
+        <img src={Brand} className="w-[30%] group-hover:w-[15%] h-auto"/>
         <StudentProfilePhoto 
           student_id={userData ? userData.id : 0} 
           photo_id={0} 
