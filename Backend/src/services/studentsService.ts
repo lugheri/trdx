@@ -26,13 +26,26 @@ class StudentsService{
   async getStudent(studentId:number):Promise<boolean | StudentsInstance >{
     const redisKey = `infoStudent:[${studentId}]`
     const infoStudentRedis = await redisGet(redisKey)
-    console.log("GET STUDENT REDIS",infoStudentRedis)
     if(infoStudentRedis!==null){ return infoStudentRedis }   
     const student = await Students.findByPk(studentId)
     const infoStudent = student ? student : false
     await redisSet(redisKey,infoStudent)
-    console.log("GET STUDENT MYSQL",infoStudent)
     return infoStudent
+  }
+
+  async checkCommunityStatusStudent(studentId:number):Promise<boolean | StudentsInstance >{
+    const redisKey = `typeAccessStudent:[${studentId}]`
+    const communityStatusStudentRedis = await redisGet(redisKey)
+    if(communityStatusStudentRedis!==null){ return communityStatusStudentRedis }   
+    const access = await Students.findOne({
+      attributes:['community'],
+      where:{id:studentId,status:1},
+      limit:1
+    })
+    console.log('ACCESS',access)
+    const communityStatusStudent = access ? access : false
+    await redisSet(redisKey,communityStatusStudent)
+    return communityStatusStudent
   }
 
   async getLastAccessStudent(studentId:number):Promise<StudentsLoginsInstance | null>{

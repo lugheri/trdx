@@ -1,4 +1,5 @@
 import * as Fas from "@fortawesome/free-solid-svg-icons";
+import * as Fab from "@fortawesome/free-brands-svg-icons";
 
 export type ToggleType = {
   value: boolean;
@@ -16,6 +17,7 @@ export type ButtonType = {
   border?: 'square'|'rounded'|'circle';
   block?: boolean;
   icon?:null | keyof typeof Fas ;
+  iconBrand?:null | keyof typeof Fab ;
   className?:string;
   onClick?:() => void;
 };

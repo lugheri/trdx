@@ -9,6 +9,7 @@ export default (routes: Router) => {
   routes.delete("/RemoveStudent/:studentId", StudentsController.removeStudent)
   routes.post("/listStudents", StudentsController.listStudents)
   routes.post("/searchStudents", StudentsController.searchStudent)
+  routes.get("/checkTypeStudentAccess/:studentId",StudentsController.checkCommunityStatusStudent)
   //Courses
   routes.get('/studentsCourses/:studentId', StudentsController.studentsCourses)
   routes.get('/checkCourseStudent/:studentId/:courseId', StudentsController.checkCourseStudent)

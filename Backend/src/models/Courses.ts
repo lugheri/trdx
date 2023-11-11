@@ -8,6 +8,7 @@ export interface CoursesInstance extends Model{
   id:number;
   date_created:string;
   image:number;
+  background_image:number;
   author:string;
   name:string;
   description:string;
@@ -29,6 +30,9 @@ export const Courses = sequelize.define<CoursesInstance>("Courses",{
     type:DataTypes.DATE
   },
   image:{
+    type:DataTypes.INTEGER
+  },
+  background_image:{
     type:DataTypes.INTEGER
   },
   author:{

@@ -4,7 +4,7 @@ import { sequelize } from '../instances/mysql';
 export interface StudentsInstance extends Model{
   id:number;
   since:string;
-  comunity:number;
+  community:number;
   type:string;
   photo:number;
   name:string;
@@ -30,7 +30,7 @@ export const Students = sequelize.define<StudentsInstance>("Students",{
     type:DataTypes.DATE,
     defaultValue:DataTypes.NOW
   },
-  comunity:{
+  community:{
     type:DataTypes.TINYINT
   },
   type:{

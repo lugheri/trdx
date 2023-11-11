@@ -97,6 +97,11 @@ class CoursesController{
     const studentId = parseInt(req.params.studentId)
     const courseId = parseInt(req.params.courseId)
     try{
+      const checkStudentCourse = await studentCoursesServices.checkCourseStudent(studentId,courseId)
+      if(checkStudentCourse==false){
+        res.json({"success":true,"response":'not_have'})
+        return
+      }
       const validityCourse = await coursesValidityContractsService.validityCourse(courseId,studentId)
       let contractStatus = 'expired'
       if(validityCourse){

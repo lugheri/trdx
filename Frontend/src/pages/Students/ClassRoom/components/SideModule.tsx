@@ -5,10 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ILessonsModule, IModules } from "../../Dtos/courses.dto";
 import api from '../../../../services/api';
 import { useNavigate } from 'react-router-dom';
+import { RenderImageGallery } from '../../../../components/RenderImageGallery';
 
 type ISideModule = {
   studentId:number,
   courseId:number,
+  imageCourse:number,
   moduleOpen:number,
   setModuleOpen:React.Dispatch<React.SetStateAction<number>>,
   lessonId:number,
@@ -60,7 +62,13 @@ export const SideModule: React.FC<ISideModule> = (props) => {
               <p className="text-xs">{module.module}</p>
               <FontAwesomeIcon className="text-xs" icon={Fas.faChevronUp}/> 
             </div>
-            <LessonsModule course_id={props.courseId} module_id={props.moduleOpen} student_id={props.studentId}  lesson_id={props.lessonId} setLessonId={props.setLessonId}/>
+            <LessonsModule 
+              course_id={props.courseId} 
+              imageCourse={props.imageCourse}
+              module_id={props.moduleOpen} 
+              student_id={props.studentId}  
+              lesson_id={props.lessonId} 
+              setLessonId={props.setLessonId}/>
             </>
             : 
             <div key={key} className="bg-[#101010] text-white flex justify-between items-center mb-2 px-2 h-12 font-light hover:font-semibold opacity-80 hover:opacity-100 cursor-pointer"
@@ -80,6 +88,7 @@ export const SideModule: React.FC<ISideModule> = (props) => {
 type ILessonsModuleComponent = {
   module_id:number,
   course_id:number,
+  imageCourse:number,
   student_id:number,
   lesson_id:number,
   setLessonId:React.Dispatch<React.SetStateAction<number>>
@@ -116,7 +125,9 @@ const LessonsModule : React.FC<ILessonsModuleComponent> = (props) => {
                           ${props.lesson_id === lesson.id && " border border-[#2eff2a]"}`}
               onClick={()=>props.setLessonId(lesson.id)}>
             <div className="flex flex-1 justify-start items-center">
-              <div className="w-[75px] h-12 bg-slate-300"></div>
+              <div className="w-[80px] h-12 bg-slate-300">
+                <RenderImageGallery className="w-full h-full" imageId={props.imageCourse}/>
+              </div>
               <p className="w-[70%] text-xs pl-2">{lesson.name}</p>
             </div>            
             <FontAwesomeIcon className="text-[#2eff2a]" icon={lesson.LessonsViewed ? Fas.faCheckSquare : Far.faSquare}/> 

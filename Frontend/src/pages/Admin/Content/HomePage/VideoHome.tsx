@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Card } from "../../../../components/Cards"
-import { TitlePage } from "../../../../components/Template/TitlePage"
+/*import { Card } from "../../../../components/Cards"
+import { TitlePage } from "../../../../components/Template/TitlePage"*/
 import api from '../../../../services/api';
 
 import * as Fab from "@fortawesome/free-brands-svg-icons";
@@ -9,9 +9,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from '../../../../components/Buttons';
 import { Modal, TitleModal } from '../../../../components/Modal';
 import { InputForm } from '../../../../components/Inputs';
-import { ButtonsHome } from './ButtonsHome';
+/*import { ButtonsHome } from './ButtonsHome';
 import { TextHome } from './TextHome';
-
+*/
 interface IWelcomeVideo{
   idvideo_welcome:string;
   video_platform:string;
@@ -29,9 +29,10 @@ export const VideoHome = () => {
     }
   }
   const [ newVideo, setNewVideo ] = useState<boolean>(false)
+  const [ removeVideo, setRemoveVideo ] = useState<boolean>(false)
   useEffect(()=>{
     getVideoWelcome()
-  },[newVideo])
+  },[newVideo,removeVideo])
   
   const openLinkVideo = async () => {    
     const link = welcomeVideo ? welcomeVideo.video_platform == 'vimeo' ? `https://vimeo.com/${welcomeVideo.idvideo_welcome}` : `https://www.youtube.com/watch?v=${welcomeVideo.idvideo_welcome}` : ""
@@ -55,24 +56,30 @@ export const VideoHome = () => {
             allow="autoplay; fullscreen" 
             src={`https://player.vimeo.com/video/${welcomeVideo.idvideo_welcome}?color=ff9933&title=0&byline=0&portrait=0&badge=0`}>
           </iframe>
-          {welcomeVideo.video_platform == 'vimeo' ?
-            <div className="flex flex-col py-4 px-1">
-              <p className="font-light text-sky-400 text-5xl"><FontAwesomeIcon icon={Fab.faVimeo}/> VIMEO</p>
-              <p className="font-light my-4 text-xl text-blue-300"><span className="font-semibold text-gray-300">Id do Vídeo:</span> {welcomeVideo.idvideo_welcome}</p>
-              <p className="font-light my-4 text-xl text-white">Link do Vídeo: <button onClick={()=>openLinkVideo()} className="font-light text-sky-400 text-xl"><FontAwesomeIcon icon={Fas.faArrowUpRightFromSquare}/> Acessar</button></p>
+          <div className="flex-col">
+            {welcomeVideo.video_platform == 'vimeo' ?
+              <div className="flex flex-col py-4 px-1">
+                <p className="font-light text-sky-400 text-5xl"><FontAwesomeIcon icon={Fab.faVimeo}/> VIMEO</p>
+                <p className="font-light my-4 text-xl text-blue-300"><span className="font-semibold text-gray-300">Id do Vídeo:</span> {welcomeVideo.idvideo_welcome}</p>
+                <p className="font-light my-4 text-xl text-white">Link do Vídeo: <button onClick={()=>openLinkVideo()} className="font-light text-sky-400 text-xl"><FontAwesomeIcon icon={Fas.faArrowUpRightFromSquare}/> Acessar</button></p>
+              </div>
+            : welcomeVideo.video_platform == 'youtube'?
+              <div className="flex flex-col py-4 px-1">
+                <p className="font-light text-red-400 text-5xl"><FontAwesomeIcon icon={Fab.faYoutube}/> YouTube</p>
+                <p className="font-light my-4 text-xl text-blue-300"><span className="font-semibold text-gray-300">Id do Vídeo:</span> {welcomeVideo.idvideo_welcome}</p>
+                <p className="font-light my-4 text-xl text-white">Link do Vídeo: <button onClick={()=>openLinkVideo()} className="font-light text-red-400 text-xl"><FontAwesomeIcon icon={Fas.faArrowUpRightFromSquare}/> Acessar</button></p>
+              </div> 
+            : false} 
+            <div className="flex">
               <Button icon="faEdit" btn="success" type='outline' name='Alterar Vídeo' onClick={()=>setNewVideo(true)}/>
+              <Button icon="faTrash" btn="error" type="notline" name="Remover Vídeo" onClick={()=>setRemoveVideo(true)}/>
             </div>
-          : welcomeVideo.video_platform == 'youtube'?
-            <div className="flex flex-col py-4 px-1">
-              <p className="font-light text-red-400 text-5xl"><FontAwesomeIcon icon={Fab.faYoutube}/> YouTube</p>
-              <p className="font-light my-4 text-xl text-blue-300"><span className="font-semibold text-gray-300">Id do Vídeo:</span> {welcomeVideo.idvideo_welcome}</p>
-              <p className="font-light my-4 text-xl text-white">Link do Vídeo: <button onClick={()=>openLinkVideo()} className="font-light text-red-400 text-xl"><FontAwesomeIcon icon={Fas.faArrowUpRightFromSquare}/> Acessar</button></p>
-              <Button icon="faEdit" btn="success" type='outline' name='Alterar Vídeo' onClick={()=>setNewVideo(true)}/>
-            </div> 
-          : false}             
+          </div>
+
         </div>
       }   
-      {newVideo && <Modal component={<NewVideo setWelcomeVideo={setWelcomeVideo} close={setNewVideo}/>}/>}      
+      {newVideo && <Modal component={<NewVideo setWelcomeVideo={setWelcomeVideo} close={setNewVideo}/>}/>}  
+      {removeVideo && <Modal component={<RemoveVideo videoId={welcomeVideo ? welcomeVideo.idvideo_welcome : ""} setWelcomeVideo={setWelcomeVideo} close={setRemoveVideo}/>}/>}     
     </div>
   )
 }
@@ -161,4 +168,35 @@ const NewVideo : React.FC<NewVideoComponent> = (props) => {
       }
     </div>
   )
+}
+
+type RemoveVideoComponent={
+  videoId:string,
+  setWelcomeVideo:React.Dispatch<React.SetStateAction<IWelcomeVideo|null>>,
+  close:React.Dispatch<React.SetStateAction<boolean>>
+}
+const RemoveVideo : React.FC<RemoveVideoComponent> = (props) => {
+  const removeVideo = async () => {
+    props.setWelcomeVideo({'idvideo_welcome':"",'video_platform':""})
+    props.close(false)
+    try{
+      await api.post("/updateVideoWelcome",{'idvideo_welcome':"",'video_platform':""})
+    }catch(err){
+      console.log(err)
+    }
+  }
+  return(
+  <div className="flex flex-col">
+    <TitleModal icon='faTrash' title='Remover vídeo'  close={()=>props.close(false)}/>
+      <div className="flex flex-col">
+        <p className="text-gray-400 text-lg p-4">
+          Confirmar remoção do vídeo de boas vindas?
+        </p>  
+        <div className="flex  border-slate-600 justify-end">
+          <Button btn='light' name='Não' type='outline' onClick={()=>props.close(false)}/>          
+          <Button btn='error' icon="faTrash" name='Sim, Remover' onClick={()=>removeVideo()}/>
+        </div>
+      </div>    
+  </div>
+)
 }

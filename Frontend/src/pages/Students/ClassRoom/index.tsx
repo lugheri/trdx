@@ -60,7 +60,7 @@ export const ClassRoom = () => {
 
 
   return(
-    <div className="flex flex-col md:flex-row h-full overflow-auto">
+    <div className="flex flex-col md:flex-row h-full overflow-auto ml-28 mr-4">
       <div className="flex flex-1 flex-col md:h-[100%] md:relative md:overflow-auto pb-2">        
         <Player
           course_id={courseId} nameCourse={infoCourse ? infoCourse.name : ""}
@@ -89,6 +89,7 @@ export const ClassRoom = () => {
         <SideModule 
           studentId={userData ? userData.id : 0}
           courseId={courseId}
+          imageCourse={infoCourse ? infoCourse.image : 0}
           moduleOpen={moduleOpen} setModuleOpen={setModuleOpen}
           lessonId={lessonId} setLessonId={setLessonId}/>         
         { openNotePad && <NotePad 
