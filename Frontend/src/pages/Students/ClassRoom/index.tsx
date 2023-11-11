@@ -12,7 +12,6 @@ import { NotePad } from './components/NotePad';
 export const ClassRoom = () => {
   const authenticated = useAuth();  
   const userData:Student|null = authenticated ? authenticated.userData : null
-
   const location = useLocation();  
   const params = location.pathname.split('/')[4]
   interface LessonObject {
@@ -26,37 +25,34 @@ export const ClassRoom = () => {
   const [ moduleOpen, setModuleOpen ] = useState<number>(moduleId)
   const [ infoCourse, setInfoCourse ] = useState<ICourse | null>(null)
 
-  useEffect(()=>{
-    const continueLesson = async () => {
-      try{
-        const info = await api.get(`/continueCourse/${userData ? userData.id : 0}/${courseId}`)
-        console.log('INFO',info.data)
-        setModuleOpen(info.data.response['module'])
-        setLessonId(info.data.response['nextLesson'])
-      }catch(err){
-        console.log(err)
-      }
-    }
+  const continueLesson = async () => {
+    try{
+      const info = await api.get(`/continueCourse/${userData ? userData.id : 0}/${courseId}`)
+      setModuleOpen(info.data.response['module'])
+      setLessonId(info.data.response['nextLesson'])
+    }catch(err){console.log(err)}
+  }
+  const getInfoCourse = async () => {
+    try{
+      const info = await api.get(`/infoCourse/${courseId}`)
+      setInfoCourse(info.data.response)
+    }catch(err){console.log(err)}
+  }
 
-    const getInfoCourse = async () => {
-      try{
-        const info = await api.get(`/infoCourse/${courseId}`)
-        setInfoCourse(info.data.response)
-      }catch(err){
-        console.log(err)
-      }
-    }
+  const [ openNotePad, setOpenNotePad ] = useState(false)
+  const [ openNotePadMobile, setOpenNotePadMobile ] = useState(false)
+  //Mobile Side
+  const [ mobileSide, setMobileSide ] = useState<'lesson'|'tools'|'comments'|null>(null)
+
+  useEffect(()=>{
     getInfoCourse()
     lessonId == 0 && continueLesson()
   },[])
 
-  const [ openNotePad, setOpenNotePad ] = useState(false)
-  const [ openNotePadMobile, setOpenNotePadMobile ] = useState(false)
-  console.log("NOTE PAD MOBILE",openNotePadMobile)
-  console.log("NOTE PAD",openNotePad)
+  
+ 
 
-  //Mobile Side
-  const [ mobileSide, setMobileSide ] = useState<'lesson'|'tools'|'comments'|null>(null)
+  
 
 
   return(
