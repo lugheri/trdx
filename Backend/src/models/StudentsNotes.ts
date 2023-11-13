@@ -6,6 +6,8 @@ export interface StudentsNotesInstance extends Model{
   date_created:string;
   student_id:number;
   course_id:number;
+  module_id:number;
+  lesson_id:number;
   note:string;
 }
 
@@ -23,6 +25,12 @@ export const StudentsNotes = sequelize.define<StudentsNotesInstance>('StudentsNo
     type:DataTypes.INTEGER
   },
   course_id:{
+    type:DataTypes.INTEGER
+  },
+  module_id:{
+    type:DataTypes.INTEGER
+  },
+  lesson_id:{
     type:DataTypes.INTEGER
   },
   note:{

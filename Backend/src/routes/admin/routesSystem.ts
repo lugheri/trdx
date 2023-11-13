@@ -20,4 +20,6 @@ export default (routes: Router) => {
   routes.patch("/EditModule/:moduleId", SystemController.editModule)
   routes.delete("/RemoveModule/:moduleId", SystemController.removeModule)
   routes.get("/listModules/:status", SystemController.listModules)
+  //Cache
+  routes.get("/clearCache", SystemController.clearCache)
 }

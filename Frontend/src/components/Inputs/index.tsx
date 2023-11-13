@@ -8,12 +8,12 @@ export const InputForm: React.FC<InputType> = (props) => {
   return (
     <div className="flex flex-col flex-1">
       {!props.label ? false 
-      : (<label className="font-semibold italic text-sm text-neutral-300  py-1">
+      : (<label className="font-semibold italic text-sm text-neutral-300 py-1">
           {props.label}
         </label>)}
       <input 
         type={props.inputType ? props.inputType : "text"} 
-        className={`${props.className} shadow text-white border rounded-md p-2 placeholder:italic placeholder:font-light placeholder:text-neutral-400 mb-4 bg-neutral-500/20 border-neutral-700 focus:border-b-4 focus:border-x-0 focus:border-t-0 focus:ring-0 focus:border-teal-600 `} 
+        className={`${props.className} font-light shadow text-white border rounded-md p-2 placeholder:italic placeholder:font-light placeholder:text-neutral-400 mb-4 bg-neutral-500/20 border-neutral-700 focus:border-b-4 focus:border-x-0 focus:border-t-0 focus:ring-0 focus:border-teal-600 `} 
         placeholder={props.placeholder} 
         value={props.value}
         required={props.required}
@@ -33,7 +33,7 @@ export const InputNumberForm: React.FC<InputNumberType> = (props) => {
         </label>)}
       <input 
         type="number" 
-        className={`shadow border rounded p-2 placeholder:italic mb-4 bg-zinc-700 text-white placeholder:text-zinc-400 
+        className={` font-light shadow border rounded p-2 placeholder:italic mb-4 bg-zinc-700 text-white placeholder:text-zinc-400 
                    border-slate-700 focus:border-b-4 focus:ring-0 focus:border-teal-600 ${props.className} `} 
         value={props.value}
         min={props.min}
@@ -56,7 +56,7 @@ export const TextAreaForm: React.FC<TextAreaType> = (props) => {
          {props.label}
         </label>)}
       <textarea 
-         className={`shadow text-white border rounded-md p-2 placeholder:italic placeholder:font-light placeholder:text-neutral-400 mb-4 bg-neutral-500/20 border-neutral-700 focus:border-b-4 focus:border-x-0 focus:border-t-0 focus:ring-0 focus:border-teal-600 ${props.className} `} 
+         className={` font-light shadow text-white border rounded-md p-2 placeholder:italic placeholder:font-light placeholder:text-neutral-400 mb-4 bg-neutral-500/20 border-neutral-700 focus:border-b-4 focus:border-x-0 focus:border-t-0 focus:ring-0 focus:border-teal-600 ${props.className} `} 
         value={props.value}
         placeholder={props.placeholder} 
         required={props.required}
@@ -76,7 +76,7 @@ export const SelectForm: React.FC<SelectType> = (props) => {
           {props.label}
         </label>)}  
       <select 
-        className={`${props.className} shadow text-white border rounded-md p-2 placeholder:italic placeholder:font-light placeholder:text-neutral-900 mb-4 bg-neutral-500/20 border-neutral-700 focus:border-b-4 focus:border-x-0 focus:border-t-0 focus:ring-0 focus:border-teal-600 `} 
+        className={`${props.className} font-light shadow text-white border rounded-md p-2 placeholder:italic placeholder:font-light placeholder:text-neutral-900 mb-4 bg-neutral-500/20 border-neutral-700 focus:border-b-4 focus:border-x-0 focus:border-t-0 focus:ring-0 focus:border-teal-600 `} 
         value={props.value} 
         onChange={handleSelectChange} 
         required={props.required}>

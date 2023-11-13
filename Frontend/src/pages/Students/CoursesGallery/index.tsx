@@ -100,10 +100,10 @@ const Course : React.FC<{infoCourse:IMyCourses;userId:number}> = (props) => {
 
   return(
     <div onClick={()=>openCourse()}
-         className="flex flex-col p-2 w-full px-3 mb-4 md:w-[32%] md:mx-[.25%] md:mb-1 opacity-90 cursor-pointer hover:opacity-100">
+         className="flex flex-col p-2 w-full px-3 mb-4 md:w-[30%] md:mx-[.25%] md:mb-1 opacity-90 cursor-pointer hover:opacity-100">
       <div className="bg-slate-300 w-full h-[200px] rounded-xl flex justify-center items-center overflow-hidden">
-        <RenderImageGallery className="w-full h-full" imageId={props.infoCourse.image}/>
-      </div> 
+        <RenderImageGallery className="w-full h-full" imageId={props.infoCourse.default_thumb}/>
+      </div>
       <p className="text-white text-sm mb-2 font-bold min-h-[50px] flex items-center">{dataCourse?.name}</p>
       <p className="text-gray-100 text-xs font-light">{progressCourse}% concluido</p>
       <div className="w-1/2 md:w-full h-[10px] p-[1px]  mb-4 bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] rounded-md shadow">

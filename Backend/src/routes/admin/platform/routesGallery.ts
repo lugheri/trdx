@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import multer from 'multer';
-import GalleryController from '../../controllers/GalleryController';
+import GalleryController from '../../../controllers/GalleryController';
 
 const upload = multer({
   dest:'./tmp',

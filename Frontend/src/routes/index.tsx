@@ -55,6 +55,7 @@ import { LoadingPage } from '../pages/LoadingPage';
 import { Levels } from '../pages/Admin/Settings/Levels';
 import { Credentials } from '../pages/Admin/Settings/Credentials';
 import { StudentInfo } from '../pages/Admin/Students/StudentInfo';
+import { FolderGallery } from '../pages/Admin/Platform/Gallery/components/FolderGallery';
 
 
 
@@ -176,7 +177,13 @@ const RoutesApp = () => {
               path: '/admin/platform',
               children:[
                 { index: true, element:<Platform/>},
-                { path: '/admin/platform/gallery', element:<Gallery/>},
+                {
+                  path:'/admin/platform/gallery',
+                  children:[
+                    { index: true, element:<Gallery/>},
+                    { path: '/admin/platform/gallery/folder/:folder_id', element:<FolderGallery/>}
+                  ]
+                },
                 { path: '/admin/platform/emails', element:<Emails/>},
                 { path: '/admin/platform/advertising', element:<Advertising/>},
                 { path: '/admin/platform/integrations', element:<Integrations/>},

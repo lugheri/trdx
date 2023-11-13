@@ -14,9 +14,9 @@ export const StudentProfilePhoto : React.FC<{student_id:number,photo_id:number,c
     const getPhoto = async () => {
       try{  
         let photoStudent = props.photo_id
-        if(!photoStudent){ 
-          const info = (await api.get(`getInfoStudent/${props.student_id}`)).data.response 
-          photoStudent = info.photo
+        if(photoStudent==0){ 
+          const info = await api.get(`getInfoStudent/${props.student_id}`)
+          photoStudent = info.data.response.photo
         }
         const photo = await api.get(`photoProfile/${photoStudent}`)     
         photo.data.response == false ? setUrlPhoto(null) :

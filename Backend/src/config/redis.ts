@@ -11,13 +11,16 @@ async function configureRedisClient(): Promise<void> {
 configureRedisClient();
 
 export const redisSet = async (key:string,value: any,expires?:number|undefined) => {
+  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : ''
+  const keyReg = environment+':'+key
   if(value===undefined){
     return false
   }
   let expire_time = expires === undefined ? 7200 : expires
   
   try{
-    await client.set(key, JSON.stringify(value));
+   
+    await client.set(keyReg, JSON.stringify(value));
     await client.expire(key,expire_time)
     return true
   }catch(e){
@@ -27,8 +30,10 @@ export const redisSet = async (key:string,value: any,expires?:number|undefined) 
 }
 
 export const redisGet = async (key:string) => {
+  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : ''
+  const keyReg = environment+':'+key
   try{
-    const result = await client.get(key);
+    const result = await client.get(keyReg);
     if(result === null){ return null}
     return JSON.parse(result)
   }catch(e){
@@ -38,8 +43,10 @@ export const redisGet = async (key:string) => {
 }
 
 export const redisDel = async (key:string) => {
+  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : ''
+  const keyReg = environment+':'+key
   try{
-    await client.del(key)
+    await client.del(keyReg)
     return true
   }catch(e){
     console.log('Redis delete Error',e)
