@@ -3,6 +3,7 @@ export interface ICourse{
   date_created:string;
   image:number;
   background_image:number;
+  default_thumb:number;
   author:string;
   name:string;
   description:string;
@@ -18,6 +19,7 @@ export interface IMyCourses{
   id:number;
   image:number;
   background_image:number;
+  default_thumb:number;
   name:string;
 }
 

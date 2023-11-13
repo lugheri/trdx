@@ -9,6 +9,7 @@ export interface GalleryInstance extends Model{
   file:string;
   extension:string;
   size:number;
+  dimension:string;
   folder:number;
   status:number;
 }
@@ -37,6 +38,9 @@ export const Gallery = sequelize.define<GalleryInstance>("Gallery",{
   },
   size:{
     type:DataTypes.INTEGER
+  },
+  dimension:{
+    type:DataTypes.STRING
   },
   folder:{
     type:DataTypes.INTEGER

@@ -387,8 +387,9 @@ class CoursesController{
   async commentsLesson(req:Request,res:Response){
     const lessonId = parseInt(req.params.lessonId);
     const page = parseInt(req.params.page)
+    const studentId = parseInt(req.params.studentId)
     try{
-      const commentsLessons = await LessonsCommentsService.getCommentsLesson(lessonId,page)
+      const commentsLessons = await LessonsCommentsService.getCommentsLesson(lessonId,page,studentId)
       res.json({"success":true,"response":commentsLessons})
     }catch(err){
       console.log(err)

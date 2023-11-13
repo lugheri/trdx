@@ -25,18 +25,20 @@ export const EditInfoCourse : React.FC<EditInfoCourseComponent> = (props) => {
   const [ comunidade, setComunidade] = useState(props.infoCourse.community)
   const [ published, setPublished] = useState(props.infoCourse.published)
   const [ tags, setTags] = useState(props.infoCourse.tags)
-  const [ editImage, setEditImage ] = useState<null|'image'|'bg'>(null)
+  const [ editImage, setEditImage ] = useState<null|'image'|'bg'|'thumb'>(null)
   const [ capaAtualCurso, setCapaAtualCurso ] = useState(props.infoCourse.image)
   const [ capaCurso, setCapaCurso ] = useState<number>(props.infoCourse.image)
 
   const [ backgroundAtualCurso, setBackgroundAtualCurso ] = useState(props.infoCourse.background_image)
   const [ backgroundCurso, setBackgroundCurso ] = useState<number>(props.infoCourse.background_image)
+  const [ default_thumb, setDefaultThumb ] = useState<number>(props.infoCourse.default_thumb)
 
   useEffect(()=>{
     setEditImage(null)
     setCapaAtualCurso(capaCurso)
     setBackgroundAtualCurso(backgroundCurso)
-  },[capaCurso,backgroundCurso])
+    setDefaultThumb(default_thumb)
+  },[capaCurso,backgroundCurso,default_thumb])
 
   const editInfoCourse = async (e:FormEvent) => {
     e.preventDefault()
@@ -45,6 +47,7 @@ export const EditInfoCourse : React.FC<EditInfoCourseComponent> = (props) => {
       const data = {
         "image":capaCurso,
         "background_image":backgroundCurso,
+        "default_thumb":default_thumb,
         "author":autor,
         "name":nome,
         "description":descricao,
@@ -67,14 +70,25 @@ export const EditInfoCourse : React.FC<EditInfoCourseComponent> = (props) => {
     <form className="flex flex-col " onSubmit={(e)=>editInfoCourse(e)}>
       <div className="flex">
         {/*Capas*/}
-        <div className="flex flex-col w-1/2 mr-2 px-2">
-          <div className="flex flex-col w-full h-[190px] justify-center items-center bg-slate-700 rounded m-2">              
-            {capaAtualCurso && <RenderImageGallery className='w-full h-full' imageId={capaAtualCurso} />}
-            <Button name="Alterar Imagem de Capa" size='sm' icon="faEdit" btn="info" type="notline" onClick={()=>{setEditImage('image')}} />         
-          </div>
-          <div className="flex flex-col w-full h-[300px] justify-center items-center bg-slate-700 rounded m-2">              
-            {backgroundAtualCurso && <RenderImageGallery className='w-full h-full' imageId={backgroundAtualCurso} />}
-            <Button name="Alterar Imagem de Fundo" size='sm' icon="faEdit" btn="info" type="notline" onClick={()=>{setEditImage('bg')}} />         
+        <div className="flex flex-col w-1/2 mr-2 px-1 overflow-h-auto">
+          <p className="text-neutral-50 mt-2">Imagens do Curso</p>
+          <div className="flex justify-center items-center">
+            <div className="flex flex-col w-[60%] h-[400px] justify-center items-center bg-slate-700 rounded m-1">              
+              {backgroundAtualCurso && <RenderImageGallery className='w-full h-full' imageId={backgroundAtualCurso} />}
+              <Button name="Alterar Imagem de Fundo" size='sm' icon="faEdit" btn="info" type="notline" onClick={()=>{setEditImage('bg')}} />         
+            </div>
+            <div className="flex flex-col w-[40%]">
+              <div className="flex flex-col w-full h-[260px]  justify-center items-center bg-slate-700 rounded m-1">              
+                {capaAtualCurso && <RenderImageGallery className='w-full h-full' imageId={capaAtualCurso} />}
+                <Button name="Alterar Capa" size='sm' icon="faEdit" btn="info" type="notline" onClick={()=>{setEditImage('image')}} />         
+              </div>
+
+              <div className="flex flex-col w-full h-[140px] justify-center items-center bg-slate-700 rounded m-1">              
+                {default_thumb && <RenderImageGallery className='w-full h-full' imageId={default_thumb} />}
+                <Button name="Thumb Padrão" size='sm' icon="faEdit" btn="info" type="notline" onClick={()=>{setEditImage('thumb')}} />         
+              </div>
+             
+            </div>
           </div>
         </div>
         { editImage && <Modal component={
@@ -82,13 +96,15 @@ export const EditInfoCourse : React.FC<EditInfoCourseComponent> = (props) => {
               <TitleModal 
                 icon='faEdit' close={()=>setEditImage(null)} 
                 title='Editar Imagem do Curso' 
-                subtitle={`Edite a imagem de ${editImage == 'bg' ? 'Fundo' : 'Capa'} do curso`}/>
+                subtitle={`Edite a imagem de ${editImage == 'bg' ? 'Fundo' : editImage == 'image' ? 'Capa' : 'Thumb'} do curso`}/>
                 <div className="flex flex-col flex-1">           
                   <Card className='flex-1 min-h-[250px] max-h-[300px] overflow-auto' component={
                     <div className="flex w-full flex-1">
-                      { editImage == 'image' ? 
+                      { editImage == 'bg' ? 
+                        <PageGallery page={1} setImage={setBackgroundCurso}/>
+                      : editImage == 'image' ? 
                         <PageGallery page={1} setImage={setCapaCurso}/>
-                      : <PageGallery page={1} setImage={setBackgroundCurso}/>}
+                      : <PageGallery page={1} setImage={setDefaultThumb}/>}
                     </div>}/>
                 </div>
             </div>
@@ -99,7 +115,7 @@ export const EditInfoCourse : React.FC<EditInfoCourseComponent> = (props) => {
             <InputForm label="Nome" required placeholder='Nome do Curso' value={nome} onChange={setNome}/>
           </div>
           <div className="flex flex-col w-full ">
-            <TextAreaForm label="Descrição" placeholder='Nome do Curso' value={descricao} onChange={setDescricao}/>
+            <TextAreaForm label="Descrição" placeholder='Descrição do Curso' value={descricao} onChange={setDescricao}/>
           </div>
           <div className="flex flex-col w-full ">
             <InputForm label="Autor" placeholder='Nome do Autor do Curso' value={autor} onChange={setAutor}/>

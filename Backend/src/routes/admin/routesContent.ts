@@ -34,4 +34,6 @@ export default (routes:Router)=>{
   routes.get("/infoSocialMedia/:media_id",ContentController.infoSocialMedia)
   routes.patch("/updateSocialMedia/:media_id",ContentController.updateSocialMedia)
   routes.delete("/deleteSocialMedia/:media_id",ContentController.deleteSocialMedia)
+
+  routes.get("/infoTeacher/:teacherId",ContentController.infoTeacher) 
 }

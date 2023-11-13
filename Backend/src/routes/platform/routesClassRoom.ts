@@ -30,7 +30,7 @@ export default (routes:Router)=>{
 
   //Comments
   routes.get("/totalCommentsLesson/:lessonId",CoursesController.totalCommentsLesson)
-  routes.get("/lessonsComments/:lessonId/:page",CoursesController.commentsLesson)
+  routes.get("/lessonsComments/:lessonId/:page/:studentId",CoursesController.commentsLesson)
   routes.get("/lessonsCommentsAnswers/:commentId/:page",CoursesController.commentsAnswersLesson)
   routes.post("/newCommentLesson",CoursesController.newCommentLesson)
   routes.get("/commentsPendingApproval/:lessonId/:studentId",CoursesController.commentsPendingApproval)

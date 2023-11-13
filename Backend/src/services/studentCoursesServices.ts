@@ -19,7 +19,7 @@ class StudentCoursesService{
     if(myCoursesRedis!==null){ return myCoursesRedis }   
 
     const myCourses = await Courses.findAll({
-      attributes: ['id','image','name'],
+      attributes: ['id','image','background_image','default_thumb','name'],
       group: ['id'],
       where: {published:1, status:1 },
       include: { attributes: [], model: StudentsCourses, where: { student_id:studentId},},     

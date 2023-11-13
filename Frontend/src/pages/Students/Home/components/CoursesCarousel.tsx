@@ -45,7 +45,7 @@ export const CoursesCarousel : React.FC<CoursesCarouselComponent> = (props)  => 
     dots:true,
     centerMode: true,
     infinite: true, // Torna o carrossel infinito
-    slidesToShow: 3, // Número de slides visíveis de cada vez
+    slidesToShow: 4, // Número de slides visíveis de cada vez
     slidesToScroll: 1, // Número de slides a rolar por vez  
     autoplay: true,
     autoplaySpeed: 2000,
@@ -67,8 +67,8 @@ export const CoursesCarousel : React.FC<CoursesCarouselComponent> = (props)  => 
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
+          slidesToShow: 4,
+          slidesToScroll: 4,
           infinite: true,
           dots: true
         }
@@ -92,7 +92,7 @@ export const CoursesCarousel : React.FC<CoursesCarouselComponent> = (props)  => 
   };
 
   return(
-    <div className="w-full relative h-[300px] mt-[100px] mb-[100px]">
+    <div className="w-full relative h-[400px] mt-[100px] mb-[100px]">
       {listAllActiveCourses === null ? <Loading/> 
       : <>
           <Slider ref={sliderRef} {...settings}>        
@@ -100,7 +100,7 @@ export const CoursesCarousel : React.FC<CoursesCarouselComponent> = (props)  => 
               <Course key={key} infoCourse={course} userId={props.studentId}/>)}     
           </Slider>
           <button 
-            className="absolute h-[80%] top-0 px-2 flex justify-center items-center group
+            className="absolute h-[360px] top-0 px-2 flex justify-center items-center group
                        left-[16%] md:left-20 lg:left-20 2xl:left-24" 
             onClick={previous}>
             <span 
@@ -112,7 +112,7 @@ export const CoursesCarousel : React.FC<CoursesCarouselComponent> = (props)  => 
             </span>
           </button>
           <button 
-            className="absolute h-[80%] top-0 px-2 flex justify-center items-center group right-0" 
+            className="absolute h-[360px] top-0 px-2 flex justify-center items-center group right-0" 
             onClick={next}>
             <span 
               className="bg-neutral-800 w-10 h-10 flex justify-center items-center rounded-full text-white shadow 
@@ -153,7 +153,7 @@ const Course : React.FC<{infoCourse:ICourse;userId:number}> = (props) => {
 
   return(
     <div className="flex flex-col p-2 w-full px-3 mb-4  md:mb-1 opacity-90 hover:opacity-100 ">
-      <div className="relative bg-slate-300 w-full h-[220px] rounded-xl flex justify-center items-center group overflow-hidden">
+      <div className="relative bg-slate-300 w-full h-[360px] rounded-xl flex justify-center items-center group overflow-hidden">
         <RenderImageGallery className="w-full h-full" imageId={props.infoCourse.image}/>
         { validityCourse == 'valid' ?
           <button

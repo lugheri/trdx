@@ -5,6 +5,7 @@ import homeButtonsCommunityServices from '../services/homeButtonsCommunityServic
 import homeButtonsService from '../services/homeButtonsService';
 import homeConfigService from '../services/homeConfigService';
 import socialMediaService from '../services/socialMediaService';
+import courseTeachersService from '../services/courseTeachersService';
 
 class ContentController{
   //Video Community
@@ -354,6 +355,19 @@ class ContentController{
     try{
       await socialMediaService.deleteSocialMedia(media_id) 
       res.json({"success":true})
+      return
+    }catch(err){
+      res.json({"error":err})
+      return
+    }
+  }
+
+  async infoTeacher(req:Request,res:Response){    
+    const teacherId = parseInt(req.params.teacherId)
+    try{
+      const infoTeacher = await courseTeachersService.infoTeacher(teacherId) 
+      res.json({"success":true,"response":infoTeacher})
+      return
       return
     }catch(err){
       res.json({"error":err})

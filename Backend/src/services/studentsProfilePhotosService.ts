@@ -12,6 +12,7 @@ class StudentsProfilePhotosServices{
   }
   
   async infoPhoto(fileId:number){
+    if(!fileId){return false}
     const redisKey = `infoPhoto:[${fileId}]`
     const infoPhotoRedis = await redisGet(redisKey)
     if(infoPhotoRedis!==null){ return infoPhotoRedis }
