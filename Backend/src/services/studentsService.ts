@@ -5,13 +5,13 @@ import { StudentsLogins, StudentsLoginsInstance } from "../models/StudentsLogins
 import { redisDel, redisGet, redisSet } from "../config/redis";
 
 class StudentsService{
-  async createNewStudent(studentData:StudentType):Promise<boolean | StudentsInstance >{
+  async createNewStudent(studentData:StudentType){
     const [newStudent,created] = await Students.findOrCreate({
       where: { mail: studentData.mail},
       defaults:studentData
     });
-    console.log('created',created);
-    return newStudent.id ? newStudent : false;
+    console.info('created',created);
+    return newStudent.id ? newStudent.id  : false;
   }
   async editStudent(studentId:number,studentData:StudentPartialType):Promise<boolean>{   
     await redisDel(`infoStudent:[${studentId}]`)
@@ -42,7 +42,7 @@ class StudentsService{
       where:{id:studentId,status:1},
       limit:1
     })
-    console.log('ACCESS',access)
+    
     const communityStatusStudent = access ? access : false
     await redisSet(redisKey,communityStatusStudent)
     return communityStatusStudent

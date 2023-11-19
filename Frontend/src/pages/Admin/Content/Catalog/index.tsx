@@ -4,9 +4,9 @@ import { Button } from "../../../../components/Buttons"
 import { TitlePage } from "../../../../components/Template/TitlePage"
 import { Card } from '../../../../components/Cards';
 
-import { NewCourse } from './components/NewCourse';
-import { ListCourses } from './components/ListCourses';
-import { OpenCourse } from './components/OpenCourse';
+import { CourseCreate } from './components/CourseCreate';
+import { CourseList } from './components/CourseList';
+import { CourseSetup } from './components/CourseSetup';
 
 
 export const Catalog = () => {
@@ -25,11 +25,13 @@ export const Catalog = () => {
           </div>
         }/>
       {/*BODY */}  
-      { newCourse ? <NewCourse setOpenCourse={setOpenCourse} setNewCourse={setNewCourse}/>
-      : openCourse ? <OpenCourse openCourse={openCourse} setOpenCourse={setOpenCourse}/>
-      : <Card component={
-          <ListCourses 
-          setOpenCourse={setOpenCourse}/>}/>}
+      { newCourse ? <CourseCreate setOpenCourse={setOpenCourse} setNewCourse={setNewCourse}/>
+      : openCourse ? <CourseSetup openCourse={openCourse} setOpenCourse={setOpenCourse}/>
+      : <div className="flex flex-col"> 
+          <Card component={<CourseList published={1} openCourse={openCourse} setOpenCourse={setOpenCourse}/>}/>
+          <Card component={<CourseList published={0} openCourse={openCourse} setOpenCourse={setOpenCourse}/>}/>
+        </div>}
+          
     </div>
   )
 }

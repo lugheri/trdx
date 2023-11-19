@@ -56,6 +56,7 @@ import { Levels } from '../pages/Admin/Settings/Levels';
 import { Credentials } from '../pages/Admin/Settings/Credentials';
 import { StudentInfo } from '../pages/Admin/Students/StudentInfo';
 import { FolderGallery } from '../pages/Admin/Platform/Gallery/components/FolderGallery';
+import { Comments } from '../pages/Admin/Content/Comments.tsx';
 
 
 
@@ -140,6 +141,7 @@ const RoutesApp = () => {
                 
                 { path: '/admin/content/homepage', element:<HomePage/>},
                 { path: '/admin/content/catalog', element:<Catalog/>},
+                { path: '/admin/content/comments', element:<Comments/>},
                 { path: '/admin/content/teachers', element:<Teachers/>},
                 { path: '/admin/content/library', element:<Library/>},
                 { path: '/admin/content/satisfaction', element:<SatisfactionContent/>},

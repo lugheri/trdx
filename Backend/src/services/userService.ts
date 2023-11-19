@@ -9,7 +9,7 @@ class userService{
       defaults:userData
     });
     await redisDel('Users:[all]')   
-    console.log('created',created);
+    console.info('created',created);
     return newUser.id ? newUser : false;
   }
 

@@ -11,6 +11,8 @@ import { Loading } from '../../../../components/Loading';
 import { useNavigate } from 'react-router-dom';
 import { RenderImageGallery } from '../../../../components/RenderImageGallery';
 
+import Logo from '/img/logo.png'
+
 type CoursesCarouselComponent = {
   studentId:number;
 }
@@ -48,6 +50,7 @@ export const CoursesCarousel : React.FC<CoursesCarouselComponent> = (props)  => 
     slidesToShow: 4, // Número de slides visíveis de cada vez
     slidesToScroll: 1, // Número de slides a rolar por vez  
     autoplay: true,
+    variableWidth: true,
     autoplaySpeed: 2000,
     pauseOnHover: true,    
     appendDots: (dots: React.ReactNode) => (
@@ -153,8 +156,14 @@ const Course : React.FC<{infoCourse:ICourse;userId:number}> = (props) => {
 
   return(
     <div className="flex flex-col p-2 w-full px-3 mb-4  md:mb-1 opacity-90 hover:opacity-100 ">
-      <div className="relative bg-slate-300 w-full h-[360px] rounded-xl flex justify-center items-center group overflow-hidden">
-        <RenderImageGallery className="w-full h-full" imageId={props.infoCourse.image}/>
+      <div className="relative bg-slate-300 w-[270px] h-[360px] rounded-xl flex justify-center items-center group overflow-hidden">
+        { props.infoCourse.image
+        ? <RenderImageGallery className="w-full h-full" imageId={props.infoCourse.image}/>
+        : <div className="flex justify-center items-center p-2 rounded-xl bg-black w-full h-full">
+            <img className="w-1/2" src={Logo}/>
+          </div>
+        }
+        
         { validityCourse == 'valid' ?
           <button
           className="p-2 bg-neutral-800 w-[60%] text-white text-xs font-light rounded-md absolute hidden bottom-0 left-[20%] shadow 

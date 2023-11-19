@@ -1,92 +1,317 @@
 import { Request, Response } from 'express';
-
-interface IHotmartApi_V1{
-  callback_type: number,
-  hottok: string,
-  aff: string,
-  aff_name: string,
-  cms_aff: string,
-  cms_aff_currency: string,
-  currency: string,
-  transaction: string,
-  xcod: string,
-  payment_type: string,
-  payment_engine: string,
-  status: string,
-  prod: number,
-  prod_name: string,
-  producer_name: string,
-  producer_document: string,
-  producer_legal_nature: string,
-  transaction_ext: string,
-  purchase_date: string,
-  confirmation_purchase_date: string,
-  currency_code_from: string,
-  currency_code_from_: string,
-  original_offer_price: number,
-  productOfferPaymentMode: string,
-  warranty_date: string,
-  product_support_email: string,
-  receiver_type: string,
-  installments_number: number,
-  funnel: boolean,
-  order_bump: boolean,
-  business_model: string,
-  cms_marketplace: number,
-  cms_vendor: number,
-  off: string,
-  price: number,
-  full_price: number,
-  has_co_production: boolean,
-  email: string,
-  name: string,
-  first_name: string,
-  last_name: string,
-  doc: string,
-  doc_type: string,
-  phone_local_code: number,
-  phone_number: number,
-  address: string,
-  address_district: string,
-  address_number: number,
-  address_comp: string,
-  address_city: string,
-  address_state: string,
-  address_zip_code: string,
-  address_country: string,
-  address_country_ISO: string,
-  phone_checkout_local_code: number,
-  phone_checkout_number: number,
-  sck: string
-}
+import integrationPlatformService from '../services/integrationPlatformService';
+import { IntegrationCoursesDTO, IntegrationOfferDTO, IntegrationPlatformDTO, IntegrationProductDTO } from './Dtos/integration.dto';
+import IntegrationProductService from '../services/IntegrationProductService';
+import IntegrationOffersService from '../services/IntegrationOffersService';
+import IntegrationCoursesService from '../services/IntegrationCoursesService';
 
 class IntegrationsController{
- 
-  async apiHotmart(req:Request,res:Response){
-    const version='1.0'
-    const data:IHotmartApi_V1 = req.body
-    const status = data.status
-    const offer = data.off
-    const productId = data.prod
-    const productName=data.prod_name
-    //Customer Info
-    const nameCustomer=data.name
-    const emailCustomer=data.email
-    const document = data.doc
-    const typeDoc = data.doc_type
-    const numberPhone = `${data.phone_local_code}${data.phone_number}`
-    const city = data.address_city
-    const state = data.address_state
-    //Offer Data
-    const price = data.full_price
-    const orderBump = data.order_bump
-    
-
-
-    console.log(data)
-    res.json(true)
-
+  //Platforms
+  async newPlatformIntegration(req:Request,res:Response){
+    const dataPlatform = IntegrationPlatformDTO.safeParse(req.body)
+    if(!dataPlatform.success){
+      res.json({"error":dataPlatform.error})
+      return
+    }
+    try{
+      //Create a new credential
+      const dataNewPlatform = await integrationPlatformService.newIntegration(dataPlatform.data)
+      if(dataNewPlatform){
+        res.json({"success": true,"response": dataNewPlatform})  
+        return
+      }
+      res.json({"error":"Falha ao cadastrar plataforma de integração!"})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
   }
+  async listPlatformIntegration(req:Request,res:Response){
+    const status = parseInt(req.params.status)
+    try{
+      const listIntegrations = await integrationPlatformService.getIntegrations(status)
+      if(listIntegrations){
+        res.json({"success": true,"response": listIntegrations})  
+        return
+      }
+      res.json({"error":"Falha ao recuperar plataformas!"})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao recuperar plataformas!"}) 
+    }
+  }
+  async infoPlatformIntegration(req:Request,res:Response){
+    const integration_id = parseInt(req.params.integration_id)
+    try{
+      const infoPlatform = await integrationPlatformService.infoIntegrations(integration_id)
+      if(infoPlatform){
+        res.json({"success": true,"response": infoPlatform})  
+        return
+      }
+      res.json({"error":"Falha ao recuperar plataforma!"})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao recuperar plataforma!"}) 
+    }
+  }
+  async editPlatformIntegration(req:Request,res:Response){
+    const integration_id = parseInt(req.params.integration_id)
+    const dataPlatform = IntegrationPlatformDTO.safeParse(req.body)       
+    if(!dataPlatform.success){
+      res.json({"error": dataPlatform.error})  
+      return
+    }
+    try{
+      const edit = await integrationPlatformService.editIntegration(integration_id, dataPlatform.data)
+      res.json({"success": true,"response": edit})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+
+  //Products
+  async newProduct(req:Request,res:Response){
+    const dataProduct = IntegrationProductDTO.safeParse(req.body)
+    if(!dataProduct.success){
+      res.json({"error":dataProduct.error})
+      return
+    }
+    try{
+      //Create a new credential
+      const dataNewProduct = await IntegrationProductService.newProduct(dataProduct.data)
+      if(dataNewProduct){
+        res.json({"success": true,"response": dataNewProduct})  
+        return
+      }
+      res.json({"error":"Falha ao cadastrar produto!"})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+  async listProducts(req:Request,res:Response){
+    const status = parseInt(req.params.status)
+    const integration = req.params.integration
+    try{
+      const listProducts = await IntegrationProductService.getProductsPlatform(status,integration)
+      if(listProducts){
+        res.json({"success": true,"response": listProducts})  
+        return
+      }
+      res.json({"error":"Falha ao recuperar produtos!"})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao recuperar produtos!"}) 
+    }
+  }
+  async infoProduct(req:Request,res:Response){
+    const product_id = parseInt(req.params.product_id)
+    try{
+      const infoProduct = await IntegrationProductService.infoProduct(product_id)
+      if(infoProduct){
+        res.json({"success": true,"response": infoProduct})  
+        return
+      }
+      res.json({"error":"Falha ao recuperar produto!"})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao recuperar produto!"}) 
+    }
+  }
+
+  
+  async editProduct(req:Request,res:Response){
+    const product_id = parseInt(req.params.product_id)
+    const dataProduct = IntegrationProductDTO.safeParse(req.body)       
+    if(!dataProduct.success){
+      res.json({"error": dataProduct.error})  
+      return
+    }
+    try{
+      const edit = await IntegrationProductService.editProduct(product_id, dataProduct.data)
+      res.json({"success": true,"response": edit})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }  
+  async deleteProduct(req:Request,res:Response){
+    const product_id = parseInt(req.params.product_id)
+    try{
+      await IntegrationProductService.removeProduct(product_id)
+      res.json({"success": true,"response": true})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao remover produto!"}) 
+    }
+  }
+
+  //Offers
+  async newOffer(req:Request,res:Response){
+    const dataOffer = IntegrationOfferDTO.safeParse(req.body)
+    if(!dataOffer.success){
+      res.json({"error":dataOffer.error})
+      return
+    }
+    try{
+      //Create a new credential
+      const dataNewOffer = await IntegrationOffersService.newOffer(dataOffer.data)
+      if(dataNewOffer){
+        res.json({"success": true,"response": dataNewOffer})  
+        return
+      }
+      res.json({"error":"Falha ao cadastrar oferta!"})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+  async listOffers(req:Request,res:Response){
+    const product_id = parseInt(req.params.product_id)
+    const status = parseInt(req.params.status)
+    try{
+      const listOffers = await IntegrationOffersService.getOffers(status,product_id)
+      if(listOffers){
+        res.json({"success": true,"response": listOffers})  
+        return
+      }
+      res.json({"error":"Falha ao recuperar Ofertas!"})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao recuperar Ofertas!"}) 
+    }
+  }
+  async infoOffer(req:Request,res:Response){
+    const offer_id = parseInt(req.params.offer_id)
+    try{
+      const infoOffer = await IntegrationOffersService.infoOffer(offer_id)
+      if(infoOffer){
+        res.json({"success": true,"response": infoOffer})  
+        return
+      }
+      res.json({"error":"Falha ao recuperar oferta!"})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao recuperar oferta!"}) 
+    }
+  }
+  async editOffer(req:Request,res:Response){
+    const offer_id = parseInt(req.params.offer_id)
+    const dataOffer = IntegrationOfferDTO.safeParse(req.body)       
+    if(!dataOffer.success){
+      res.json({"error": dataOffer.error})  
+      return
+    }
+    try{
+      const edit = await IntegrationOffersService.editOffer(offer_id,dataOffer.data)
+      res.json({"success": true,"response": edit})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }  
+  async deleteOffer(req:Request,res:Response){
+    const offer_id = parseInt(req.params.offer_id)
+    try{
+      await IntegrationOffersService.removeOffer(offer_id)
+      res.json({"success": true,"response": true})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao remover oferta!"}) 
+    }
+  }
+
+  //Courses
+  async newCourse(req:Request,res:Response){
+    const dataCourse = IntegrationCoursesDTO.safeParse(req.body)
+    if(!dataCourse.success){
+      res.json({"error":dataCourse.error})
+      return
+    }
+    try{
+      //Create a new credential
+      const dataNewCourse = await IntegrationCoursesService.newCourse(dataCourse.data)
+      if(dataNewCourse){
+        res.json({"success": true,"response": dataNewCourse})  
+        return
+      }
+      res.json({"error":"Falha ao cadastrar curso!"})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+  async listCourse(req:Request,res:Response){
+    const product_id = parseInt(req.params.product_id)
+    const offer_id = parseInt(req.params.offer_id)
+    try{
+      const listCourse = await IntegrationCoursesService.getCoursesPlatform(product_id,offer_id)
+      if(listCourse){
+        res.json({"success": true,"response": listCourse})  
+        return
+      }
+      res.json({"error":"Falha ao recuperar cursos!"})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao recuperar cursos!"}) 
+    }
+  }
+  async infoCourse(req:Request,res:Response){
+    const course_id = parseInt(req.params.course_id)
+    try{
+      const infoCourse = await IntegrationCoursesService.infoCourse(course_id)
+      if(infoCourse){
+        res.json({"success": true,"response": infoCourse})  
+        return
+      }
+      res.json({"error":"Falha ao recuperar curso!"})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao recuperar curso!"}) 
+    }
+  }
+  async editCourse(req:Request,res:Response){
+    const course_id = parseInt(req.params.course_id)
+    const dataCourse = IntegrationCoursesDTO.safeParse(req.body)       
+    if(!dataCourse.success){
+      res.json({"error": dataCourse.error})  
+      return
+    }
+    try{
+      const edit = await IntegrationCoursesService.editCourse(course_id, dataCourse.data)
+      res.json({"success": true,"response": edit})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }  
+  async deleteCourse(req:Request,res:Response){
+    const course_id = parseInt(req.params.course_id)
+    try{
+      await IntegrationCoursesService.removeCourse(course_id)
+      res.json({"success": true,"response": true})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao remover produto!"}) 
+    }
+  }
+
+  //Emails
+
+
+
+
+
+ 
 }
 
 export default new IntegrationsController();

@@ -23,7 +23,7 @@ const errorHandler: ErrorRequestHandler = (err,req,res,next) =>{
   if(err instanceof MulterError){
     res.json({ error: err.code});
   }else{
-    console.log(err)
+    console.error(err)
     res.json({error:  'Ocorreu algum erro'})
   }
 }
@@ -36,7 +36,7 @@ app.use(errorHandler)
 
 const httpServer = http.createServer(app);
 const startUp = async() => {  
-  httpServer.listen(4000,()=>console.log('😀 Backend Platform v4 - online!'));
+  httpServer.listen(4000,()=>console.info('😀 Backend Platform v4 - online!'));
 }
 startUp()
 

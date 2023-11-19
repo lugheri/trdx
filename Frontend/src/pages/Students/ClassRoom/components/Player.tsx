@@ -30,6 +30,14 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
   const [ scoreLesson, setScoreLesson ] = useState<number|null>(null)
   const [ watchedLesson, setWatchedLesson ] = useState<boolean|null>(null)
   const [ attachmentsLesson, setAttachmentsLesson ] = useState<IAttachmentsLesson[]|null>(null)
+  const [ validityCourse, setValidityCourse] = useState(null);
+  const checkValidity = async () => {
+    try{
+      const contract = await api.get(`validityCourse/${props.course_id}/${props.student_id}`)
+      setValidityCourse(contract.data.response) 
+    }catch(e){console.log(e)}
+  }
+  
   useEffect(()=>{
     const getInfoLesson = async () => {
       try{
@@ -61,6 +69,7 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
     getInfoLesson()
     getWatchedLesson()
     getAttachmentsLesson()
+    checkValidity()
   },[props.lesson_id])
 
   const watchLesson = async () => {
@@ -106,6 +115,19 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
 
   return(
     infoLesson === null ? <Loading/> :  
+      validityCourse == 'not_have' ?  
+      <div className="flex flex-col w-full h-full items-center justify-center">
+         <FontAwesomeIcon className="text-orange-500/50 text-4xl my-4" icon={Fas.faLock}/>
+         <p className="text-neutral-300 text-xl">Acesso Bloqueado</p> 
+         <p className="text-neutral-300 text font-light my-2">Parece que você não possui acesso a este conteúdo</p>  
+      </div> 
+      : validityCourse == 'expired' ?  
+      <div className="flex flex-col w-full h-full items-center justify-center">
+        <FontAwesomeIcon className="text-orange-500/50 text-4xl my-4" icon={Fas.faCalendarTimes}/>
+        <p className="text-neutral-300 text-xl">Acesso Expirado</p>       
+        <p className="text-neutral-300 text font-light my-2">Parece que você não possui acesso a este conteúdo</p>   
+      </div> 
+      :
       <div className="flex flex-col w-full items-start justify-start">
         <iframe 
           className="h-full min-h-[60vh]" 

@@ -3,5 +3,5 @@ import ApiController from '../controllers/ApiController';
 
 export default (routes: Router) => {
   routes.get('/testApi',ApiController.checkHealth)
-  routes.get('/api/webhook',ApiController.webhook)
+  routes.post('/api/hotmart',ApiController.hotmart)
 }

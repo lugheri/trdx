@@ -58,7 +58,7 @@ export const CommentsLesson : React.FC<ICommentLesson> = (props) => {
             <StudentProfilePhoto autoUpdate={false} student_id={props.student_id} photo_id={0} class="w-[40px] h-[40px]"/>
             <div className="flex flex-col w-full">
               <p className="text-neutral-300 text-sm">{props.student_name}</p>
-              <textarea value={comment} onChange={(e)=>setComment(e.target.value)} className="bg-[#333] max-h-6 focus:max-h-max  p-0 text-sm text-white font-light focus:ring-0 focus:border-white border-x-0 border-t-0" placeholder="Digite o seu comentário..."/>
+              <textarea value={comment} onChange={(e)=>setComment(e.target.value)} className="bg-[#333] max-h-6 focus:max-h-max p-0 text-sm text-white font-light focus:ring-0 focus:border-white border-x-0 border-t-0" placeholder="Digite o seu comentário..."/>
               {comment != "" &&
                <div className="flex w-full justify-end">
                 <button
@@ -155,7 +155,7 @@ const PageComments: React.FC<IPageComments> = (props) => {
   return(
     <div className="flex flex-col w-full">
       { commentsLesson === null ? <p>Carregando Comentários</p>
-      : commentsLesson.length == 0 ? <p>Nenhum comentário</p>
+      : commentsLesson.length == 0 ? <p className="text-white p-2 text-center font-light">Esta aula ainda não recebeu nenhum comentário</p>
       : commentsLesson.map((comment,key)=>
         <div key={key} className="flex flex-col justify-start items-start gap-2 mb-6">
           <div className="flex gap-2 w-full">

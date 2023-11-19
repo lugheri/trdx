@@ -22,7 +22,7 @@ class StudentsController{
       res.json({"error":"Falha ao criar o novo Aluno de acesso!"})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -31,11 +31,10 @@ class StudentsController{
     const studentId : number = parseInt(req.params.studentId)
     try{
       const student = await studentsService.getStudent(studentId)
-      console.log(student)
       res.json({"success": true,"response": student})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -47,7 +46,7 @@ class StudentsController{
       res.json({"success": true,"response": lastAccess})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -65,7 +64,7 @@ class StudentsController{
       res.json({"success": true,"response": edit})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -77,7 +76,7 @@ class StudentsController{
       res.json({"success": true})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -93,7 +92,7 @@ class StudentsController{
       res.json({"success": true,"response": listStudents})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -109,7 +108,7 @@ class StudentsController{
       res.json({"success": true,"response": searchStudent})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -121,7 +120,7 @@ class StudentsController{
       res.json({"success": true,"response": communityStatusStudent})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -130,11 +129,10 @@ class StudentsController{
     const studentId : number = parseInt(req.params.studentId)
     try{
       const courses = await studentCoursesServices.myCourses(studentId)
-      console.log(courses)
       res.json({"success": true,"response": courses})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -147,7 +145,7 @@ class StudentsController{
       res.json({"success": true,"response": checkCourse})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -163,7 +161,7 @@ class StudentsController{
       res.json({"success": true,"response": addCourseStudent})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -232,11 +230,10 @@ class StudentsController{
     const studentId : number = parseInt(req.params.studentId)
     try{
       const comments = await LessonsCommentsService.getRecentCommentsStudent(studentId)
-      console.log(comments)
       res.json({"success": true,"response": comments})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }

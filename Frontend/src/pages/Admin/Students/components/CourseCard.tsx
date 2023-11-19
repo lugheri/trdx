@@ -38,8 +38,12 @@ export const CourseCard : React.FC<ICourseCard> = (props) => {
   useEffect(()=>{
     const getInfoImage = async () => {
       try{
-        const info = await api.get(`infoFile/${props.image}`)
-        setInfoImage(info.data.response)
+        if(props.image){
+          const info = await api.get(`infoFile/${props.image}`)
+          setInfoImage(info.data.response)
+        }else{
+          setInfoImage(null)
+        }
       }catch(e){
         console.log(e)
       } 

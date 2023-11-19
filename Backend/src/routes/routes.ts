@@ -4,11 +4,16 @@ import routesAuth from './routesAuth';
 // ::: A D M I N   A R E A  :::
 // :: Dashboard
 // :: Content
+import routesHomeConfig from './admin/content/routesHomeConfig';
+import routesCatalog from './admin/content/routesCatalog';
+import routesComments from './admin/content/routesComments';
+import routesTeachers from './admin/content/routesTeachers';
 // :: Community
 // :: Students
 // :: Support
 // :: Platform
 import routesGallery from './admin/platform/routesGallery';
+import routesIntegrations from './admin/platform/routesIntegrations';
 
 // :: Metrics
 // :: Setup
@@ -17,11 +22,9 @@ import routesGallery from './admin/platform/routesGallery';
 
 
 
-import routesIntegrations from './admin/routesIntegrations';
-import routesContent from './admin/routesContent';
+
 import routesStudents from './admin/routesStudents';
 //PLATFORM
-import routesCourses from './admin/routesCourses';
 import routesClassRoom from './platform/routesClassRoom';
 import routesSystem from './admin/routesSystem';
 import routesUsers from './admin/routesUsers';
@@ -34,11 +37,16 @@ routesAuth(routes)
 // ::::::::::::::::::::::::::::::::::::::::::  A D M I N   A R E A  ::::::::::::::::::::::::::::::::::::::::::
 // :: Dashboard
 // :: Content
+routesHomeConfig(routes)
+routesCatalog(routes)
+routesComments(routes)
+routesTeachers(routes)
 // :: Community
 // :: Students
 // :: Support
 // :: Platform
 routesGallery(routes)
+routesIntegrations(routes)
 
 // :: Metrics
 // :: Setup
@@ -46,21 +54,19 @@ routesGallery(routes)
 
 
 
-routesContent(routes)
 
 // ::::::::::::::::::::::::::::::::::::::::  S T U D E N T   A R E A  ::::::::::::::::::::::::::::::::::::::::
 
 
 
-routesIntegrations(routes)
+
 routesStudents(routes)
 //PLATFORM
 routesClassRoom(routes)
 
 
 
-//Content
-routesCourses(routes)
+
 //Community
 //Students
 routesProfileStudents(routes)

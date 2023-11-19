@@ -29,7 +29,7 @@ class homeConfigCommunityService{
       where: { status:1},
       defaults:videoData
     });
-    console.log('created',created);
+    console.info('created',created);
     return newVideo.id ? newVideo : false;
   }
 
@@ -58,7 +58,7 @@ class homeConfigCommunityService{
       where: { status:1},
       defaults:textData
     });
-    console.log('created',created);
+    console.info('created',created);
     return newText.id ? newText : false;
   }
 

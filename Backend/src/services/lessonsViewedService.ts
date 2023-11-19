@@ -54,8 +54,8 @@ class LessonsViewedService{
     await redisDel(`nextLessonStudent:[${viewedData.student_id}]`)
     await redisSet(`lastLessonViewed:[studentId:[${viewedData.student_id}],courseId:[${viewedData.lesson_id}]]`,newView.id)
     await redisSet(`lessonViewed:[studentId:[${viewedData.student_id}],lessonId:[${viewedData.lesson_id}]]`,newView)
-    console.log('New',newView)
-    console.log('Created',created)
+    console.info('New',newView)
+    console.info('Created',created)
     return newView.id ? newView : false;
   }
 

@@ -29,11 +29,10 @@ class LoginService {
     const userdata = await Students.findOne({
       attributes: ['id','name','password'],
       where: {mail: accessStudent.username, status:1}
-    })
-    
+    })    
     if(!userdata){
       return false
-    }
+    }  
     if(userdata.password!=md5(accessStudent.password)){
       return false
     }
@@ -72,7 +71,7 @@ class LoginService {
       return null
     }else{
       if(!authHeader){
-        console.log("No auth header")
+        console.info("No auth header")
         return false
       }
       interface TokenPayload {
@@ -80,12 +79,12 @@ class LoginService {
       }
       const { userId } = jwt.verify(authHeader, process.env.APP_SECRET as string) as TokenPayload;
       if(!userId){
-        console.log("User Id is not founded")
+        console.info("User Id is not founded")
         return false
       }
       const userdata = await User.findByPk(userId)
       if(userdata){
-        console.log("User has been logged out successfully")
+        console.info("User has been logged out successfully")
         userdata.logged = 0
         await userdata.save()
         await Logins.create({date: new Date().toISOString().split('T')[0],
@@ -94,7 +93,7 @@ class LoginService {
                              action:action});
         return null
       }
-      console.log("User Id is not valid")
+      console.info("User Id is not valid")
       return null
     }
 
@@ -130,7 +129,7 @@ class LoginService {
       return null
     }else{
       if(!authHeader){
-        console.log("No auth header")
+        console.info("No auth header")
         return false
       }
       interface TokenPayload {
@@ -138,12 +137,12 @@ class LoginService {
       }
       const { userId } = jwt.verify(authHeader, process.env.APP_SECRET as string) as TokenPayload;
       if(!userId){
-        console.log("User Id is not founded")
+        console.info("User Id is not founded")
         return false
       }
       const userdata = await Students.findByPk(userId)
       if(userdata){
-        console.log("User has been logged out successfully")
+        console.info("User has been logged out successfully")
         userdata.logged = 0
         await userdata.save()
         await StudentsLogins.create({date: new Date().toISOString().split('T')[0],
@@ -152,7 +151,7 @@ class LoginService {
                              action:action});
         return null
       }
-      console.log("User Id is not valid")
+      console.info("User Id is not valid")
       return null
     }
   }

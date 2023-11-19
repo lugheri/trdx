@@ -18,8 +18,8 @@ class GalleryController{
     try{
       const newFolder = await galleryService.newFolder(dataNewFolder.data)
       res.json({"success":true,"response":newFolder})
-    }catch(e){
-      console.log(e)
+    }catch(err){
+      console.error(err)
     }
   }
   async editFolder (req:Request,res:Response){
@@ -32,8 +32,8 @@ class GalleryController{
     try{
       const editFolder = await galleryService.editFolder(folderId,dataFolder.data)
       res.json({"success":true,"response":editFolder})
-    }catch(e){
-      console.log(e)
+    }catch(err){
+      console.error(err)
     }
   }
   async infoFolder (req:Request,res:Response){
@@ -41,8 +41,8 @@ class GalleryController{
     try{
       const infoFolder = await galleryService.infoFolder(folderId)
       res.json({"success":true,"response":infoFolder})
-    }catch(e){
-      console.log(e)
+    }catch(err){
+      console.error(err)
     }
   }
   async listFolders (req:Request,res:Response){
@@ -50,8 +50,8 @@ class GalleryController{
     try{
       const listFolders = await galleryService.listFolders(status)
       res.json({"success":true,"response":listFolders})
-    }catch(e){
-      console.log(e)
+    }catch(err){
+      console.error(err)
     }
   }
   async removeFolder (req:Request,res:Response){
@@ -59,8 +59,8 @@ class GalleryController{
     try{
       const editFolder = await galleryService.editFolder(folderId,{status:0})
       res.json({"success":true,"response":editFolder})
-    }catch(e){
-      console.log(e)
+    }catch(err){
+      console.error(err)
     }
   }
 
@@ -74,8 +74,8 @@ class GalleryController{
     try{
       const listFiles = await galleryService.filterFiles(pagination.data)
       res.json({"success":true,"response":listFiles})
-    }catch(e){
-      console.log(e)
+    }catch(err){
+      console.error(err)
     }
   }
   async uploadFile(req:Request,res:Response){
@@ -107,8 +107,8 @@ class GalleryController{
         const newFile = await galleryService.newFile(dataFile)
         res.json({"success":true,"response":newFile})
         return
-      }catch(e){
-        console.log(e)
+      }catch(err){
+        console.error(err)
       }
     }    
     res.json({"error":true})  
@@ -118,8 +118,8 @@ class GalleryController{
     try{
       const infoFile = await galleryService.infoFile(fileId)
       res.json({"success":true,"response":infoFile})
-    }catch(e){
-      console.log(e)
+    }catch(err){
+      console.error(err)
     }
   }
   async editFile(req:Request,res:Response){
@@ -132,8 +132,8 @@ class GalleryController{
     try{
       const editFile = await galleryService.editFile(fileId,dataFile.data)
       res.json({"success":true,"response":editFile})
-    }catch(e){
-      console.log(e)
+    }catch(err){
+      console.error(err)
     }
   }
   async removeFile(req:Request,res:Response){
@@ -141,8 +141,8 @@ class GalleryController{
     try{
       const editFile = await galleryService.editFile(fileId,{status:0})
       res.json({"success":true,"response":editFile})
-    }catch(e){
-      console.log(e)
+    }catch(err){
+      console.error(err)
     }
   }
 }

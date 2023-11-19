@@ -37,7 +37,8 @@ export const Students = sequelize.define<StudentsInstance>("Students",{
     type:DataTypes.STRING
   },
   photo:{
-    type:DataTypes.INTEGER
+    type:DataTypes.INTEGER,
+    defaultValue:0
   },
   name:{
     type:DataTypes.STRING
@@ -64,7 +65,8 @@ export const Students = sequelize.define<StudentsInstance>("Students",{
     type:DataTypes.STRING
   },
   logged:{
-    type: DataTypes.TINYINT
+    type: DataTypes.TINYINT,
+    defaultValue:0
   },
   reset:{
     type:DataTypes.TINYINT,

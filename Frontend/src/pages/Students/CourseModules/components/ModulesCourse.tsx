@@ -32,7 +32,7 @@ export const ModulesCourse : React.FC<ModulesCourseComponent> = (props) => {
     infinite: false, // Torna o carrossel infinito
     slidesToShow: 4, // Número de slides visíveis de cada vez
     slidesToScroll: 1, // Número de slides a rolar por vez     
-   
+    variableWidth: true,
     responsive: [
       {
         breakpoint: 1024,

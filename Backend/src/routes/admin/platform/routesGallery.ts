@@ -6,7 +6,6 @@ const upload = multer({
   dest:'./tmp',
   fileFilter: (req,file,cb)=>{
     const allowed: string[] = ['image/jpg', 'image/jpeg','image/png','image/gif'];
-    console.log("Info Image", file)
     cb(null,allowed.includes(file.mimetype))
   },
   limits: {fieldSize: 20000000}

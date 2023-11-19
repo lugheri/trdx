@@ -19,7 +19,7 @@ export const newModule = async (req:Request, res:Response) => {
     res.json({"error":"Falha ao criar o novo Nível de acesso!"})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }
@@ -31,7 +31,7 @@ export const getModule = async (req:Request, res:Response) => {
     res.json({"success": true,"response": module})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }
@@ -48,7 +48,7 @@ export const editModule = async (req:Request, res:Response) => {
     res.json({"success": true,"response": edit})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }
@@ -60,7 +60,7 @@ export const removeModule = async (req:Request, res:Response) => {
     res.json({"success": true})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }
@@ -72,7 +72,7 @@ export const listModules = async (req:Request, res:Response) => {
     res.json({"success": true,"response": listModules})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }

@@ -10,7 +10,7 @@ class systemService{
       where: { name: levelData.name},
       defaults:levelData
     });
-    console.log('created',created);
+    console.info('created',created);
     return newLevel.id ? newLevel : false;
   }
   async editLevel(levelId:number,levelData:LevelAccessPartialType):Promise<boolean>{   
@@ -36,7 +36,7 @@ class systemService{
       where: { name: credentialData.name},
       defaults:credentialData
     });
-    console.log('created',created);
+    console.info('created',created);
     return newCredential.id ? newCredential : false;
   }
   async editCredential(credentialId:number,credentialData:CredentialAccessPartialType):Promise<boolean>{   
@@ -62,7 +62,7 @@ class systemService{
       where: { name: moduleData.name},
       defaults:moduleData
     });
-    console.log('created',created);
+    console.info('created',created);
     return newModule.id ? newModule : false;
   }
   async editModule(moduleId:number,moduleData:ModuleAccessPartialType):Promise<boolean>{   

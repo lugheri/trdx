@@ -54,8 +54,12 @@ const CourseItemList: React.FC<{course:ICourse;studentId:number}> = (props) => {
   useEffect(()=>{
     const getInfoImage = async () => {
       try{
-        const info = await api.get(`infoFile/${props.course.image}`)
-        setInfoImage(info.data.response)
+        if(props.course.image){
+          const info = await api.get(`infoFile/${props.course.image}`)
+          setInfoImage(info.data.response)
+        }else{
+          setInfoImage(null)
+        }
       }catch(e){
         console.log(e)
       } 

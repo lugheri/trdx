@@ -30,7 +30,7 @@ class AuthController{
         success: true
       })
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})
     }   
   }
@@ -43,20 +43,20 @@ class AuthController{
     }
     try{
       const userdata = await LoginService.checkStudent(studentAccess.data)
+      
       if(!userdata){
-        res.json({"error":'Usuário não encontrado!!'})
+        res.json({"error":'Aluno não encontrado!!'})
         return
       }
       //Authenticate
       const action = 'login';
-      console.log('userdata',userdata)
       const token = await LoginService.studentAuthenticate(action,userdata)
       res.json({
         token: token,
         success: true
       })
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})
     }   
   }
@@ -70,9 +70,9 @@ class AuthController{
         return
       }
       res.json({"error":"token invalid"})
-    }catch(error){
-      console.log(error)
-      res.json({"error":error})
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})
     }
   }
 
@@ -83,14 +83,13 @@ class AuthController{
       return
     }
     try{
-      const studentId : number = parseInt(req.params.student_id)
-      console.log('studentId',studentId)
-      console.log({password:md5(req.body.password)})
+      const studentId : number = parseInt(req.params.student_id)     
+   
       const edit = await studentsService.editStudent(studentId, {password:md5(req.body.newPass)})
-      console.log('edit',edit)
+    
       res.json({success: true})
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})
     }   
   }
@@ -101,7 +100,7 @@ class AuthController{
       await LoginService.userAuthenticate('logout',undefined,authHeader)
       res.json({success: true})
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})
     }   
   }

@@ -12,9 +12,10 @@ export default (routes:Router)=>{
   routes.get("/progressStudent/:studentId",CoursesController.progressStudent)
   routes.get("/progressCourse/:courseId/:studentId",CoursesController.progressCourse)
   routes.get("/progressModule/:moduleId/:studentId",CoursesController.progressModule)
+
+  routes.get("/lessonsModule/:courseId/:moduleId/:studentId",CoursesController.lessonsModule)
   
-  //Attachments
-  routes.get("/getAttachmentsLesson/:lessonId",CoursesController.attachmentLesson)
+  
  
   //Notes
   routes.get("/studentsNotes/:courseId/:studentId",CoursesController.studentsNotes)

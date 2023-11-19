@@ -8,7 +8,7 @@ export type StudentAccessType = z.infer<typeof StudentAccessDTO>;
 
 
 export const StudentDTO = z.object({
-  community:z.optional(z.literal(1).or(z.literal(0))).default(1),
+  community:z.optional(z.number()).default(1),
   type:z.optional(z.string()).default('student'),
   photo:z.optional(z.number()),
   name:z.string(),
@@ -18,7 +18,7 @@ export const StudentDTO = z.object({
   gender:z.optional(z.string()),
   password:z.string().transform(v=>md5(v)),
   reset:z.optional(z.number()).default(1),
-  status:z.optional(z.literal(1).or(z.literal(0))).default(1)
+  status:z.optional(z.number()).default(1)
 })
 export type StudentType = z.infer<typeof StudentDTO>;
 

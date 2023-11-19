@@ -26,7 +26,7 @@ export const CourseModules = () => {
 
   const [ progressCourse, setProgressCourse] = useState(0);
   const [ infoCourse, setInfoCourse] = useState<ICourse|null>(null)
-  const [ fileImage, setFileImage ] = useState(null)
+  const [ fileImage, setFileImage ] = useState<null|string>(null)
 
   const getProgressCourse = async () => {
     try{
@@ -42,8 +42,12 @@ export const CourseModules = () => {
   }
   const getInfoImage = async (imageId:number) => {
     try{
-      const i = await api.get(`infoFile/${imageId}`)
-      setFileImage(i.data.response.file)
+      if(imageId){
+        const i = await api.get(`infoFile/${imageId}`)
+        setFileImage(i.data.response.file)
+      }else{
+        setFileImage("")
+      }
     }catch(e){console.log(e)}
   }
 
