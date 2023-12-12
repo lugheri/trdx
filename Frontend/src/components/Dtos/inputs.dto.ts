@@ -2,7 +2,7 @@ import * as Fas from "@fortawesome/free-solid-svg-icons";
 
 export type InputType={
   value: string;
-  inputType?: 'text'|'password'|'date'|'file';
+  inputType?: 'text'|'password'|'date'|'email'|'file';
   className?:string;
   label?:string;
   placeholder?:string;

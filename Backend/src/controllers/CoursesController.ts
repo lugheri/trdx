@@ -11,6 +11,7 @@ import { CoursesLessonsInstance } from '../models/CoursesLessons';
 import LessonsCommentsService from '../services/LessonsCommentsService';
 import LessonsAttachmentsService from '../services/LessonsAttachmentsService';
 import StudentsNotesService from '../services/StudentsNotesService';
+import CommentsController from './CommentsController';
 
 class CoursesController{
   
@@ -72,15 +73,19 @@ class CoursesController{
     const coursesStudents = await studentCoursesServices.myCourses(studentId)
     let totalLessons = 0
     let viewedLessons = 0
+   
     for(const course of coursesStudents){
       const lessons = await coursesLessonsService.lessonsCourse(course.id)
+      const viewsCourse = await lessonsViewedService.lessonsViewed(studentId,course.id)
+      
       totalLessons += lessons
-      viewedLessons += await lessonsViewedService.lessonsViewed(studentId,course.id)
-
+      viewedLessons += viewsCourse
     }
 
-    const progress = viewedLessons == 0 ? 0 : Math.round((viewedLessons/totalLessons)*100)  
+    
 
+    const progress = viewedLessons == 0 ? 0 : Math.round((viewedLessons/totalLessons)*100)  
+    console.log(viewedLessons,'/',totalLessons,'=',progress)
 
     res.json({"success":true,"response":progress})
   }
@@ -157,10 +162,12 @@ class CoursesController{
   }
 
   async removeWatchedLesson(req:Request,res:Response){
+    const courseId = parseInt(req.params.courseId)
+    const moduleId = parseInt(req.params.moduleId)
     const lessonId = parseInt(req.params.lessonId)
     const studentId = parseInt(req.params.studentId)
     try{
-      await lessonsViewedService.removeViewedLesson(lessonId,studentId)
+      await lessonsViewedService.removeViewedLesson(courseId,moduleId,lessonId,studentId)
       res.json({"success": true,"response":0})  
       return
     }catch(err){

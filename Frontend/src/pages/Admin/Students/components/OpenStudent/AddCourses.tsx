@@ -1,50 +1,58 @@
 import { useState, useEffect } from 'react'
-import { Button } from "../../../../components/Buttons"
-import { ICourse } from '../../Content/Dtos/courses.dto'
-import api from '../../../../services/api'
-import { Loading } from '../../../../components/Loading'
+import { Button } from "../../../../../components/Buttons"
+import { ICourse } from '../../../Content/Dtos/courses.dto'
+import api from '../../../../../services/api'
+import { Loading } from '../../../../../components/Loading'
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IFileGallery } from '../../../Students/Dtos/gallery.dto'
-import { urlBase } from '../../../../utils/baseUrl'
+import { IFileGallery } from '../../../../Students/Dtos/gallery.dto'
+import { urlBase } from '../../../../../utils/baseUrl'
+import { Modal, TitleModal } from '../../../../../components/Modal'
+import { IStudent } from '../../Dtos/student.dto'
 
 interface IAddCourses{
-  studentId:number,
+  infoStudent:IStudent,
   close:React.Dispatch<React.SetStateAction<number|null>>
 }
 export const AddCourses : React.FC<IAddCourses> = (props) => {
   const [ courses, setListCourses ] = useState<ICourse[]|null>(null)
-  useEffect(()=>{
-    const getCourses = async () => {
-      try{
-        const list = await api.post(`listCourses`,{status:1})
-        setListCourses(list.data.response)
-      }catch(err){
-        console.log(err)
-      }
+  const getCourses = async () => {
+    try{
+      const list = await api.post(`listCourses`,{status:1})
+      setListCourses(list.data.response)
+    }catch(err){
+      console.log(err)
     }
-   
-    getCourses()
-    
-  },[])
+  }
+  useEffect(()=>{getCourses()},[])
+  
   return (
-    <div className="flex flex-col">
-      { courses === null ? <div className="flex flex-col p-8 justify-center items-center"><Loading/></div> :
-        courses.length === 0 ? 
-        <div className="flex flex-col p-2 py-8 justify-center items-center">
-          <FontAwesomeIcon icon={Fas.faVideoSlash} className="text-5xl my-4 text-green-500"/>
-          <p className="text-neutral-200">Parece que você ainda não tem nenhum curso disponível!</p>
-        </div>
-        : <div className="flex flex-wrap max-h-[400px] overflow-auto py-2">
-            {courses.map((course,key)=><CourseItemList key={key} course={course} studentId={props.studentId} />)}
-         </div>
-      }
-      
-      <div className="border-t border-slate-600 flex justify-end items-center pt-3">
-        <Button name="Fechar" btn="muted" type="notline" onClick={()=>props.close(null)}/>
-      </div>
-    </div>
+    <Modal component={
+      <div>
+        <TitleModal icon='faPlus' close={()=>props.close(null)} 
+                    title='Adicionar Novos Cursos'
+                    subtitle={`Cadastre novos cursos para o aluno ${props.infoStudent.name}`}/>
+          <div className="flex flex-col">
+            { courses === null 
+            ? 
+              <div className="flex flex-col p-8 justify-center items-center"><Loading/></div> :
+                courses.length === 0 
+                ? 
+                  <div className="flex flex-col p-2 py-8 justify-center items-center">
+                    <FontAwesomeIcon icon={Fas.faVideoSlash} className="text-5xl my-4 text-green-500"/>
+                    <p className="text-neutral-200">Parece que você ainda não tem nenhum curso disponível!</p>
+                  </div>
+                : 
+                  <div className="flex flex-wrap max-h-[400px] overflow-auto py-2">
+                    {courses.map((course,key)=><CourseItemList key={key} course={course} studentId={props.infoStudent.id} />)}
+                  </div>
+                }
+                <div className="border-t border-slate-600 flex justify-end items-center pt-3">
+                  <Button name="Fechar" btn="muted" type="notline" onClick={()=>props.close(null)}/>
+                </div>
+              </div>
+          </div>}/>
   )
 }
 
@@ -105,11 +113,15 @@ const CourseItemList: React.FC<{course:ICourse;studentId:number}> = (props) => {
           <FontAwesomeIcon icon={Fas.faCheckCircle} className='block group-hover:hidden text-teal-500 text-4xl py-8'/>
           <FontAwesomeIcon icon={Fas.faXmarkCircle} className='hidden group-hover:block text-red-500 text-4xl py-8'/>
           <p className="text-xs font-bold mt-4 text-center group-hover:opacity-100 opacity-0 text-red-600"> Remover Curso </p>
+          <p className="text-sm font-bold mt-4 mx-4 text-center group-hover:opacity-100 opacity-0 text-red-300 ">{props.course.name}</p>
+          
         </div>
       :
-        <div className="flex flex-col justify-center items-center group cursor-pointer hover:bg-slate-900/75 w-full h-full absolute" onClick={()=>addCourse()}>
+        <div className="flex flex-col justify-center items-center group cursor-pointer hover:bg-slate-900/95 w-full h-full absolute" onClick={()=>addCourse()}>
           <FontAwesomeIcon icon={Fas.faPlusCircle} className='group-hover:block hidden text-slate-300 text-4xl py-8'/>
           <p className="text-xs font-bold mt-4 text-center group-hover:opacity-100 opacity-0 text-slate-300 "> Adicionar Curso</p>
+          <p className="text-sm font-bold mt-4 mx-4 text-center group-hover:opacity-100 opacity-0 text-slate-300 ">{props.course.name}</p>
+          
         </div>
       }
       

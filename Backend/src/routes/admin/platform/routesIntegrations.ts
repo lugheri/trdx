@@ -25,7 +25,7 @@ export default (routes:Router)=>{
   //Courses
   routes.post('/newCoursePlatform',IntegrationsController.newCourse)
   routes.get('/listCoursePlatform/:product_id/:offer_id',IntegrationsController.listCourse)
-  routes.get('/infoCoursePlatform/:course_id',IntegrationsController.infoCourse)
+  routes.get('/infoCourseStudentPlatform/:offer_id/:course_id_students',IntegrationsController.infoCourseStudentPlatform)
   routes.patch('/editCoursePlatform/:course_id',IntegrationsController.editCourse)
   routes.delete('/deleteCoursePlatform/:course_id',IntegrationsController.deleteCourse)
 

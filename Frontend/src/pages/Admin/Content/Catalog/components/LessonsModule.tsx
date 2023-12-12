@@ -7,8 +7,9 @@ import { Button } from "../../../../../components/Buttons"
 import * as Fab from "@fortawesome/free-brands-svg-icons";
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { InputForm, } from "../../../../../components/Inputs"
+import { InputForm } from "../../../../../components/Inputs"
 import { Modal, TitleModal } from "../../../../../components/Modal"
+import { LessonsOrder } from "./LessonsOrder"
 
 
 type LessonsModuleComponent = {
@@ -20,6 +21,7 @@ export const LessonsModule: React.FC<LessonsModuleComponent> = (props)=> {
   const [ lessons, setLessons ] = useState<null | ILessonsModule[]>(null)
   const [ error, setError ] = useState<null | string>(null)
   const [ newLesson, setNewLesson ] = useState<null | number>(null)  
+  const [ orderLesson, setOrderLesson ] = useState<null | number>(null)
 
   const getLesson = async () => {
     try{
@@ -31,7 +33,7 @@ export const LessonsModule: React.FC<LessonsModuleComponent> = (props)=> {
       }
     }catch(e){ console.log(e) }
   }
-  useEffect(()=>{ getLesson()},[newLesson,props.setupLesson])
+  useEffect(()=>{ getLesson()},[newLesson,props.setupLesson,orderLesson])
 
   return(
     <Card component={ 
@@ -50,11 +52,15 @@ export const LessonsModule: React.FC<LessonsModuleComponent> = (props)=> {
                     <p className="text-neutral-100">
                       <FontAwesomeIcon className="text-teal-500/50" icon={Fas.faChalkboardTeacher}/> Aulas do Módulo: {lessons.length}
                     </p>
-                    <Button name="Criar Nova Aula" btn="success" icon="faFolderPlus" onClick={()=>setNewLesson(props.infoModule.id)}/>
+                    <div className="flex">
+                      <Button name="Reordenar Aulas" btn="success" type="notline" icon="faSortNumericAsc" onClick={()=>setOrderLesson(props.infoModule.id)}/>
+                      <Button name="Criar Nova Aula" btn="success" icon="faFolderPlus" onClick={()=>setNewLesson(props.infoModule.id)}/>
+                    </div>
                   </div>              
                   <div className="flex bg-neutral-950/50 flex-wrap rounded my-2 p-2">
                     {lessons.map((lesson,key)=><LessonItem key={key} lesson={lesson} setSetupLesson={props.setSetupLessonModule}/>)}
-                  </div>                
+                  </div>
+                  {orderLesson && <LessonsOrder module_id={orderLesson} order_module={props.infoModule.order} lessons={lessons} close={setOrderLesson}/> }                 
                 </div>}
       {newLesson && <NewLesson course_id={props.infoModule.course_id}  moduleId={newLesson} moduleOrder={props.infoModule.order} setNewLesson={setNewLesson} totalLessons={lessons ? lessons.length : 0}/>}      
     </div>}/>
@@ -102,10 +108,24 @@ const NewLesson : React.FC<NewLessonComponent> = (props) => {
   //const [ typeContent, setTypeContent ] = useState<null|string>('video')
   const [ link, setLink ] = useState("")
   const [ name, setName ] = useState("")
+  const [ order, setOrder ] = useState(0)
+  const nextOrder = async () => {
+    try{
+      const res = await api.get(`/nextLessonOrder/${props.moduleId}`)
+      setOrder(res.data.response)
+    }catch(err){console.log(err)}
+  }
+
+  useEffect(()=>{
+    nextOrder()
+  },[])
 
   const saveNewLesson = async (e:FormEvent) => {
     e.preventDefault()
     const match = link.match(/vimeo\.com\/(\d+)/);
+
+    await nextOrder()
+
     try{
       const data = {
         course_id:props.course_id,
@@ -115,7 +135,7 @@ const NewLesson : React.FC<NewLessonComponent> = (props) => {
         link:match ? match[1] : '0',
         video_platform:'vimeo',
         name:name,
-        order:(props.moduleOrder*100)+props.totalLessons+1,
+        order:order,
         visibility:0    
       }
       const response = await api.post('newLessonModule/',data)

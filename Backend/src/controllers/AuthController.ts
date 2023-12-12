@@ -5,11 +5,56 @@ import { UserAccessDTO } from './Dtos/usersAccess.dto';
 import { StudentAccessDTO } from './Dtos/student.dto';
 import studentsService from '../services/studentsService';
 import md5 from 'md5';
+import sendMail from '../services/sendMail';
 
 class AuthController{
   async live(req: Request,res: Response){  
     res.json(true)
   }
+  async checkMailStudent(req: Request,res: Response){
+    const mail = req.params.mail
+    const studentId = await LoginService.checkMailStudent(mail)
+    if(studentId){
+      res.json({"success":studentId})
+      return
+    }
+    res.json({"error":'Aluno não encontrado!!'})
+  }
+
+  async resetPassLogin(req: Request,res: Response){
+    const studentId : number = parseInt(req.params.studentId)
+    const mailStudent = req.params.mail
+    try{
+      const length = 6;
+      const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&()_-+=<>?';
+      let passwordHash = '';  
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        passwordHash += characters.charAt(randomIndex);
+      }
+      const newPass = passwordHash
+      await studentsService.editStudent(studentId,{password:md5(newPass)})  
+
+      //SendMail
+      const from = 'Guilherme Cardoso'
+      const fromMail = 'suporte@otraderquemultiplica.com.br'
+      const subject = '[RESET de Senha] Seus novos dados de acesso'
+      const text = `<p style="font-size:18px;margin-bottom:10px">Seus dados de acesso foram resetados.</p>
+                    <p style="font-size:18px;margin-bottom:10px">Aperte no link abaixo e entre com os seus novos dados de acesso:</p>
+                    <br/>                         
+                      <p style="font-size:18px;margin:0px"><a href="https://app.otraderquemultiplica.com.br">https://app.otraderquemultiplica.com.br</a></p>
+                      <p style="font-size:18px;margin:0px"><b>Usuário:</b> ${mailStudent}</p>
+                      <p style="font-size:18px;margin:0px"><b>Senha:</b> ${passwordHash}</p>                          
+                    <br/>
+                    <p style="font-size:18px;margin-bottom:10px">Abração,<br/>
+                    Guilherme</p>`;
+      
+      sendMail.sendMail(from,fromMail,mailStudent,subject,text)    
+    }catch(e){console.log(e)} 
+    
+    res.json({"success":'Senha resetada com sucesso'})
+  }
+
   async login(req: Request,res: Response){   
     const userAccess = UserAccessDTO.safeParse(req.body)
     if(!userAccess.success){

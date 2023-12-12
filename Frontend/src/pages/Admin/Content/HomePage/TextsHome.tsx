@@ -37,9 +37,13 @@ export const TextsHome: React.FC<{typeStudent:'community'|'student'}> = (props) 
         text:text,
         additional_text:additional
       }
+      console.log('data',data)
+      const r =
       props.typeStudent === 'community' 
         ? await api.post("updateTextHomeCommunity",data) 
         : await api.post("updateTextHome",data)
+      
+        console.log('DATA',r.data)
     }catch(err){console.log(err)}
     setTimeout(()=>{setTextSave(false)},3000)
   }

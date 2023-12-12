@@ -83,7 +83,8 @@ export const CourseModules = () => {
             progressCourse={progressCourse} 
             imageCourseId={infoCourse.image} 
             courseId={infoCourse.id}/>  
-        <div className="flex flex-col  h-screen mr-4 ml-20 lg:ml-24 xl:ml-24 2xl:ml-24">
+        <div className="flex flex-col  h-screen mr-4 ml-4 md:ml-28
+                    lg:ml-28 xl:ml-28 2xl:ml-28">
           <ModulesCourse courseId={parseInt(courseId, 10)} userId={userData ? userData.id : 0}/>
         </div>        
       </div>}

@@ -26,6 +26,7 @@ export const Sidebar = () => {
     const getProgress = async () => {
       try{
         const prog = await api.get(`progressStudent/${userData ? userData.id : 0}`)
+       
         setProgress(prog.data.response)      
         console.log(progress)  
       }catch(e){
@@ -46,10 +47,10 @@ export const Sidebar = () => {
   
   return(
     <div className="h-full fixed z-20 group overflow-auto hover:transition-all duration-500 
-                     /*Mobile**/ w-[16%] hover:w-[80%]
-                     /*Tablet*/ md:w-20 md:hover:w-[35%]
-                     /*Desktop*/ lg:w-20 lg:hover:w-[18%]
-                     /*TV******/ 2xl:w-24 2xl:hover:w-[18%]">
+                     /*Mobile**/ hidden w-[16%] hover:w-[80%]
+                     /*Tablet*/ md:flex md:w-20 md:hover:w-[35%]
+                     /*Desktop*/ lg:flex lg:w-20 lg:hover:w-[18%]
+                     /*TV******/ 2xl:flex 2xl:w-24 2xl:hover:w-[18%]">
       <div className="side-blur absolute w-full h-full"/>
       <div className="absolute w-full h-full flex flex-col justify-center items-center hover:px-4">
         <img src={Brand} className="w-[30%] group-hover:w-[15%] h-auto"/>

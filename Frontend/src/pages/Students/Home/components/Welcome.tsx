@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
 import api from '../../../../services/api';
 import { SocialMedia, WelcomeButtons, WelcomeText, WelcomeVideo } from '../Dtos/homeConfigs.dto';
-import { Loading } from '../../../../components/Loading';
+import { Loading, LoadingBars } from '../../../../components/Loading';
 import { RenderImageGallery } from '../../../../components/RenderImageGallery';
 import { Button, ButtonDefault } from '../../../../components/Buttons';
 import DOMPurify from 'dompurify';
-
-
-
 
 type WelcomeComponent = {
   studentId:number;
@@ -42,15 +39,15 @@ export const Welcome : React.FC<WelcomeComponent> = (props) => {
 
   return(
     <>
-      { typeAccess === null ? <Loading/>
+      { typeAccess === null ? <LoadingBars/>
       : typeAccess == 'community' ? <HomeCommunity/> : <HomeDefault/>}
 
-      <div className="flex flex-col ml-20
-                      lg:ml-28 xl:ml-28 2xl:ml-28">
+      <div className="flex flex-col mr-4 ml-4 md:ml-28
+                    lg:ml-28 xl:ml-28 2xl:ml-28 ">
         <p className="text-white font-black  px-4 mb-4 text-shadow-custom
                         text-xl 2xl:text-2xl "></p>
         <div className="flex flex-col justify-start px-4 md:flex-row lg:flex-row 2xl:flex-row">
-          { socialMediaChannels === null ? <Loading/>
+          { socialMediaChannels === null ? <LoadingBars/>
           : socialMediaChannels.map((channel,key)=> 
             <Button key={key} 
               onClick={()=>openLink(channel.link)} 
@@ -129,7 +126,7 @@ const HomeCommunity = () => {
   const openLink = async (link:string) => { window.open(link, '_blank'); }
 
   return(
-    <div className="flex flex-col  justify-center items-start mr-4 ml-20
+    <div className="flex flex-col  justify-center items-start mr-4 ml-4 md:ml-28
                     lg:ml-28 xl:ml-28 2xl:ml-28 ">
       { video === null ? <Loading/> 
       : video.idvideo_welcome ?      
@@ -145,18 +142,18 @@ const HomeCommunity = () => {
       : video.image_gallery !== null && <RenderImageGallery className="w-1/3 h-[250px]" imageId={video.image_gallery}/>
       }
       
-      { textHome === null ? <Loading/> :
+      { textHome === null ? <LoadingBars/> :
         <div className="flex flex-col flex-1 justify-start items-start px-4">
           <p className="text-white font-black  mb-4 text-shadow-custom
                         text-xl 2xl:text-2xl ">
             {textHome.title_text} 
           </p>
-          <p className="text-slate-300 font-extralight text-shadow-custom my-2
+          <p className="text-slate-50 font-extralight text-shadow-custom my-2
                         text 2xl:text-xl mb-8" dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
           
           
           <div className="flex flex-col w-full my-2 md:flex-row lg:flex-row 2xl:flex-row">
-          { buttonsHome === null ? <Loading/> 
+          { buttonsHome === null ? <LoadingBars/> 
           : buttonsHome.length >0 && 
           buttonsHome.map((button,key)=> 
             button.type === 'default' ? 
@@ -218,7 +215,8 @@ const HomeDefault = () => {
   const openLink = async (link:string) => { window.open(link, '_blank'); }
 
   return(
-    <div className="flex  justify-center items-center ml-28 mr-4">
+    <div className="flex justify-center items-center mr-4 ml-4 md:ml-28
+                    lg:ml-28 xl:ml-28 2xl:ml-28 ">
       { video === null ? <Loading/> 
       : video.idvideo_welcome ?      
         <iframe 
@@ -233,18 +231,18 @@ const HomeDefault = () => {
       : video.image_gallery && <RenderImageGallery className="w-1/3 h-[250px]" imageId={video.image_gallery}/>
       }
       
-      { textHome === null ? <Loading/> :
+      { textHome === null ? <LoadingBars/> :
         <div className="flex flex-col flex-1 justify-start items-start px-4">
           <p className="text-white font-black  mb-4 text-shadow-custom
                         text-xl 2xl:text-2xl ">
             {textHome.title_text}
           </p>
-          <p className="text-slate-300 font-extralight text-shadow-custom my-2
+          <p className="text-slate-50 font-extralight text-shadow-custom my-2
                         text 2xl:text-xl mb-8" dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
 
 
           <div className="flex flex-col my-2 md:flex-row lg:flex-row 2xl:flex-row">
-          { buttonsHome === null ? <Loading/> 
+          { buttonsHome === null ? <LoadingBars/> 
           : buttonsHome.length >0 && 
           buttonsHome.map((button,key)=> 
             button.type === 'default' ? 

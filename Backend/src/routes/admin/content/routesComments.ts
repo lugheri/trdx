@@ -11,6 +11,9 @@ export default (routes:Router)=>{
   routes.get("/infoComment/:commentId",CommentsController.infoComment);
   routes.patch("/editComment/:commentId",CommentsController.editComment);
 
+  //Comments by Student
+  routes.get('/getCommentsStudent/:studentId',CommentsController.getCommentsStudent);
+
 
 
 }

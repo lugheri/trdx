@@ -12,7 +12,7 @@ configureRedisClient();
 
 export const redisSet = async (key:string,value: any,expires?:number|undefined) => {
 
-  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : ''
+  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : 'prod'
   const keyReg = environment+':'+key
   if(value===undefined){
     return false
@@ -25,9 +25,9 @@ export const redisSet = async (key:string,value: any,expires?:number|undefined) 
   let expire_time =  expires ?? defaultExpires;
   
   try{
-   
+   //console.log("EXPIRE TIME >>",keyReg,expire_time)
     await client.set(keyReg, JSON.stringify(value));
-    await client.expire(key,expire_time)
+    await client.expire(keyReg,expire_time)
     return true
   }catch(e){
     console.error('Redis Set Error',e)
@@ -36,7 +36,7 @@ export const redisSet = async (key:string,value: any,expires?:number|undefined) 
 }
 
 export const redisGet = async (key:string) => {
-  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : ''
+  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : 'prod'
   const keyReg = environment+':'+key
   try{
     const result = await client.get(keyReg);
@@ -49,7 +49,7 @@ export const redisGet = async (key:string) => {
 }
 
 export const redisDel = async (key:string) => {
-  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : ''
+  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : 'prod'
   const keyReg = environment+':'+key
   try{
     await client.del(keyReg)

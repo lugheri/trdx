@@ -74,6 +74,27 @@ export const ModulesLessonModuleDTO = z.object({
 })
 export type ModulesLessonModuleType = z.infer<typeof ModulesLessonModuleDTO>;
 
+//Lesson Access Rules
+export const LessonAccessRuleDTO = z.object({
+  lesson_id:z.optional(z.number()),
+  rule_access:z.optional(z.string()),
+  days_to_access:z.optional(z.number()),
+  date_of_access:z.optional(z.string())
+})
+export type LessonAccessRuleType = z.infer<typeof LessonAccessRuleDTO>;
+
+//Lesson Attachment
+export const LessonAttachmentDTO = z.object({
+  course_id:z.optional(z.number()),
+  module_id:z.optional(z.number()),
+  lesson_id:z.optional(z.number()),
+  name:z.optional(z.string()),
+  description:z.optional(z.string()),
+  type:z.optional(z.string()),
+  material:z.optional(z.string()),
+  status:z.optional(z.number())
+})
+export type LessonAttachmentType = z.infer<typeof LessonAttachmentDTO>;
 
 
 //Comments

@@ -30,8 +30,7 @@ export const Catalog = () => {
       : <div className="flex flex-col"> 
           <Card component={<CourseList published={1} openCourse={openCourse} setOpenCourse={setOpenCourse}/>}/>
           <Card component={<CourseList published={0} openCourse={openCourse} setOpenCourse={setOpenCourse}/>}/>
-        </div>}
-          
+        </div>}          
     </div>
   )
 }

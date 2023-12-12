@@ -10,10 +10,9 @@ import { Student } from '../../../contexts/Dtos/auth.dto';
 import { ICourse, IMyCourses } from '../Dtos/courses.dto';
 import api from '../../../services/api';
 import { Loading } from '../../../components/Loading';
-//import { urlBase } from '../../../utils/baseUrl';
+import { urlBase } from '../../../utils/baseUrl';
 import { RenderImageGallery } from '../../../components/RenderImageGallery';
 import Logo from '/img/logo.png'
-import { BannerHome } from '../Home/components/BannerHome';
 
 
 export const CoursesGallery = () => {
@@ -28,15 +27,15 @@ export const CoursesGallery = () => {
   }
   useEffect(()=>{ userData ? getMyCourses() : false },[userData])
   return(
-    <div className="relative flex flex-col" 
-      style={{/*
-        background: `linear-gradient(to bottom,rgba(9, 9, 9, 0),rgba(9, 9, 9, 0.4),rgba(9, 9, 9, 0.6),rgba(9, 9, 9, 0.9), rgba(9, 9, 9, 1), rgba(9, 9, 9, 1), rgba(9, 9, 9, 1)),
-                    url(${urlBase}/gallery/bg-text-1.jpg)`,
-        backgroundSize:'100% auto',
+    <div className="relative flex flex-col bg-black" 
+      style={{
+        backgroundImage: `url(${urlBase}/gallery/bg-home-candles.jpg)`,
+        backgroundSize:'100%',
         backgroundRepeat:'no-repeat'
-      */}}>
-        <BannerHome/>
-      <div className="my-[50px] mr-4 ml-20 lg:ml-28 xl:ml-28 2xl:ml-28">
+        }}>
+        
+      <div className="my-[80px] mr-4 ml-4 md:ml-28 lg:my-[300px]
+                    lg:ml-28 xl:ml-28 2xl:ml-28">
         <TitlePage title="Meus cursos"/>
         <div className="flex">
           <div className="w-full flex flex-wrap">

@@ -9,6 +9,7 @@ import { Loading } from "../../../../../components/Loading";
 import { Button } from "../../../../../components/Buttons";
 import { Modal, TitleModal } from "../../../../../components/Modal";
 import { InputForm, InputNumberForm, SelectForm, TextAreaForm } from "../../../../../components/Inputs";
+import { ModuleOrder } from "./ModuleOrder";
 
 type ModuleCourseComponent = {
   infoCourse:ICourse
@@ -18,6 +19,7 @@ export const ModuleCourse : React.FC<ModuleCourseComponent> = (props) => {
   const [ modules, setModules ] = useState<null | IModuleCourse[]>(null)
   const [ error, setError ] = useState<null | string>(null)
   const [ newModule, setNewModule ] = useState<null | number>(null)  
+  const [ orderModule, setOrderModule ] = useState<null | number>(null)
 
   const getModule = async () => {
     try{
@@ -29,7 +31,7 @@ export const ModuleCourse : React.FC<ModuleCourseComponent> = (props) => {
       }
     }catch(e){ console.log(e) }
   }
-  useEffect(()=>{ getModule()},[newModule])
+  useEffect(()=>{ getModule()},[newModule,orderModule])
 
   return(
     <Card component={
@@ -47,13 +49,18 @@ export const ModuleCourse : React.FC<ModuleCourseComponent> = (props) => {
                       <p className="text-neutral-100">
                         <FontAwesomeIcon className="text-teal-500/50" icon={Fas.faCube}/> Módulos do Curso: {modules.length}
                       </p>
-                      <Button name="Criar Novo Módulo" btn="success" icon="faFolderPlus" onClick={()=>setNewModule(props.infoCourse.id)}/>
+                      <div className="flex">
+                        <Button name="Reordenar Módulos" btn="success" type="notline" icon="faSortNumericAsc" onClick={()=>setOrderModule(props.infoCourse.id)}/>
+                        <Button name="Criar Novo Módulo" btn="success" icon="faFolderPlus" onClick={()=>setNewModule(props.infoCourse.id)}/>
+                      </div>                      
                     </div>    
                     <div className="flex bg-neutral-950/50 flex-wrap rounded my-2 p-2">
                       {modules.map((module,key)=><ModuleItem key={key} module={module} setSetupModule={props.setSetupModule}/>)}
-                    </div>                         
+                    </div>   
+                    {orderModule && <ModuleOrder course_id={orderModule} modules={modules} close={setOrderModule}/> }                      
                   </div>}
           {newModule && <NewModule courseId={newModule} setNewModule={setNewModule} totalModule={modules?modules.length:0}/>} 
+          
         </div>}/>    
   )
 }

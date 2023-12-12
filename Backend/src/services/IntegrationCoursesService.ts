@@ -5,7 +5,7 @@ class IntegrationCoursesService{
 
   async newCourse(dataCourse:IntegrationCoursesType):Promise<boolean | IntegrationPlatformsCoursesInstance>{
     const [newCourse,created] = await IntegrationPlatformsCourses.findOrCreate({
-      where:{product_id:dataCourse.product_id,offer_id:dataCourse.offer_id},
+      where:{product_id:dataCourse.product_id,offer_id:dataCourse.offer_id,course_id_students:dataCourse.course_id_students},
       defaults:dataCourse
     })
     console.info(created)
@@ -23,6 +23,13 @@ class IntegrationCoursesService{
     const infoCourse = await IntegrationPlatformsCourses.findByPk(course_id)
     return infoCourse
   }
+
+  async infoCourseStudentPlatform(offer_id:number,course_id:number){
+    const infoCourseStudentPlatform = await IntegrationPlatformsCourses.findOne({
+    where: {offer_id:offer_id,course_id_students:course_id},
+  })
+  return infoCourseStudentPlatform
+}
 
   async editCourse(course_id:number,dataCourse:IntegrationCoursesType){
     await IntegrationPlatformsCourses.update(dataCourse,{where:{id:course_id}})

@@ -237,7 +237,7 @@ const Comment : React.FC<CommentComponent> = (props) => {
         </div>
         <div className="flex flex-col flex-1 py-2 px-1">
           <p className="text-neutral-300 font-light flex items-center">
-            <b>{infoStudent.name} - {props.comment.student_id}</b> 
+            <b>{infoStudent.name}</b> 
             <FontAwesomeIcon className="mx-2 text-teal-500 text-[.2rem]" icon={Fas.faCircle}/>
             <span>{infoStudent.mail}</span>
             <FontAwesomeIcon className="mx-2 text-teal-500 text-[.2rem]" icon={Fas.faCircle}/>

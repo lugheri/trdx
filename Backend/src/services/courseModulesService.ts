@@ -37,6 +37,7 @@ class CourseModulesService{
   }  
 
   async editModuleCourse(moduleId:number,dataModule:ModulesCourseType):Promise<boolean>{   
+    console.log(dataModule)
     const redisKey=`Module:infoModuleCourse:[${moduleId}]`
     const redisListKey=`Modules:listModules:courseId[${dataModule.course_id}]`
     await redisDel(redisKey)
@@ -45,6 +46,7 @@ class CourseModulesService{
     return true;
   }
 
+  
 }
 
 

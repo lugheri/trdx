@@ -32,7 +32,7 @@ import { CommunitySettings } from '../pages/Admin/Community/CommunitySettings';
 import { CommunityOthers } from '../pages/Admin/Community/Others';
 //Students
 import { Students } from '../pages/Admin/Students';
-import { ActiveStudents } from '../pages/Admin/Students/Actives';
+import { ActiveStudents } from '../pages/Admin/Students/Actives/index.tsx';
 import { InactiveStudents } from '../pages/Admin/Students/Inactives';
 //Support
 import { Support } from '../pages/Admin/Support';
@@ -54,9 +54,9 @@ import { Users } from '../pages/Admin/Settings/Users';
 import { LoadingPage } from '../pages/LoadingPage';
 import { Levels } from '../pages/Admin/Settings/Levels';
 import { Credentials } from '../pages/Admin/Settings/Credentials';
-import { StudentInfo } from '../pages/Admin/Students/StudentInfo';
 import { FolderGallery } from '../pages/Admin/Platform/Gallery/components/FolderGallery';
 import { Comments } from '../pages/Admin/Content/Comments.tsx';
+import { OpenStudent } from '../pages/Admin/Students/components/OpenStudent/index.tsx';
 
 
 
@@ -162,7 +162,7 @@ const RoutesApp = () => {
               children:[
                 { index: true, element:<Students/>},
                 { path: '/admin/students/actives', element:<ActiveStudents/>},
-                { path: '/admin/students/actives/info/:student_id', element:<StudentInfo/>},
+                { path: '/admin/students/actives/info/:student_id', element:<OpenStudent/>},
                 { path: '/admin/students/inactives', element:<InactiveStudents/>},
               ]
             }, 

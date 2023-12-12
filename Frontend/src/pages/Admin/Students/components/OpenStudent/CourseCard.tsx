@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Button } from "../../../../components/Buttons";
-import api from '../../../../services/api';
-import { Loading } from '../../../../components/Loading';
+import { Button } from "../../../../../components/Buttons";
+import api from '../../../../../services/api';
+import { Loading, LoadingBars } from '../../../../../components/Loading';
 
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IFileGallery } from '../../../Students/Dtos/gallery.dto';
-import { urlBase } from '../../../../utils/baseUrl';
-import { Modal, TitleModal } from '../../../../components/Modal';
-import { ICourse } from '../../Content/Dtos/courses.dto';
+import { IFileGallery } from '../../../../Students/Dtos/gallery.dto';
+import { urlBase } from '../../../../../utils/baseUrl';
+import { Modal, TitleModal } from '../../../../../components/Modal';
+import { ICourse } from '../../../Content/Dtos/courses.dto';
 import { NewValidityContract, RemoveValidityContract, ValidityContract } from './ValidityContracts';
 
 import moment from 'moment';
@@ -20,6 +20,7 @@ interface ICourseCard{
   studentName:string;
   studentId:number;
   viewMode: 'cells'|'list';
+  setUpdate:React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const CourseCard : React.FC<ICourseCard> = (props) => {
@@ -34,6 +35,7 @@ export const CourseCard : React.FC<ICourseCard> = (props) => {
   const [removeContract, setRemoveContract] = useState<number|null>(null)
   const [studentEvolution, setStudentEvolution] = useState<number|null>(null)
   const [removeCourse, setRemoveCourse] = useState<number|null>(null)
+  
 
   useEffect(()=>{
     const getInfoImage = async () => {
@@ -62,7 +64,7 @@ export const CourseCard : React.FC<ICourseCard> = (props) => {
         const today = moment();
         const contract = await api.get(`activeContract/${props.studentId}/${props.id}`)
         let status : 'Expirado'|'Expira Hoje!'|'Vigente'|null = null
-        const statusExpired = moment(contract.data.response.end_validity, 'YYYY-MM-DD');
+        const statusExpired = contract.data.response.end_validity ? moment(contract.data.response.end_validity, 'YYYY-MM-DD') : moment('YYYY-MM-DD') ;
         if(contract.data.response.payment_cycle === "V" ){
           status = 'Vigente';
         }else{
@@ -96,10 +98,6 @@ export const CourseCard : React.FC<ICourseCard> = (props) => {
 
   },[props.viewMode,validityContract])
 
- 
- 
-
-
 
   return(
     props.viewMode == 'cells' ? 
@@ -113,7 +111,7 @@ export const CourseCard : React.FC<ICourseCard> = (props) => {
         }
       </div>
     : 
-    <div className="flex w-full h-[150px] mb-2 bg-neutral-800 rounded-lg overflow-hidden shadow-neutral-950 shadow ">
+    <div className="flex w-full h-[200px] mb-2 bg-neutral-800 rounded-lg overflow-hidden shadow-neutral-950 shadow ">
       <div className="w-1/4">
         { props.image !== 0 ? 
           infoImage ? <img src={`${urlBase}/gallery/${infoImage.file}`} className='w-full'/> : <Loading/>
@@ -128,7 +126,7 @@ export const CourseCard : React.FC<ICourseCard> = (props) => {
           <div className="p-2">
             <p className="text-xl text-neutral-300">{infoCourse.name}</p>
             <p className="text-sm text-neutral-400" title={infoCourse.description}>
-              { infoCourse.description.length > 150 ? infoCourse.description.slice(0, 145) + ' . . . ' : infoCourse.description }
+              { infoCourse.description.length > 300 ? infoCourse.description.slice(0, 295) + ' . . . ' : infoCourse.description }
             </p>
           </div>
           <div className="flex justify-between items-center bg-gradient-to-r from-neutral-800 to-neutral-700 w-full p-1">
@@ -143,46 +141,97 @@ export const CourseCard : React.FC<ICourseCard> = (props) => {
             </div>
           </div>
         {/*Modais*/}
-        { validityContract && <Modal component={<div>
-                          <TitleModal icon='faCalendarCheck' close={()=>setValidityContract(null)} 
-                                      title='Contratos de Vigência'
-                                      subtitle={`Planos de Vigência no curso ${infoCourse.name} do aluno ${props.studentName}`}/>
-                          <ValidityContract close={()=>setValidityContract(null)}
-                                            setNewContract={setNewContract} newContract={newContract}
-                                            setRemoveContract={setRemoveContract} removeContract={removeContract}
-                                            studentId={props.studentId} studentName={props.studentName}
-                                            courseId={infoCourse.id} courseName={infoCourse.name} />              
-                                        </div>}/>}
-          {newContract && <Modal component={<div>
-                          <TitleModal icon='faCalendarPlus' close={()=>setNewContract(null)} 
-                                      title='Novo Contrato de Vigência'
-                                      subtitle={`Crie um novo Planos de Vigência no curso ${infoCourse.name} do aluno ${props.studentName}`}/>
-                          <NewValidityContract close={()=>setNewContract(null)}
-                                            studentId={props.studentId} studentName={props.studentName}
-                                            courseId={infoCourse.id} courseName={infoCourse.name} />              
-                                        </div>}/>}
-
-          { removeContract && <Modal component={<div>
-            <TitleModal icon='faCalendarXmark' close={()=>setRemoveContract(null)} 
-                        title='Remover Contrato de Vigência'
-                        subtitle={`Remover Plano de Vigência no curso ${infoCourse.name} do aluno ${props.studentName}`}/>
-            <RemoveValidityContract close={()=>setRemoveContract(null)} contractId={removeContract} />              
-                          </div>}/>}
-
-        { studentEvolution && <Modal component={<div>
-                          <TitleModal icon='faChartLine' close={()=>setStudentEvolution(null)} 
-                                      title='Evolução do Aluno'
-                                      subtitle={`Acompanhe a evolução do aluno ${props.studentName} no curso ${infoCourse.name}`}/>
-                                        </div>}/>}
-
-        { removeCourse && <Modal component={<div>
-                          <TitleModal icon='faTrash' close={()=>setRemoveCourse(null)} 
-                                      title='Remover Curso'
-                                      subtitle={`Remover o acesso do curso ${infoCourse.name} do aluno ${props.studentName}`}/>
-                                        </div>}/>} 
+        { validityContract && <ValidityContract 
+                                close={()=>setValidityContract(null)}
+                                setNewContract={setNewContract} newContract={newContract}
+                                setRemoveContract={setRemoveContract} removeContract={removeContract}
+                                studentId={props.studentId} studentName={props.studentName}
+                                courseId={infoCourse.id} courseName={infoCourse.name} />}
+        { newContract && <NewValidityContract infoCourse={infoCourse} close={()=>setNewContract(null)} studentId={props.studentId} studentName={props.studentName} courseId={infoCourse.id} courseName={infoCourse.name} />}
+        { removeContract && <RemoveValidityContract infoCourse={infoCourse} close={()=>setRemoveContract(null)} studentName={props.studentName} contractId={removeContract} /> }
+        { studentEvolution && <EvolutionCourse infoCourse={infoCourse} studentName={props.studentName} setStudentEvolution={setStudentEvolution}/>}
+        { removeCourse && <RemoveCourse setUpdate={props.setUpdate} studentId={props.studentId} infoCourse={infoCourse} studentName={props.studentName} setRemoveCourse={setRemoveCourse}/>} 
       </div>}       
-    </div>
+    </div>    
+  )
+}
+
+
+type EvolutionCourseComponent = {
+  infoCourse:ICourse,
+  setStudentEvolution:React.Dispatch<React.SetStateAction<number|null>>
+  studentName:string
+}
+const EvolutionCourse : React.FC<EvolutionCourseComponent>  = (props) => {
+  return(
+    <Modal component={
+      <div>
+        <TitleModal 
+          icon='faChartLine' 
+          close={()=>props.setStudentEvolution(null)} 
+          title='Evolução do Aluno'
+          subtitle={`Acompanhe a evolução do aluno ${props.studentName} no curso ${props.infoCourse.name}`}/>
+      </div>}/>
     
   )
+}
 
+
+type RemoveCourseComponent = {
+  infoCourse:ICourse,
+  setRemoveCourse:React.Dispatch<React.SetStateAction<number|null>>
+  studentName:string,
+  studentId:number,
+  setUpdate:React.Dispatch<React.SetStateAction<number>>;
+}
+const RemoveCourse : React.FC<RemoveCourseComponent>  = (props) => {
+  const [ idJoin, setIdJoin]= useState<number|null>(null)
+
+  const getCheckCourseStudent = async () => {
+    try{
+      const check = await api.get(`checkCourseStudent/${props.studentId}/${props.infoCourse.id}`)
+      setIdJoin(check.data.response)
+    }catch(e){
+      console.log(e)
+    } 
+  }   
+
+  useEffect(()=>{
+    getCheckCourseStudent()
+  },[])
+
+
+  const removeCourse = async () => {
+    try{
+      await api.delete(`delCourseStudent/${idJoin}`)
+      props.setUpdate(idJoin == null ? 0 : idJoin)
+      props.setRemoveCourse(null)
+
+    }catch(err){
+      console.log(err)
+    }
+  }
+
+
+  return(
+    <Modal component={
+      <div className="flex flex-col p-2">
+        <TitleModal 
+          icon='faTrash' 
+          close={()=>props.setRemoveCourse(null)} 
+          title='Remover Curso'
+          subtitle={`Remover o acesso do curso ${props.infoCourse.name} do aluno ${props.studentName}`}/>
+
+        <p className="text-white font-xl mt-8 mx-4 mb-4">
+          Confirmar a remoção do curso <b>{props.infoCourse.name}</b>
+        </p>
+        <div className="flex border-t mt-4 p-2 justify-end items-center">
+          <Button name="Cancelar" btn="muted"  type='outline' onClick={()=>props.setRemoveCourse(null)} />
+          { idJoin == null ? <LoadingBars/> : <Button name="Sim, Remover" icon="faTrash" btn="error" onClick={()=>removeCourse()} /> }
+        </div> 
+        
+        
+      </div>}/>
+    
+  )
 }

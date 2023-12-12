@@ -47,3 +47,11 @@ export interface ILessonsModule{
   visibility:number;
   status:number;
 }
+
+export interface ILessonsAccessRule{
+  id:number;
+  lesson_id:number;
+  rule_access:string;
+  days_to_access:number;
+  date_of_access:string;
+}

@@ -28,8 +28,17 @@ export const ClassRoom = () => {
   const continueLesson = async () => {
     try{
       const info = await api.get(`/continueCourse/${userData ? userData.id : 0}/${courseId}`)
-      setModuleOpen(info.data.response['module'])
-      setLessonId(info.data.response['nextLesson'])
+      setModuleOpen(moduleOpen > 0 ? moduleOpen : info.data.response['module'])
+      const fl = await api.get(`firstLessonModule/${moduleOpen}`)
+      const firstLessonModule: number = moduleOpen > 0 && fl.data.response
+      console.log("module open",moduleOpen)
+      console.log("lesson",moduleOpen > 0 ? firstLessonModule : info.data.response['nextLesson'] === 0 ? info.data.response['lastLesson'] : info.data.response['nextLesson'])
+      console.log("firstLessonModule",firstLessonModule)
+      
+      setLessonId(moduleOpen > 0 ? firstLessonModule : 
+                 info.data.response['nextLesson'] === 0 ? info.data.response['lastLesson'] : info.data.response['nextLesson'] )
+      
+
     }catch(err){console.log(err)}
   }
   const getInfoCourse = async () => {
@@ -49,6 +58,7 @@ export const ClassRoom = () => {
     lessonId == 0 && continueLesson()
   },[])
 
+  const [ checkLesson, setCheckLesson ] = useState<number|null>(null)
   
  
 
@@ -56,16 +66,20 @@ export const ClassRoom = () => {
 
 
   return(
-    <div className="flex flex-col md:flex-row h-full overflow-auto ml-28 mr-4">
-      <div className="flex flex-1 flex-col md:h-[100%] md:relative md:overflow-auto pb-2">        
+    <div className="flex flex-col md:flex-row h-full overflow-auto mr-1 ml-1 md:ml-28
+                    lg:ml-28 xl:ml-28 2xl:ml-28 ">
+      <div className="flex flex-1 flex-col md:h-[100%] md:relative md:overflow-auto pb-2">  
+          
         <Player
           course_id={courseId} nameCourse={infoCourse ? infoCourse.name : ""}
           module_id={moduleOpen} 
           lesson_id={lessonId} setLessonId={setLessonId}
           student_id={userData ? userData.id : 0}          
           studentName={userData ? userData.name : ""}
+          setModuleOpen={setModuleOpen}
           setOpenNotePad={setOpenNotePad} setOpenNotePadMobile={setOpenNotePadMobile}
-          setMobileSide={setMobileSide} mobileSide={mobileSide}          
+          setMobileSide={setMobileSide} mobileSide={mobileSide}   
+          setCheckLesson={setCheckLesson}       
           />
           {/*Load Mobile Side */} 
 
@@ -84,6 +98,7 @@ export const ClassRoom = () => {
       <div className={`${mobileSide == 'lesson' ? "flex" : "hidden"} md:overflow-auto md:flex flex-col md:w-1/3 relative px-2`}>
         <SideModule 
           studentId={userData ? userData.id : 0}
+          checkLesson={checkLesson}
           courseId={courseId}
           imageCourse={infoCourse ? infoCourse.image : 0}
           moduleOpen={moduleOpen} setModuleOpen={setModuleOpen}

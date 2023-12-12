@@ -6,9 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IAttachmentsLesson, ILessons } from "../../Dtos/courses.dto"
 import api from '../../../../services/api';
-import { Loading } from '../../../../components/Loading';
+import { LoadingBars } from '../../../../components/Loading';
 import { CommentsLesson } from './CommentsLesson';
 import { urlBase } from '../../../../utils/baseUrl';
+import moment from 'moment';
 
 
 interface VideoPlayerProps {
@@ -19,6 +20,8 @@ interface VideoPlayerProps {
   student_id:number,
   studentName:string,
   setLessonId:React.Dispatch<React.SetStateAction<number>>,
+  setCheckLesson:React.Dispatch<React.SetStateAction<number|null>>,
+  setModuleOpen:React.Dispatch<React.SetStateAction<number>>,
   setOpenNotePad:React.Dispatch<React.SetStateAction<boolean>>,
   setOpenNotePadMobile:React.Dispatch<React.SetStateAction<boolean>>,
   setMobileSide:React.Dispatch<React.SetStateAction<'lesson'|'tools'|'comments'|null>>,
@@ -72,15 +75,18 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
     checkValidity()
   },[props.lesson_id])
 
+  
   const watchLesson = async () => {
     try{
       setWatchedLesson(true)
+      props.setCheckLesson(null)
       const options = {'viewed':1,
         student_id: props.student_id, 
         course_id: props.course_id,
         module_id: props.module_id,
         lesson_id: props.lesson_id}      
       await api.post(`watchedLesson`,options)
+      props.setCheckLesson(props.lesson_id)
     }catch(e){
       console.log(e)
     }
@@ -88,8 +94,10 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
 
   const unWatchLesson = async () => {
     try{
+      props.setCheckLesson(null)
       setWatchedLesson(false)
-      await api.delete(`watchedLesson/${props.student_id}/${props.lesson_id}`)      
+      await api.delete(`watchedLesson/${props.course_id}/${props.module_id}/${props.student_id}/${props.lesson_id}`)      
+      props.setCheckLesson(0)
     }catch(e){
       console.log(e)
     }
@@ -98,8 +106,8 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
   const nextLesson = async () => {
     try{     
       const nextLessons = await api.get(`nextLesson/${props.student_id}/${props.course_id}/${props.lesson_id}`)  
-    
-      props.setLessonId(nextLessons.data.response['nextLesson'])
+      props.setModuleOpen(nextLessons.data.response['module'])
+      props.setLessonId(nextLessons.data.response['nextLesson'] == 0 ? nextLessons.data.response['lastLesson'] : nextLessons.data.response['nextLesson'])
     }catch(e){
       console.log(e)
     }
@@ -111,10 +119,26 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
     window.open(link, '_blank');   
   }
 
+  const [ accessLesson, setAccessLesson ] = useState(null)
+  const [ dateAccess, setDateAccess ] = useState("")
+  const [ messageAccessLesson, setMessageAccessLesson ] = useState("")
+  const getAccessRules = async () => {
+    setAccessLesson(null)
+    try{
+      const response = await api.get(`checkAccessLesson/${props.lesson_id}/${props.student_id}`)
+      if(response.data.success){
+        setAccessLesson(response.data.response.access)
+        setDateAccess(response.data.response.dateAccess)
+        setMessageAccessLesson(response.data.response.message ? response.data.response.message : "")
+      }
+    }catch(err){console.log(err)}
+  }
+  useEffect(()=>{ getAccessRules() },[props.lesson_id])
+
   
 
   return(
-    infoLesson === null ? <Loading/> :  
+    infoLesson === null ? <LoadingBars/> :  
       validityCourse == 'not_have' ?  
       <div className="flex flex-col w-full h-full items-center justify-center">
          <FontAwesomeIcon className="text-orange-500/50 text-4xl my-4" icon={Fas.faLock}/>
@@ -129,19 +153,31 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
       </div> 
       :
       <div className="flex flex-col w-full items-start justify-start">
+        {accessLesson === null ? <LoadingBars/>
+        : accessLesson === true ?
         <iframe 
           className="h-full min-h-[60vh]" 
           width="100%" 
           allow="autoplay; fullscreen" 
           src={`https://player.vimeo.com/video/${infoLesson.link}?color=ff9933&title=0&byline=0&portrait=0&badge=0`}></iframe>
-        
+        : 
+          <div className="bg-black p-4 rounded w-[98%] min-h-[60vh] flex flex-col justify-center items-center">
+            <FontAwesomeIcon className="text-teal-500 text-4xl" icon={Fas.faLock}/>
+            <p className="text-neutral-500 text-lg mt-3">Espere só mais um pouco!</p>  
+            <p className="text-neutral-500 mb-3">Esta aula estará disponível a partir de {moment(dateAccess).format('DD/MM/YYYY')}</p>  
+            <p className="text-neutral-500 text-xs">{messageAccessLesson}</p>  
+          
+          </div>}  
+
         <div className="flex w-full flex-col mt-2 px-2">
           <div className="flex flex-col md:flex-row justify-between items-end md:items-center">           
             <div className="flex flex-col flex-1 mb-4 md:mb-0">
               <p className="text-white font-bold text-xl">{infoLesson.name}</p>
               <p className="text-[#4FFF4E] font-light text-sm">{props.nameCourse}</p>
             </div>
+
             
+
             { watchedLesson ? 
               <div className="flex justify-between items-center">
                 <RatingButton
@@ -166,10 +202,13 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
               </button>
               }
 
-          </div>        
-          <p className="text-neutral-400 text-xs font-light mt-6">
-            <div dangerouslySetInnerHTML={{ __html: infoLesson.description}}/>
-          </p>          
+          </div>  
+
+
+
+          <div className="text-neutral-400 text-xs font-light mt-6">
+            <p dangerouslySetInnerHTML={{ __html: infoLesson.description}}/>
+          </div>          
         </div>
 
         {/*Tools Mobile*/}

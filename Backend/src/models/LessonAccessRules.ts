@@ -18,7 +18,7 @@ export const LessonAccessRules = sequelize.define<LessonAccessRuleInstance>("Les
   lesson_id:{
     type:DataTypes.INTEGER
   },
-  rules_access:{
+  rule_access:{
     type:DataTypes.STRING
   },
   days_to_access:{

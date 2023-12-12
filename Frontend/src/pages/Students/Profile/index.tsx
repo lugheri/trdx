@@ -211,9 +211,9 @@ const ChangePassword: React.FC<{student_id:number,student_mail:string}> = (props
         <div className="flex flex-col w-full justify-center items-start pl-8">
           <p className="font-bold mb-4 text-white text-xl mt-4">Alterar Senha</p>
           <form className="w-full" onSubmit={(e)=>editPass(e)}>
-            <InputForm value={password} label="Senha Atual" className='border-0 mb-[10px] text-sm' placeholder="Informe sua senha atual" onChange={setPassword} required/>
-            <InputForm value={newPassword} label="Nova Senha" className='border-0 mb-[10px] text-sm' placeholder="Escolha uma nova senha" onChange={setNewPassword} required/>
-            <InputForm value={confirmNewPass} label="Confirmar Nova Senha" className='border-0 mb-[10px] text-sm' placeholder="Confirme sua nova senha" onChange={setConfirmNewPass} required/>
+            <InputForm inputType='password' value={password} label="Senha Atual" className='border-0 mb-[10px] text-sm' placeholder="Informe sua senha atual" onChange={setPassword} required/>
+            <InputForm inputType='password' value={newPassword} label="Nova Senha" className='border-0 mb-[10px] text-sm' placeholder="Escolha uma nova senha" onChange={setNewPassword} required/>
+            <InputForm inputType='password' value={confirmNewPass} label="Confirmar Nova Senha" className='border-0 mb-[10px] text-sm' placeholder="Confirme sua nova senha" onChange={setConfirmNewPass} required/>
             <div className="flex w-full justify-end">
               <button className="text-neutral-500 mr-4 p-2 text-center my-2 rounded shadown text-sm font-semibold" onClick={()=>setChangePass(false)}>
                 Cancelar

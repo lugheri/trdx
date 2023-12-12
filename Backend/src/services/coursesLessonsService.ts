@@ -54,6 +54,22 @@ class CoursesLessonsService{
     await redisSet(redisKey,lessonsModulesCourse)
     return lessonsModulesCourse
   }
+  async firstLessonModule(moduleId:number){
+    const lessonsModulesCourse = await CoursesLessons.findOne({
+      where:{module_id:moduleId, status:1},      
+      order:[['order','ASC']],
+    })   
+    return lessonsModulesCourse ? lessonsModulesCourse.id : 0
+  }
+  async nextLessonOrder(moduleId:number){
+    const order = await CoursesLessons.findOne({
+      attributes:['order'],
+      where:{module_id:moduleId, status:1},      
+      order:[['order','DESC']],
+      limit:1
+    })
+    return order
+  }
   async infoLesson(lessonId:number){
     const redisKey = `Lessons:infoLesson:[${lessonId}]`
     const infoLessonRedis = await redisGet(redisKey)
@@ -69,6 +85,7 @@ class CoursesLessonsService{
     await redisDel(`Lessons:TotalLessonsModule:[${dataLesson.module_id}]`)
     await redisDel(`Lessons:infoLesson:[${lessonId}]`)
     await redisDel(`Lessons:LessonsModule:[${dataLesson.module_id}]`)
+    console.log(`Lessons:LessonsModule:[${dataLesson.module_id}]`)
 
     
     await CoursesLessons.update(dataLesson,{where:{id:lessonId}})  

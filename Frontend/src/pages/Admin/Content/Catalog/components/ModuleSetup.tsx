@@ -38,7 +38,7 @@ export const ModuleSetup : React.FC<SetupModuleLessonsComponent> = (props) => {
 
   return(
     <div className="flex flex-col">
-      { setupLesson ? <LessonSetup lessonId={setupLesson} setLessonSetup={setSetupLesson} />
+      { setupLesson ? <LessonSetup infoModule={infoModule} course={props.course} lessonId={setupLesson} setLessonSetup={setSetupLesson} />
       : infoModule === null ? <Loading/> : 
       <>
         <Card component={

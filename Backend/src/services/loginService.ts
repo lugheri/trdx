@@ -39,13 +39,24 @@ class LoginService {
     return userdata
   }
 
+  async checkMailStudent(mail:string){
+    const userdata = await Students.findOne({
+      attributes: ['id'],
+      where: {mail: mail, status:1}
+    })    
+    if(!userdata){
+      return null
+    } 
+    return userdata.id
+  }
+
   
 
   async userAuthenticate(action:string,userdata?:UserInstance,authHeader?:string){
     if(action=='login'){
       if(userdata){
         const typeAccess : 'Adm' | 'Student' = 'Adm'
-        const token = jwt.sign({userId:userdata.id,userName:userdata.mail,typeAccess:typeAccess},process.env.APP_SECRET as string,{expiresIn:'12h'})
+        const token = jwt.sign({userId:userdata.id,userName:userdata.mail,typeAccess:typeAccess},process.env.APP_SECRET as string)
         //Check last action login user
         const lastAction = await Logins.findOne({attributes: ['action'],
                                                 where: {id:userdata.id},
@@ -103,7 +114,7 @@ class LoginService {
     if(action=='login'){
       if(userdata){
         const typeAccess = 'Student'
-        const token = jwt.sign({userId:userdata.id,userName:userdata.mail,typeAccess:typeAccess},process.env.APP_SECRET as string,{expiresIn:'12h'})
+        const token = jwt.sign({userId:userdata.id,userName:userdata.mail,typeAccess:typeAccess},process.env.APP_SECRET as string)
         //Check last action login user
         const lastAction = await StudentsLogins.findOne({attributes: ['action'],
                                                 where: {id:userdata.id},

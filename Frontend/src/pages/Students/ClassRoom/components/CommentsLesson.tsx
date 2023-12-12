@@ -201,7 +201,7 @@ const AnswersComments : React.FC<IAnswersComments> = (props) => {
           <div key={key} className="flex justify-start items-start gap-2 mb-6">
             { comment.teacher_id > 0 ?
               <>
-                <div className="flex w-[5%] h-[40px] justify-center items-center">
+                <div className="flex w-[40px%] h-[40px] justify-center items-center">
                   <div className={`w-[30px] h-[30px] rounded-full p-[1px] bg-gradient-to-r from-[#24ff0055] to-[#2eff2a]`}>
                       <div className="w-full h-full rounded-full flex justify-center items-center bg-neutral-900 text-gray-600 overflow-hidden">
                         <img src={Brand} style={{ maxWidth: '60%' }} />

@@ -41,7 +41,11 @@ class CoursesService{
     return course ? course : false
   }  
 
-  async editCourse(courseId:number,dataCourse:CoursesPartialType):Promise<boolean>{   
+  async editCourse(courseId:number,dataCourse:CoursesPartialType):Promise<boolean>{  
+    await redisDel(`Course:listCourses:status[1],published:[1],orderedBy:[order],order:[ASC],page:[1]`)
+    await redisDel(`Course:listCourses:status[1],published:[0],orderedBy:[order],order:[ASC],page:[1]`)
+    await redisDel(`Course:listCourses:status[0],published:[1],orderedBy:[order],order:[ASC],page:[1]`)
+    await redisDel(`Course:listCourses:status[0],published:[0],orderedBy:[order],order:[ASC],page:[1]`) 
     await redisDel(`Course:listCourses:status[1],published:[1],orderedBy:[id],order:[ASC],page:[1]`)
     await redisDel(`Course:listCourses:status[1],published:[0],orderedBy:[id],order:[ASC],page:[1]`)
     await redisDel(`Course:listCourses:status[0],published:[1],orderedBy:[id],order:[ASC],page:[1]`)

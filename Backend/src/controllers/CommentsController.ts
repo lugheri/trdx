@@ -108,5 +108,17 @@ class CommentsController{
       res.json({"error":err})  
     }
   }
+
+  async getCommentsStudent(req:Request,res:Response){
+    const studentId =parseInt(req.params.studentId)   
+    try{
+      const comments = await LessonsCommentsService.getRecentCommentsStudent(studentId)
+      res.json({"success": true,"response": comments})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
 }
 export default new CommentsController();

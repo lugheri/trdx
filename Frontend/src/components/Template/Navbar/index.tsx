@@ -15,9 +15,9 @@ export const Navbar = () => {
   const authenticated = useAuth();  
   const userData:Student|null = authenticated ? authenticated.userData : null
 
-  const location = useLocation();  
+ /* const location = useLocation();  
   const component = location.pathname.split('/')[1]
-  const lesson = location.pathname.split('/')[4]
+  const lesson = location.pathname.split('/')[4]*/
 
 
   const [mobileNav, setMobileNav ] = useState<'open'|'closed'>('closed')
@@ -28,9 +28,9 @@ export const Navbar = () => {
         <div className="flex px-4 justify-between bg-[#1B1B1B] items-center flex-1">
           <img src={Logo} className="w-1/4 my-2"/>
           <div className="flex flex-1 items-center justify-end">
-            <div className="flex mx-1 w-[30px] h-[30px] hover:flex-1 justify-center items-center text-white rounded-full text-sm bg-[#353535] cursor-pointer opacity-90 hover:opacity-100">
+            {/*<div className="flex mx-1 w-[30px] h-[30px] hover:flex-1 justify-center items-center text-white rounded-full text-sm bg-[#353535] cursor-pointer opacity-90 hover:opacity-100">
               <FontAwesomeIcon icon={Fas.faSearch}/>
-            </div>
+            </div>*/}
             <div className="flex ml-1 w-[30px] h-[30px] justify-center items-center text-black rounded-[8.226px] text-sm bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow-md cursor-pointer opacity-90 hover:opacity-100" 
               onClick={()=>setMobileNav(mobileNav === 'closed' ? 'open':'closed')}>
               <FontAwesomeIcon icon={mobileNav === 'closed' ? Fas.faEllipsisV:Fas.faCaretDown}/>
@@ -87,21 +87,6 @@ export const Navbar = () => {
             </div>
           </div>}
       </div>
-     
-     
-      {/*Web*/}
-      <div className="hidden md:flex h-14 px-4 items-center">
-        {/* Load Option */}
-        { component === "classRoom" && !lesson &&
-          <NavLink to={'/coursesGallery'} className="text-white font-light pr-8 pl-2">
-            <FontAwesomeIcon className="px-2" icon={Fas.faArrowLeft}/> Voltar para Meus cursos {lesson}
-          </NavLink>
-        }
-        <div className="flex mx-1 w-[30px] h-[30px] hover:flex-1 justify-center items-center text-white rounded-full text-sm bg-[#353535] cursor-pointer opacity-90 hover:opacity-100">
-          <FontAwesomeIcon icon={Fas.faSearch}/>         
-        </div>
-      </div>
-      
     </>
   )
 }

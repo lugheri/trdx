@@ -264,10 +264,11 @@ class IntegrationsController{
       res.json({"error":"Falha ao recuperar cursos!"}) 
     }
   }
-  async infoCourse(req:Request,res:Response){
-    const course_id = parseInt(req.params.course_id)
+  async infoCourseStudentPlatform(req:Request,res:Response){
+    const offer_id = parseInt(req.params.offer_id)
+    const course_id_students = parseInt(req.params.course_id_students)
     try{
-      const infoCourse = await IntegrationCoursesService.infoCourse(course_id)
+      const infoCourse = await IntegrationCoursesService.infoCourseStudentPlatform(offer_id,course_id_students)
       if(infoCourse){
         res.json({"success": true,"response": infoCourse})  
         return

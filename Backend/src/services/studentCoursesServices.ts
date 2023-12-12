@@ -13,6 +13,19 @@ class StudentCoursesService{
     return myCourses
   }*/
 
+  async totalMyCourses(studentId:number):Promise<number>{  
+   /* const totalMyCourses = await StudentsCourses.count({
+      where: { status:1,student_id:studentId },
+    })    */
+
+    const totalMyCourses = await Courses.count({      
+      where: { status:1 },
+      include: { attributes: [], model: StudentsCourses, where: { student_id:studentId},},     
+    })
+
+    return totalMyCourses
+  }
+
   async myCourses(studentId:number):Promise<CoursesInstance[]>{
     const redisKey = `myCourses:[${studentId}]`
     const myCoursesRedis = await redisGet(redisKey)
@@ -21,7 +34,8 @@ class StudentCoursesService{
     const myCourses = await Courses.findAll({
       attributes: ['id','image','background_image','default_thumb','name'],
       group: ['id'],
-      where: {published:1, status:1 },
+      where: { status:1 },
+      order:[['order','ASC']],
       include: { attributes: [], model: StudentsCourses, where: { student_id:studentId},},     
     })
     await redisSet(redisKey,myCourses)
@@ -57,6 +71,7 @@ class StudentCoursesService{
     await StudentsCourses.destroy({where: { id: idJoin}})
     return true
   }
+
 
  
  

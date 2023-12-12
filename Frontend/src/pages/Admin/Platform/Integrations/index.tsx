@@ -15,6 +15,8 @@ export const Integrations = () => {
   const [newPlatform, setNewPlatform ] = useState(false)
   const [openPlatform, setOpenPlatform ] = useState<IIntegrationPlatform|null>(null)
 
+  
+
   const getPlatforms = async () => {
     try{
       const response = await api.get(`listPlatformIntegration/1`)
@@ -34,7 +36,8 @@ export const Integrations = () => {
       <>
         { openPlatform 
           ? <SetupPlatformIntegration platform={openPlatform} setOpenPlatform={setOpenPlatform}/>
-          : <div className="flex p-2 flex-col">
+          : 
+            <div className="flex p-2 flex-col">
               {/*TITLE */}
               <TitlePage
                 icon="faPlug" 
@@ -62,12 +65,13 @@ type PlatformIntegrationComponent = {
 }
 const PlatformIntegration: React.FC<PlatformIntegrationComponent> = (props) => {
   return(
-    <div className="w-[49%] m-1 bg-teal-500 h-[200px] rounded flex flex-col justify-center items-center text-white">
-      <FontAwesomeIcon className="text-4xl opacity-60" icon={Fas.faPlug}/>
+    <div className="flex flex-col justify-between items-center w-[49%] p-4 h-[220px] m-1 rounded relative
+    border bg-gray-800/50 hover:bg-gray-800 text-white border-teal-500">
+      <FontAwesomeIcon className="text-6xl text-teal-500/60" icon={Fas.faPlug}/>
       <p className="text-xl">{props.platform.name}</p>
       <p className="text-sm font-light">{props.platform.description}</p>
       <p className="text-sm text-teal-100 font-light my-2">{props.platform.url}</p>
-      <Button btn="error" icon="faWrench" name="Gerenciar Integração" onClick={()=>props.setOpenPlatform(props.platform)}/>
+      <Button btn="success" icon="faWrench" name="Gerenciar Integração" onClick={()=>props.setOpenPlatform(props.platform)}/>
     </div>
   )
 }

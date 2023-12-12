@@ -13,7 +13,7 @@ export interface IProducts{
   integration:string;
   product_id_platform:string;
   community_access:number;
-  name:number;
+  name:string;
   active:number;
   status:number;
 }
