@@ -7,7 +7,7 @@ export default (req:Request, res:Response,next:NextFunction) => {
     if(!authHeader) return res.json('Token not provided');
     try{
         const payload = jwt.verify(authHeader, process.env.APP_SECRET as string);
-        console.log(payload)
+       
         return next();
     }catch(err){
         return res.json(false);

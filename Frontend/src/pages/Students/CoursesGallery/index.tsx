@@ -12,6 +12,7 @@ import api from '../../../services/api';
 import { Loading } from '../../../components/Loading';
 import { urlBase } from '../../../utils/baseUrl';
 import { RenderImageGallery } from '../../../components/RenderImageGallery';
+import Logo from '/img/logo.png'
 
 
 export const CoursesGallery = () => {
@@ -26,21 +27,15 @@ export const CoursesGallery = () => {
   }
   useEffect(()=>{ userData ? getMyCourses() : false },[userData])
   return(
-    <div 
-      className="relative flex flex-col" 
+    <div className="relative flex flex-col bg-black" 
       style={{
-        background: `linear-gradient(to bottom,rgba(9, 9, 9, 0),
-                                             rgba(9, 9, 9, 0.4),
-                                             rgba(9, 9, 9, 0.6),
-                                             rgba(9, 9, 9, 0.9),
-                                             rgba(9, 9, 9, 1),
-                                             rgba(9, 9, 9, 1),
-                                             rgba(9, 9, 9, 1)),
-                     url(${urlBase}/gallery/bg-text-1.jpg)`,
-        backgroundSize:'100% auto',
+        backgroundImage: `url(${urlBase}/gallery/bg-home-candles.jpg)`,
+        backgroundSize:'100%',
         backgroundRepeat:'no-repeat'
-      }}>
-      <div className="my-[250px] mr-4 ml-20 lg:ml-28 xl:ml-28 2xl:ml-28">
+        }}>
+        
+      <div className="my-[80px] mr-4 ml-4 md:ml-28 lg:my-[300px]
+                    lg:ml-28 xl:ml-28 2xl:ml-28">
         <TitlePage title="Meus cursos"/>
         <div className="flex">
           <div className="w-full flex flex-wrap">
@@ -56,8 +51,7 @@ export const CoursesGallery = () => {
 
 const Course : React.FC<{infoCourse:IMyCourses;userId:number}> = (props) => {
   //const [ fileImage, setFileImage ] = useState(null)
-  const navigate = useNavigate();
-  const [ progress, setProgress] = useState(0);
+  const navigate = useNavigate(); 
   const [ dataCourse, setDataCourse ] = useState< ICourse | null>(null)
   const [ validityCourse, setValidityCourse] = useState(null);
   const [ progressCourse, setProgressCourse] = useState(0);
@@ -66,19 +60,11 @@ const Course : React.FC<{infoCourse:IMyCourses;userId:number}> = (props) => {
       const prog = await api.get(`infoCourse/${props.infoCourse.id}`)
       setDataCourse(prog.data.response)        
     }catch(e){console.log(e)}
-  }
-  const getProgress = async () => {
-    try{
-      const prog = await api.get(`progressCourse/${props.infoCourse.id}/${props.userId}`)
-      setProgress(prog.data.response)      
-      console.log(progress)  
-    }catch(e){console.log(e)}
-  }
+  } 
   const checkValidity = async () => {
     try{
       const contract = await api.get(`validityCourse/${props.infoCourse.id}/${props.userId}`)
-      setValidityCourse(contract.data.response)    
-      console.log(validityCourse)    
+      setValidityCourse(contract.data.response) 
     }catch(e){console.log(e)}
   }
   const getProgressCourse = async () => {
@@ -93,18 +79,26 @@ const Course : React.FC<{infoCourse:IMyCourses;userId:number}> = (props) => {
   }
   useEffect(()=>{
     getDataCourse()
-    getProgress()
     checkValidity()
     getProgressCourse()
-  },[props.infoCourse])  
+  },[props.infoCourse]) 
 
   return(
     <div onClick={()=>openCourse()}
-         className="flex flex-col p-2 w-full px-3 mb-4 md:w-[30%] md:mx-[.25%] md:mb-1 opacity-90 cursor-pointer hover:opacity-100">
-      <div className="bg-slate-300 w-full h-[200px] rounded-xl flex justify-center items-center overflow-hidden">
-        <RenderImageGallery className="w-full h-full" imageId={props.infoCourse.default_thumb}/>
-      </div>
-      <p className="text-white text-sm mb-2 font-bold min-h-[50px] flex items-center">{dataCourse?.name}</p>
+         className="flex flex-col relative p-2 w-full px-3 mb-4 md:w-[30%] md:mx-[.25%] md:mb-1 opacity-90 cursor-pointer hover:opacity-100">
+     { props.infoCourse.default_thumb  
+       ? <RenderImageGallery className="w-full rounded-xl" imageId={props.infoCourse.default_thumb} imgTag/>
+       : props.infoCourse.background_image 
+         ? <RenderImageGallery className="w-full rounded-xl" imageId={props.infoCourse.background_image} imgTag/>
+         : <div className="flex justify-center items-center p-2 rounded-xl bg-black h-[180px]">
+            <img className="w-1/2" src={Logo}/>
+          </div>
+      }
+      { validityCourse == 'not_have' 
+        ? <p className="text-red-500 text-white absolute top-[20px] left-6 p-1 text-xs rounded shadow"><FontAwesomeIcon icon={Fas.faLock}/></p> 
+        : validityCourse == 'expired' && <p className="bg-pink-800 text-white absolute top-[20px] left-6 p-1 text-xs rounded shadow"><FontAwesomeIcon icon={Fas.faCalendarTimes}/> Acesso Expirado</p> }
+     
+      <p className="text-white text-sm mb-2 font-bold min-h-[50px] flex items-center">{props.infoCourse.name}</p>
       <p className="text-gray-100 text-xs font-light">{progressCourse}% concluido</p>
       <div className="w-1/2 md:w-full h-[10px] p-[1px]  mb-4 bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] rounded-md shadow">
         <div className="w-full h-full bg-neutral-900 rounded-md shadow overflow-hidden"> 

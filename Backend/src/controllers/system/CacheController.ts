@@ -7,7 +7,7 @@ export const clearCache = async (req:Request, res:Response) => {
     res.json(true)
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }

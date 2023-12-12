@@ -27,6 +27,7 @@ export const Template = () => {
       h-screen w-screen overflow-x-hidden overflow-y-auto
       ">
       <Sidebar/>
+      <Navbar/>
       <Outlet/>  
     </div>
   )

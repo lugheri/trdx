@@ -30,21 +30,21 @@ export const ModulesCourse : React.FC<ModulesCourseComponent> = (props) => {
   const settings: Settings = {   
     centerMode: false,
     infinite: false, // Torna o carrossel infinito
-    slidesToShow: 4, // Número de slides visíveis de cada vez
+    slidesToShow: 2, // Número de slides visíveis de cada vez
     slidesToScroll: 1, // Número de slides a rolar por vez     
-   
+    variableWidth: true,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
           slidesToShow: 3,
-          slidesToScroll: 3
+          slidesToScroll: 2
         }
-      },
+      },      
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1,
           slidesToScroll: 2,
         }
       },

@@ -4,6 +4,14 @@ import { sequelize } from "../instances/mysql";
 import { LessonsViewed, LessonsViewedInstance } from "../models/LessonsViewed";
 
 class LessonsViewedService{
+  async allLessonsStudentViewed(studentId:number):Promise<number>{  
+    const totalViewed = await LessonsViewed.count({
+      where:{student_id:studentId}
+    })   
+    return totalViewed 
+  }
+
+
   async lessonsViewed(studentId:number,courseId:number):Promise<number>{
     const redisKey = `lessonsViewedbyCourse:[studentId:[${studentId}],courseId:[${courseId}]]`
     const lessonViewedRedis = await redisGet(redisKey)
@@ -49,27 +57,30 @@ class LessonsViewedService{
       where: { student_id : viewedData.student_id, module_id : viewedData.module_id, lesson_id : viewedData.lesson_id},
       defaults: viewedData
     });
+    await redisDel(`Lessons:lessonsModuleStudent:courseId[${viewedData.course_id}]:moduleId[${viewedData.module_id}]:studentId[${viewedData.student_id}]`)
     await redisDel(`lessonsViewedbyCourse:[studentId:[${viewedData.student_id}],courseId:[${viewedData.course_id}]]`)
     await redisDel(`lessonsViewedByModule:[studentId:[${viewedData.student_id}],moduleId:[${viewedData.module_id}]]`)
     await redisDel(`nextLessonStudent:[${viewedData.student_id}]`)
     await redisSet(`lastLessonViewed:[studentId:[${viewedData.student_id}],courseId:[${viewedData.lesson_id}]]`,newView.id)
     await redisSet(`lessonViewed:[studentId:[${viewedData.student_id}],lessonId:[${viewedData.lesson_id}]]`,newView)
-    console.log('New',newView)
-    console.log('Created',created)
+    console.info('New',newView)
+    console.info('Created',created)
     return newView.id ? newView : false;
   }
 
-  async removeViewedLesson(lessonId:number,studentId:number){
+  async removeViewedLesson(courseId:number,moduleId:number,lessonId:number,studentId:number){
     await LessonsViewed.destroy({where:{ student_id : studentId, lesson_id : lessonId}})
     await redisDel(`lessonViewed:[studentId:[${studentId}],lessonId:[${lessonId}]]`)
     await redisDel(`nextLessonStudent:[${studentId}]`)
+    await redisDel(`Lessons:lessonsModuleStudent:courseId[${courseId}]:moduleId[${moduleId}]:studentId[${studentId}]`)
+   
     return true;
   }
 
   async lessonStudentViewed(lessonId:number,studentId:number):Promise<LessonsViewedInstance|null>{
     const redisKey = `lessonViewed:[studentId:[${studentId}],lessonId:[${lessonId}]]`
     const lessonViewed = await redisGet(redisKey)
-    if(lessonViewed!==null){return lessonViewed}
+    //if(lessonViewed!==null){return lessonViewed}
 
     const viewed = await LessonsViewed.findOne({
       where:{student_id:studentId,lesson_id:lessonId}

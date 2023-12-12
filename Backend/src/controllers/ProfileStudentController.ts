@@ -11,8 +11,8 @@ class ProfileController{
     try{
       const infoPhoto = await studentsProfilePhotosService.infoPhoto(fileId)
       res.json({"success":true,"response":infoPhoto})
-    }catch(e){
-      console.log(e)
+    }catch(err){
+      console.error(err)
     }
   }
 
@@ -48,19 +48,18 @@ class ProfileController{
           const studentId : number = parseInt(dataNewFile.data.student_id as string)
           const newProfile = {photo:newFile.id}        
           try{
-            console.log('edit',studentId, newProfile)
             const edit = await studentsService.editStudent(studentId, newProfile)
             res.json({"success": true,"response": edit})  
             return
           }catch(err){
-            console.log(err)
+            console.error(err)
             res.json({"error":err})  
           }
         }
         res.json({"success":true,"response":newFile})
         return
-      }catch(e){
-        console.log(e)
+      }catch(err){
+        console.error(err)
       }
     }    
   }
@@ -70,11 +69,10 @@ class ProfileController{
     const studentId : number = parseInt(req.params.student_id)
     try{
       const student = await studentsService.getStudent(studentId)
-      console.log(student)
       res.json({"success": true,"response": student})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }

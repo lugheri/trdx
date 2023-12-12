@@ -24,7 +24,8 @@ export const StudentsCourses = sequelize.define<StudentsCoursesInstance>("Studen
     defaultValue:DataTypes.NOW,
   },
   date_validity:{
-    type:DataTypes.DATE
+    type:DataTypes.DATE,
+    defaultValue:DataTypes.NOW,
   },
   payment_cycle:{
     type:DataTypes.STRING

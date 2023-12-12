@@ -26,7 +26,7 @@ export const CourseModules = () => {
 
   const [ progressCourse, setProgressCourse] = useState(0);
   const [ infoCourse, setInfoCourse] = useState<ICourse|null>(null)
-  const [ fileImage, setFileImage ] = useState(null)
+  const [ fileImage, setFileImage ] = useState<null|string>(null)
 
   const getProgressCourse = async () => {
     try{
@@ -42,8 +42,12 @@ export const CourseModules = () => {
   }
   const getInfoImage = async (imageId:number) => {
     try{
-      const i = await api.get(`infoFile/${imageId}`)
-      setFileImage(i.data.response.file)
+      if(imageId){
+        const i = await api.get(`infoFile/${imageId}`)
+        setFileImage(i.data.response.file)
+      }else{
+        setFileImage("")
+      }
     }catch(e){console.log(e)}
   }
 
@@ -79,7 +83,8 @@ export const CourseModules = () => {
             progressCourse={progressCourse} 
             imageCourseId={infoCourse.image} 
             courseId={infoCourse.id}/>  
-        <div className="flex flex-col  h-screen mr-4 ml-20 lg:ml-24 xl:ml-24 2xl:ml-24">
+        <div className="flex flex-col  h-screen mr-4 ml-4 md:ml-28
+                    lg:ml-28 xl:ml-28 2xl:ml-28">
           <ModulesCourse courseId={parseInt(courseId, 10)} userId={userData ? userData.id : 0}/>
         </div>        
       </div>}

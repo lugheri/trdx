@@ -19,7 +19,7 @@ export const newCredential = async (req:Request, res:Response) => {
     res.json({"error":"Falha ao criar o novo Nível de acesso!"})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }
@@ -28,11 +28,11 @@ export const getCredential = async (req:Request, res:Response) => {
   const credentialId : number = parseInt(req.params.credentialId)
   try{
     const credential = await systemService.getCredential(credentialId)
-    console.log(credential)
+    console.info(credential)
     res.json({"success": true,"response": credential})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }
@@ -49,7 +49,7 @@ export const editCredential = async (req:Request, res:Response) => {
     res.json({"success": true,"response": edit})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }
@@ -61,7 +61,7 @@ export const removeCredential = async (req:Request, res:Response) => {
     res.json({"success": true})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }
@@ -73,7 +73,7 @@ export const listCredentials = async (req:Request, res:Response) => {
     res.json({"success": true,"response": listCredentials})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }

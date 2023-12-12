@@ -6,12 +6,14 @@ import { ILessonsModule, IModules } from "../../Dtos/courses.dto";
 import api from '../../../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { RenderImageGallery } from '../../../../components/RenderImageGallery';
+import moment from 'moment';
 
 type ISideModule = {
   studentId:number,
   courseId:number,
   imageCourse:number,
   moduleOpen:number,
+  checkLesson:number|null,
   setModuleOpen:React.Dispatch<React.SetStateAction<number>>,
   lessonId:number,
   setLessonId:React.Dispatch<React.SetStateAction<number>>
@@ -68,6 +70,7 @@ export const SideModule: React.FC<ISideModule> = (props) => {
               module_id={props.moduleOpen} 
               student_id={props.studentId}  
               lesson_id={props.lessonId} 
+              checkLesson={props.checkLesson}
               setLessonId={props.setLessonId}/>
             </>
             : 
@@ -91,6 +94,7 @@ type ILessonsModuleComponent = {
   imageCourse:number,
   student_id:number,
   lesson_id:number,
+  checkLesson:number|null,
   setLessonId:React.Dispatch<React.SetStateAction<number>>
 }
 
@@ -106,7 +110,7 @@ const LessonsModule : React.FC<ILessonsModuleComponent> = (props) => {
       }
     }
     getLessons()
-  },[])
+  },[props.checkLesson])
   return(
     <div className="flex flex-col">
       { lessons === null ? 
@@ -120,21 +124,59 @@ const LessonsModule : React.FC<ILessonsModuleComponent> = (props) => {
           Nenhuma aula disponível 
         </div> 
         : lessons.map((lesson,key)=>
-          <div key={key} 
-               className={`bg-[#101010] text-white  mb-2 px-2 h-16 font-light hover:font-semibold opacity-80 hover:opacity-100 cursor-pointer flex justify-between items-center
-                          ${props.lesson_id === lesson.id && " border border-[#2eff2a]"}`}
-              onClick={()=>props.setLessonId(lesson.id)}>
-            <div className="flex flex-1 justify-start items-center">
-              <div className="w-[80px] h-12 bg-slate-300">
-                <RenderImageGallery className="w-full h-full" imageId={props.imageCourse}/>
-              </div>
-              <p className="w-[70%] text-xs pl-2">{lesson.name}</p>
-            </div>            
-            <FontAwesomeIcon className="text-[#2eff2a]" icon={lesson.LessonsViewed ? Fas.faCheckSquare : Far.faSquare}/> 
-          </div>
+          <CardLesson key={key} student_id={props.student_id} lesson={lesson} lesson_id={props.lesson_id} setLessonId={props.setLessonId} imageCourse={props.imageCourse}/>
         )
       }
     </div>
   )
-
 }
+
+type CardLessonComponent = {
+  lesson:ILessonsModule,
+  lesson_id:number,
+  student_id:number,
+  imageCourse:number,
+  setLessonId:React.Dispatch<React.SetStateAction<number>>
+}
+const CardLesson : React.FC<CardLessonComponent> = (props) => {
+  const [ accessLesson, setAccessLesson ] = useState(null)
+  const [ dateAccess, setDateAccess ] = useState("")
+  const getAccessRules = async () => {
+    setAccessLesson(null)
+    try{
+      const response = await api.get(`checkAccessLesson/${props.lesson.id}/${props.student_id}`)      
+      if(response.data.success){
+        setAccessLesson(response.data.response.access)
+        setDateAccess(response.data.response.dateAccess)
+      }
+    }catch(err){console.log(err)}
+  }
+  useEffect(()=>{ getAccessRules() },[props.lesson.id])
+
+  return(
+    <div className={`bg-[#101010] text-white  mb-2 px-2 h-16 font-light hover:font-semibold opacity-80 hover:opacity-100 cursor-pointer flex justify-between items-center
+      ${props.lesson_id === props.lesson.id && " border border-[#2eff2a]"}`}
+      onClick={()=>props.setLessonId(props.lesson.id)}>
+      <div className="flex flex-1 justify-start items-center">
+        <div className="w-[80px] h-12 bg-slate-300">
+          <RenderImageGallery className="w-full h-full" imageId={props.imageCourse}/>
+        </div>
+        <div className="flex flex-col flex-1">
+          <p className="w-[80%] text-xs pl-2">{props.lesson.name} </p>
+          {accessLesson === false && 
+          <p className="text-teal-500 w-[80%] text-xs font-light pl-2">
+            Aula disponível a partir de {moment(dateAccess).format('DD/MM/YYYY')}
+          </p>}
+        </div>
+
+      </div>     
+      {accessLesson === null 
+      ? <FontAwesomeIcon className="text-[#2eff2a]" icon={Far.faSquare}/>
+      : accessLesson === true 
+      ? <FontAwesomeIcon className="text-[#2eff2a]" icon={props.lesson.LessonsViewed ? Fas.faCheckSquare : Far.faSquare}/> 
+      : <FontAwesomeIcon className="text-[#2eff2a]" icon={Fas.faLock}/>} 
+    </div>
+  )
+}
+
+

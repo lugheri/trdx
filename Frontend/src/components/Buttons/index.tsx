@@ -102,7 +102,7 @@ export const Button : React.FC<ButtonType> = (props) => {
     
     const block= "w-full"
 
-    const borderCircle="rounded-full"
+    const borderCircle="rounded-full w-10 h-10 flex justify-center items-center"
     const borderSquare=" "
     const borderRounded="rounded-md"
 

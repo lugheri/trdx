@@ -1,7 +1,7 @@
 export interface IStudent{
   id:number;
   since:string;
-  comunity:number;
+  community:number;
   type:string;
   photo:number;
   name:string;

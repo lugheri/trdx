@@ -1,5 +1,5 @@
 import {z} from 'zod';
-
+//Courses
 export const CoursesDTO = z.object({
   date_created:z.optional(z.string()),
   image:z.optional(z.number()),
@@ -39,6 +39,88 @@ export const SearchCoursesDTO = z.object({
 })
 export type SearchCoursesType = z.infer<typeof SearchCoursesDTO>
 
+//MODULES
+export const ModulesCourseDTO = z.object({
+  course_id:z.optional(z.number()),
+  image:z.optional(z.number()),
+  type_module:z.optional(z.string()),
+  module:z.optional(z.string()),
+  description:z.optional(z.string()),
+  order:z.optional(z.number()),
+  visibility:z.optional(z.literal(1).or(z.literal(0))).default(0),
+  status:z.optional(z.literal(1).or(z.literal(0))).default(1)
+})
+export type ModulesCourseType = z.infer<typeof ModulesCourseDTO>;
+
+//Lessons
+export const ModulesLessonModuleDTO = z.object({
+  course_id:z.optional(z.number()),
+  module_id:z.optional(z.number()),
+  date_created:z.optional(z.string()),
+  type_lesson:z.optional(z.string()),
+  max_time:z.optional(z.string()),
+  top_score:z.optional(z.number()),
+  teacher_id:z.optional(z.number()),
+  type_content:z.optional(z.string()),
+  link:z.optional(z.string()),
+  video_platform:z.optional(z.string()),
+  image:z.optional(z.number()),
+  name:z.optional(z.string()),
+  description:z.optional(z.string()),
+  tags:z.optional(z.string()),
+  order:z.optional(z.number()),
+  visibility:z.optional(z.literal(1).or(z.literal(0))).default(0),
+  status:z.optional(z.literal(1).or(z.literal(0))).default(1)
+})
+export type ModulesLessonModuleType = z.infer<typeof ModulesLessonModuleDTO>;
+
+//Lesson Access Rules
+export const LessonAccessRuleDTO = z.object({
+  lesson_id:z.optional(z.number()),
+  rule_access:z.optional(z.string()),
+  days_to_access:z.optional(z.number()),
+  date_of_access:z.optional(z.string())
+})
+export type LessonAccessRuleType = z.infer<typeof LessonAccessRuleDTO>;
+
+//Lesson Attachment
+export const LessonAttachmentDTO = z.object({
+  course_id:z.optional(z.number()),
+  module_id:z.optional(z.number()),
+  lesson_id:z.optional(z.number()),
+  name:z.optional(z.string()),
+  description:z.optional(z.string()),
+  type:z.optional(z.string()),
+  material:z.optional(z.string()),
+  status:z.optional(z.number())
+})
+export type LessonAttachmentType = z.infer<typeof LessonAttachmentDTO>;
+
+
+//Comments
+export const CommentLessonDTO = z.object({
+  date_created:z.optional(z.string()),
+  lesson_id:z.optional(z.number()),
+  student_id:z.optional(z.number()),
+  teacher_id:z.optional(z.number()),
+  answers_comment_id:z.optional(z.number()).default(0),
+  comment:z.optional(z.string()),
+  public:z.optional(z.literal(1).or(z.literal(0))).default(1),
+  status:z.optional(z.literal(1).or(z.literal(0))).default(1)
+})
+export type CommentLessonType = z.infer<typeof CommentLessonDTO>
+
+
+
+export const NewCommentLessonDTO = z.object({
+  lesson_id:z.number(),
+  student_id:z.number(),
+  comment:z.string(),
+})
+export type NewCommentLessonType = z.infer<typeof NewCommentLessonDTO>
+
+
+
 //Watched
 export const WatchedLessonDTO = z.object({
   viewed: z.number(z.literal(1).or(z.literal(0))).default(1),
@@ -63,9 +145,3 @@ export const NoteStudentsDTO = z.object({
 })
 export type NoteStudentsType = z.infer<typeof NoteStudentsDTO>
 
-export const NewCommentLessonDTO = z.object({
-  lesson_id:z.number(),
-  student_id:z.number(),
-  comment:z.string(),
-})
-export type NewCommentLessonType = z.infer<typeof NewCommentLessonDTO>

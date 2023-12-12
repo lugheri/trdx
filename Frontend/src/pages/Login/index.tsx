@@ -56,7 +56,7 @@ export const Login = () => {
           </div>              
           <input 
             type="text"  
-            placeholder="Email de Cadastro"   
+            placeholder="E-mail de Cadastro"   
             value={username} onChange={(e)=>{setUsername(e.target.value)}}
             required             
             className="w-full bg-transparent text-white font-light text-sm placeholder:text-gray-400 border-0 focus:border-0 focus:ring-0"/>
@@ -83,12 +83,12 @@ export const Login = () => {
           type="submit" 
            onClick={requestFullscreen}
           className="w-[80%] md:hidden text-sm rounded-md font-semibold mb-4 p-3 bg-gradient-to-r from-[#3CF400] to-[#73CB00]">
-          Acessar comunidade
+          Entrar Agora
         </button>  
          <button 
           type="submit" 
           className="w-[80%] hidden md:inline text-sm rounded-md font-semibold mb-4 p-3 bg-gradient-to-r from-[#3CF400] to-[#73CB00]">
-          Acessar comunidade
+          Entrar Agora
         </button>  
         {ErrorAuth ? ( 
           <strong 
@@ -145,7 +145,7 @@ export const LoginOldStudent = () => {
               </div>              
               <input 
                 type="text"  
-                placeholder="Email de Cadastro"   
+                placeholder="E-mail de Cadastro"   
                 value={username} onChange={(e)=>{setUsername(e.target.value)}}
                 required             
                 className="w-full border-0 focus:border-b-4 focus:border-[#3CF400] focus:ring-0 dark:focus:border-zinc-300"/>

@@ -19,7 +19,7 @@ class UserController{
       res.json({"error":"Falha ao criar o novo Usuário de acesso!"})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -28,11 +28,10 @@ class UserController{
     const userId : number = parseInt(req.params.userId)
     try{
       const user = await userService.getUser(userId)
-      console.log(user)
       res.json({"success": true,"response": user})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -49,7 +48,7 @@ class UserController{
       res.json({"success": true,"response": edit})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -61,7 +60,7 @@ class UserController{
       res.json({"success": true})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -77,7 +76,7 @@ class UserController{
       res.json({"success": true,"response": listUsers})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }

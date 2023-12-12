@@ -8,8 +8,7 @@ export type WelcomeVideoType = z.infer<typeof WelcomeVideoDTO>;
 
 export const TextHomeDTO = z.object({
   title_text:z.string(),
-  text:z.string(),
-  additional_text:z.optional(z.string()),
+  text:z.string()
 })
 export type TextHomeType = z.infer<typeof TextHomeDTO>;
 

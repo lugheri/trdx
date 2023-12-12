@@ -11,74 +11,16 @@ import { CoursesLessonsInstance } from '../models/CoursesLessons';
 import LessonsCommentsService from '../services/LessonsCommentsService';
 import LessonsAttachmentsService from '../services/LessonsAttachmentsService';
 import StudentsNotesService from '../services/StudentsNotesService';
+import CommentsController from './CommentsController';
 
 class CoursesController{
-  async listCourses(req:Request,res:Response){
-    const pagination = PaginationCoursesDTO.safeParse(req.body)
-    if(!pagination.success){
-      res.json({"error": pagination.error})  
-      return
-    }  
-    try{
-      const listCourses = await coursesService.listCourses(pagination.data)
-      res.json({"success": true,"response": listCourses})  
-      return
-    }catch(err){
-      console.log(err)
-      res.json({"error":err})  
-    }
-  }
+  
 
-  async newCourse(req:Request,res:Response){
-    const dataCourse = CoursesDTO.safeParse(req.body)
-    if(!dataCourse.success){
-      res.json({"error":dataCourse.error})
-      return
-    }
-    try{
-      const dataNewCourse = await coursesService.createNewCourse(dataCourse.data)
-      if(dataNewCourse){
-        res.json({"success": true,"response": dataNewCourse})  
-        return
-      }
-      res.json({"error":"Falha ao criar o novo Curso!"})  
-      return
-    }catch(err){
-      console.log(err)
-      res.json({"error":err})  
-    }
-    
-  }
+  
 
-  async infoCourse(req:Request,res:Response){
-    const courseId : number = parseInt(req.params.courseId)
-    try{
-      const course = await coursesService.getCourse(courseId)
-      console.log(course)
-      res.json({"success": true,"response": course})  
-      return
-    }catch(err){
-      console.log(err)
-      res.json({"error":err})  
-    }
-  }
+  
 
-  async editCourse(req:Request, res:Response){ 
-    const courseId : number = parseInt(req.params.courseId)
-    const dataCourse = CoursesPartialDTO.safeParse(req.body)
-    if(!dataCourse.success){
-      res.json({"error": dataCourse.error})  
-      return
-    }
-    try{
-      const edit = await coursesService.editCourse(courseId, dataCourse.data)
-      res.json({"success": true,"response": edit})  
-      return
-    }catch(err){
-      console.log(err)
-      res.json({"error":err})  
-    }
-  }
+  
 
   //Students Methods
   async myCourses(req:Request, res:Response){
@@ -88,7 +30,7 @@ class CoursesController{
       res.json({"success":true,"response":myCourses})
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -121,7 +63,7 @@ class CoursesController{
       res.json({"success":true,"response":contractStatus})
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -131,16 +73,19 @@ class CoursesController{
     const coursesStudents = await studentCoursesServices.myCourses(studentId)
     let totalLessons = 0
     let viewedLessons = 0
+   
     for(const course of coursesStudents){
       const lessons = await coursesLessonsService.lessonsCourse(course.id)
+      const viewsCourse = await lessonsViewedService.lessonsViewed(studentId,course.id)
+      
       totalLessons += lessons
-      viewedLessons += await lessonsViewedService.lessonsViewed(studentId,course.id)
-
-      console.log('lessons course',course.id,'lessons',lessons) 
+      viewedLessons += viewsCourse
     }
 
-    const progress = viewedLessons == 0 ? 0 : Math.round((viewedLessons/totalLessons)*100)  
+    
 
+    const progress = viewedLessons == 0 ? 0 : Math.round((viewedLessons/totalLessons)*100)  
+    console.log(viewedLessons,'/',totalLessons,'=',progress)
 
     res.json({"success":true,"response":progress})
   }
@@ -155,7 +100,7 @@ class CoursesController{
       res.json({"success":true,"response":progress})
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -170,45 +115,14 @@ class CoursesController{
       res.json({"success":true,"response":progress})
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
 
-  async modulesCourse(req:Request,res:Response){
-    const courseId = parseInt(req.params.courseId)
-    try{
-      const modulesCourse = await courseModulesService.modulesCourse(courseId);
-      res.json({"success":true,"response":modulesCourse})
-    }catch(err){
-      console.log(err)
-      res.json({"error":err})
-    }
-  }
+  
 
-  async lessonsModule(req:Request,res:Response){
-    const courseId = parseInt(req.params.courseId)
-    const moduleId = parseInt(req.params.moduleId)
-    const studentId = parseInt(req.params.studentId)
-    try{
-      const lessonsModule = await coursesLessonsService.lessonsModule(courseId,moduleId,studentId);
-      res.json({"success":true,"response":lessonsModule})
-    }catch(err){
-      console.log(err)
-      res.json({"error":err})
-    }
-  }
-
-  async infoLesson(req:Request,res:Response){
-    const lessonId = parseInt(req.params.lessonId)
-    try{
-      const infoLesson = await coursesLessonsService.infoLesson(lessonId);
-      res.json({"success":true,"response":infoLesson})
-    }catch(err){
-      console.log(err)
-      res.json({"error":err})
-    }
-  }
+  
 
   async lastLessonViewed(req:Request,res:Response){
     const studentId = parseInt(req.params.studentId)
@@ -226,7 +140,7 @@ class CoursesController{
       //Info Next Lesson
       res.json({"success": true,"response":nextLessonId})  
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})    
     }
   }
@@ -242,20 +156,22 @@ class CoursesController{
       res.json({"success": true,"response": watch.data.viewed})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error": err})  
     }
   }
 
   async removeWatchedLesson(req:Request,res:Response){
+    const courseId = parseInt(req.params.courseId)
+    const moduleId = parseInt(req.params.moduleId)
     const lessonId = parseInt(req.params.lessonId)
     const studentId = parseInt(req.params.studentId)
     try{
-      await lessonsViewedService.removeViewedLesson(lessonId,studentId)
+      await lessonsViewedService.removeViewedLesson(courseId,moduleId,lessonId,studentId)
       res.json({"success": true,"response":0})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error": err})  
     }
   }
@@ -268,7 +184,7 @@ class CoursesController{
       res.json({"success": true,"response":lesson})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error": err})  
     }
   }
@@ -285,7 +201,7 @@ class CoursesController{
                                             "nextLesson":nextLesson ? nextLesson.id : 0,
                                             "module":nextLesson ? nextLesson.module_id : 0}})  
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})
     }
   }
@@ -302,7 +218,7 @@ class CoursesController{
                                             "nextLesson":nextLesson ? nextLesson.id : 0,
                                             "module":nextLesson ? nextLesson.module_id : 0}})  
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})
     }
   }
@@ -320,7 +236,7 @@ class CoursesController{
       res.json({"success": true,"response": score.data.score})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error": err})  
     }
 
@@ -328,17 +244,7 @@ class CoursesController{
 
 
   //Attachment
-  async attachmentLesson(req:Request,res:Response){
-    const lessonId = parseInt(req.params.lessonId)    
-    try{
-      const attachmentsLesson = await LessonsAttachmentsService.getAttachmentsLesson(lessonId)
-      res.json({"success":true,"response":attachmentsLesson})
-    }catch(err){
-      console.log(err)
-      res.json({"error":err})
-    }
-  }
-
+  
   //Notes
   async studentsNotes(req:Request, res:Response){
     const courseId = parseInt(req.params.courseId)    
@@ -347,7 +253,7 @@ class CoursesController{
       const notesCourse = await StudentsNotesService.studentsNotes(courseId,studentId)
       res.json({"success":true,"response":notesCourse})
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})
     }    
   }
@@ -363,7 +269,7 @@ class CoursesController{
       res.json({"success": true,"response": note})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error": err})  
     }
   }
@@ -378,7 +284,7 @@ class CoursesController{
       const totalLessons = await LessonsCommentsService.totalCommentsLesson(lessonId)
       res.json({"success":true,"response":totalLessons})
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})
     }
   }
@@ -392,7 +298,7 @@ class CoursesController{
       const commentsLessons = await LessonsCommentsService.getCommentsLesson(lessonId,page,studentId)
       res.json({"success":true,"response":commentsLessons})
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})
     }
   }
@@ -404,7 +310,7 @@ class CoursesController{
       const commentsAnswersLesson = await LessonsCommentsService.getCommentsAnswersLesson(commentId,page)
       res.json({"success":true,"response":commentsAnswersLesson})
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})
     }
   }
@@ -420,7 +326,7 @@ class CoursesController{
       res.json({"success": true,"response": true})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error": err})  
     }
 
@@ -434,7 +340,20 @@ class CoursesController{
       const commentsPendingApproval = await LessonsCommentsService.commentsPendingApproval(studentId,lessonId)
       res.json({"success":true,"response":commentsPendingApproval})
     }catch(err){
-      console.log(err)
+      console.error(err)
+      res.json({"error":err})
+    }
+  }
+
+  async lessonsModule(req:Request,res:Response){
+    const courseId = parseInt(req.params.courseId)
+    const moduleId = parseInt(req.params.moduleId)
+    const studentId = parseInt(req.params.studentId)
+    try{
+      const lessonsModule = await coursesLessonsService.lessonsModule(courseId,moduleId,studentId);
+      res.json({"success":true,"response":lessonsModule})
+    }catch(err){
+      console.error(err)
       res.json({"error":err})
     }
   }

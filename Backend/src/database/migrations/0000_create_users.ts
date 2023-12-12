@@ -17,7 +17,7 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamps(true,true);
   })
   .then(()=>{
-    console.log(`# Table ${ETableNames.users} created successfully!`)
+    console.info(`# Table ${ETableNames.users} created successfully!`)
   })
 }
 
@@ -27,6 +27,6 @@ export async function down(knex: Knex): Promise<void> {
   .schema
   .dropTable(ETableNames.users)
   .then(()=>{
-    console.log(`# Table ${ETableNames.users} dropped successfully!`)
+    console.info(`# Table ${ETableNames.users} dropped successfully!`)
   })
 }

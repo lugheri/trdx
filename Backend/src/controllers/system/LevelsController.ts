@@ -19,7 +19,7 @@ export const newLevel = async (req:Request, res:Response) => {
     res.json({"error":"Falha ao criar o novo Nível de acesso!"})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }
@@ -28,11 +28,11 @@ export const getLevel = async (req:Request, res:Response) => {
   const levelId : number = parseInt(req.params.levelId)
   try{
     const level = await systemService.getLevel(levelId)
-    console.log(level)
+    console.error(level)
     res.json({"success": true,"response": level})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }
@@ -49,7 +49,7 @@ export const editLevel = async (req:Request, res:Response) => {
     res.json({"success": true,"response": edit})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }
@@ -61,7 +61,7 @@ export const removeLevel = async (req:Request, res:Response) => {
     res.json({"success": true})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }
@@ -73,7 +73,7 @@ export const listLevels = async (req:Request, res:Response) => {
     res.json({"success": true,"response": listLevels})  
     return
   }catch(err){
-    console.log(err)
+    console.error(err)
     res.json({"error":err})  
   }
 }

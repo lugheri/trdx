@@ -46,10 +46,12 @@ export const CoursesLessons = sequelize.define<CoursesLessonsInstance>('CoursesL
     type:DataTypes.STRING
   },
   top_score:{
-    type:DataTypes.INTEGER
+    type:DataTypes.INTEGER,
+    defaultValue:0
   },
   teacher_id:{
-    type:DataTypes.INTEGER
+    type:DataTypes.INTEGER,
+    defaultValue:0
   },
   type_content:{
     type:DataTypes.STRING
@@ -61,7 +63,8 @@ export const CoursesLessons = sequelize.define<CoursesLessonsInstance>('CoursesL
     type:DataTypes.STRING
   },
   image:{
-    type:DataTypes.INTEGER
+    type:DataTypes.INTEGER,
+    defaultValue:0
   },
   name:{
     type:DataTypes.STRING

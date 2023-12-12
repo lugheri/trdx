@@ -4,6 +4,8 @@ import { AddContractValidityDTO, AddCourseStudentDTO, PaginationStudentDTO, Sear
 import studentCoursesServices from "../services/studentCoursesServices";
 import LessonsCommentsService from "../services/LessonsCommentsService";
 import coursesValidityContractsService from "../services/coursesValidityContractsService";
+import lessonsViewedService from "../services/lessonsViewedService";
+import md5 from 'md5';
 
 class StudentsController{
   async newStudent(req:Request, res:Response){ 
@@ -22,7 +24,7 @@ class StudentsController{
       res.json({"error":"Falha ao criar o novo Aluno de acesso!"})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -31,11 +33,10 @@ class StudentsController{
     const studentId : number = parseInt(req.params.studentId)
     try{
       const student = await studentsService.getStudent(studentId)
-      console.log(student)
       res.json({"success": true,"response": student})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -47,10 +48,10 @@ class StudentsController{
       res.json({"success": true,"response": lastAccess})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
-  }
+  } 
   
   async editStudent(req:Request, res:Response){
     const studentId : number = parseInt(req.params.studentId)
@@ -65,7 +66,7 @@ class StudentsController{
       res.json({"success": true,"response": edit})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -77,39 +78,67 @@ class StudentsController{
       res.json({"success": true})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
-  }
-  
+  }  
   async listStudents(req:Request, res:Response){
-    const pagination = PaginationStudentDTO.safeParse(req.body)
-    if(!pagination.success){
-      res.json({"error": pagination.error})  
-      return
-    }  
+    const status = parseInt(req.params.status)
+    const page = parseInt(req.params.page);
+    const filter = req.params.filterType == 'all' ? null : parseInt(req.params.filterType);
+    const orderedBy = req.params.orderedBy
+    const order = req.params.order as 'ASC'|'DESC'
     try{
-      const listStudents = await studentsService.listStudent(pagination.data)
+      const listStudents = await studentsService.listStudent(status,page,filter,orderedBy,order);
       res.json({"success": true,"response": listStudents})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+  async searchStudent(req:Request, res:Response){
+    const status = parseInt(req.params.status)
+    const page = parseInt(req.params.page);
+    const searchParams = req.params.searchParams;
+    const filter = req.params.filterType == 'all' ? null : parseInt(req.params.filterType);
+    const orderedBy = req.params.orderedBy
+    const order = req.params.order as 'ASC'|'DESC'
+    try{
+      const listStudents = await studentsService.searchStudents(status,page,searchParams,filter,orderedBy,order);
+      res.json({"success": true,"response": listStudents})  
+      return
+    }catch(err){
+      console.error(err)
       res.json({"error":err})  
     }
   }
 
-  async searchStudent(req:Request, res:Response){
+  async totalStudents(req:Request, res:Response){
+    const status = parseInt(req.params.status)
+    try{
+      const total = await studentsService.totalStudents(status)
+      res.json({"success": true,"response": total})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+
+  async searchStudentOld(req:Request, res:Response){
     const searchParams = SearchStudentDTO.safeParse(req.body)
     if(!searchParams.success){
       res.json({"error": searchParams.error})  
       return
     }  
     try{
-      const searchStudent = await studentsService.searchStudents(searchParams.data)
+      const searchStudent = await studentsService.searchStudentsOld(searchParams.data)
+      
       res.json({"success": true,"response": searchStudent})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -121,23 +150,59 @@ class StudentsController{
       res.json({"success": true,"response": communityStatusStudent})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
+
+  async resetPass(req:Request, res:Response){
+    const studentId : number = parseInt(req.params.studentId)
+    try{
+      const length = 6;
+      const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_-+=<>?';
+      let passwordHash = '';  
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        passwordHash += characters.charAt(randomIndex);
+      }
+
+      const newPass = passwordHash
+      await studentsService.editStudent(studentId,{password:md5(newPass)})
+      
+      res.json({"success": true,"response": newPass})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+
+  
 
   async studentsCourses(req:Request, res:Response){
     const studentId : number = parseInt(req.params.studentId)
     try{
       const courses = await studentCoursesServices.myCourses(studentId)
-      console.log(courses)
       res.json({"success": true,"response": courses})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
+
+  async totalMyCourses(req:Request, res:Response){
+    const studentId = parseInt(req.params.studentId)
+    try{
+      const total = await studentCoursesServices.totalMyCourses(studentId)
+      res.json({"success": true,"response": total})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+
 
   async checkCourseStudent(req:Request, res:Response){
     const studentId : number = parseInt(req.params.studentId)
@@ -147,7 +212,7 @@ class StudentsController{
       res.json({"success": true,"response": checkCourse})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -163,7 +228,7 @@ class StudentsController{
       res.json({"success": true,"response": addCourseStudent})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }
@@ -178,6 +243,21 @@ class StudentsController{
       res.json({"error":err})
     }
   }
+
+
+  async allLessonsViews(req:Request, res:Response){
+    const studentId = parseInt(req.params.studentId)
+    try{
+      const total = await lessonsViewedService.allLessonsStudentViewed(studentId)
+      res.json({"success": true,"response": total})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+
+  
 
   //Validity Contracts
   async activeContract(req:Request,res:Response){
@@ -232,11 +312,10 @@ class StudentsController{
     const studentId : number = parseInt(req.params.studentId)
     try{
       const comments = await LessonsCommentsService.getRecentCommentsStudent(studentId)
-      console.log(comments)
       res.json({"success": true,"response": comments})  
       return
     }catch(err){
-      console.log(err)
+      console.error(err)
       res.json({"error":err})  
     }
   }

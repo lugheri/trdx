@@ -1,7 +1,7 @@
 import { sequelize } from "../instances/mysql"
 import { NoteStudentsType } from "../controllers/Dtos/courses.dto"
 import { StudentsNotes } from "../models/StudentsNotes"
-import { redisDel, redisGet, redisSet } from "../config/redis"
+import { redisGet, redisSet } from "../config/redis"
 import { QueryTypes } from "sequelize"
 
 class LessonsNotesService{
@@ -36,13 +36,11 @@ class LessonsNotesService{
     const redisKey=`listNotes:[courseId:[${courseId}],studentId:[${studentId}],page:[${page}]]`
     const listNotesCache = await redisGet(redisKey)
     if(listNotesCache!==null){return listNotesCache}
-    console.log('>>>>>>>> page',page)
     const p = page-1
    
     const qtdRegPage = 30
     const offset = qtdRegPage * p 
 
-    console.log('p',p,'offset',offset)
     const query = `
         SELECT n.id AS note_id, n.date_created, n.note, l.id as lesson_id, l.name AS lesson, m.module 
           FROM lessons_notes AS n 
