@@ -11,6 +11,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Modal, TitleModal } from "../../../../../components/Modal"
 import { InputForm, SelectForm, TextAreaForm } from "../../../../../components/Inputs"
 import { SettingsEmailProduct } from "./SettingsEmailProduct"
+import { HooksHistory } from "./HooksHistory"
+import { ICopyEmail } from "../../Dtos/mail.dto"
 
 
 
@@ -28,6 +30,8 @@ export const OffersProducts : React.FC<offersComponents> = (props) => {
   const [ historicWebhook, setHistoricWebhook ] = useState<null|IProducts>(null)
   const [ settingsEmailProducts, setSettingsEmailProducts ] = useState<null|IProducts>(null)
 
+  const [updateOffers, setUpdateOffers ] = useState(true)
+
   const getOffers = async () => {
     try{
       const response = await api.get(`listOffers/${props.product.id}/1`)
@@ -38,7 +42,10 @@ export const OffersProducts : React.FC<offersComponents> = (props) => {
       }
     } catch (err) { console.error('Erro ao obter os itens:', err); }
   }
-  useEffect(() => {getOffers();}, [newOffer,editOffer,deleteOffer]); 
+  useEffect(() => { 
+    updateOffers ? getOffers() : setUpdateOffers(true) 
+    
+  }, [newOffer,editOffer,deleteOffer,updateOffers]); 
 
   return(
     <div className="flex flex-col w-full ">
@@ -55,9 +62,9 @@ export const OffersProducts : React.FC<offersComponents> = (props) => {
       { error && <p className="text-red-500">{error}</p>}
       { historicWebhook === null 
         ?
-          <ListOffersComponent 
+          <ListOffersComponent setUpdateOffers={setUpdateOffers}
             offers={offers} productId={props.product.id} setEditOffer={setEditOffer} setNewOffer={setNewOffer}/>
-        : <HistoricWebhooks product={historicWebhook} close={setHistoricWebhook}/>
+        : <HooksHistory product={historicWebhook} close={setHistoricWebhook}/>
       }
       { newOffer && <NewOffer productId={newOffer} close={setNewOffer}/> }
       { editOffer && <EditOffer offer={editOffer} close={setEditOffer} setDeleteOffer={setDeleteOffer}/> }
@@ -70,6 +77,7 @@ export const OffersProducts : React.FC<offersComponents> = (props) => {
 type ListOffersComponent = {
   offers: IOffers[]|null,
   productId:number,
+  setUpdateOffers:React.Dispatch<React.SetStateAction<boolean>>,
   setNewOffer:React.Dispatch<React.SetStateAction<number|null>>,
   setEditOffer:React.Dispatch<React.SetStateAction<IOffers|null>>
 }
@@ -85,19 +93,23 @@ const ListOffersComponent : React.FC<ListOffersComponent> = (props) => {
         </div>
         : <div className="flex flex-wrap"> 
           { props.offers.map((offer,key)=>
-            <OfferItem key={key} offer={offer} setEditOffer={props.setEditOffer}/>)}
+            <OfferItem 
+              key={key} offer={offer} 
+              setEditOffer={props.setEditOffer} setUpdateOffers={props.setUpdateOffers}/>)}
         </div>} </>
   )
 }
 //OFFER
 type OfferItemComponents = {
   offer:IOffers,
+  setUpdateOffers:React.Dispatch<React.SetStateAction<boolean>>,
   setEditOffer:React.Dispatch<React.SetStateAction<IOffers|null>>,
 }
 const OfferItem: React.FC<OfferItemComponents> = (props) => {
   const [ coursesOffer, setCoursesOffer ] = useState<null | ICoursesIntegration[]>(null)
   const [ addCourses, setAddCourses ] = useState<IOffers|null>(null)
   const [ update, setUpdate ] = useState<number|null>(null)
+  const [ openEmail, setOpenEmail ] = useState<number|null>(null)
 
   const getCourses = async () => {
     try{
@@ -107,28 +119,137 @@ const OfferItem: React.FC<OfferItemComponents> = (props) => {
       }
     } catch (err) { console.error('Erro ao obter os itens:', err); }
   }
-  useEffect(() => {getCourses();}, [addCourses,update]); 
+  useEffect(() => {
+    addCourses ? console.log('AddCourses',addCourses) : console.log('No Add Courses')
+    getCourses();}, [addCourses,update]); 
   return(
     <div className="flex flex-col items-start w-[99%] py-2 m-1 rounded relative
       border bg-gray-800/50 hover:bg-gray-800 text-white border-teal-500">
       <div className="flex w-full justify-between items-center border-b px-4 border-teal-500">
         <p>Oferta: {props.offer.offer}</p>
         <div className="flex">
-          <Button btn="info" icon="faEdit" type="notline" size="sm" name="Editar Oferta" onClick={()=>props.setEditOffer(props.offer)}/>
-          <Button btn="info" icon="faPlus" size="sm" name="Adicionar/Remover Cursos" onClick={()=>setAddCourses(props.offer)}/>
+          { props.offer.email_copy === 0 ?
+            <Button 
+              btn="error" 
+              icon="faEnvelope" 
+              type="notline" 
+              size="sm" 
+              name="Selecionar E-mail de Boas Vindas" 
+              onClick={()=>setOpenEmail(props.offer.id)}/>          
+           : <Button 
+              btn="light" 
+              icon="faEdit" 
+              type="notline" 
+              size="sm" 
+              name="Alterar E-mail de Boas Vindas" 
+              onClick={()=>setOpenEmail(props.offer.id)}/> }
+          <Button 
+            btn="info" 
+            icon="faEdit" 
+            type="notline" 
+            size="sm" 
+            name="Editar Oferta" 
+            onClick={()=>props.setEditOffer(props.offer)}/>
+          <Button 
+            btn="info" 
+            icon="faPlus" 
+            size="sm" 
+            name="Adicionar/Remover Cursos" 
+            onClick={()=>setAddCourses(props.offer)}/>
         </div>
       </div>
       { coursesOffer === null ? <LoadingBars/>
-      : coursesOffer.length === 0 
-      ? <div className="text-red-500 flex flex-col w-full p-4">Nenhum Curso Cadastrado na Oferta "{props.offer.offer}"!</div> 
-      : <div className="flex flex-wrap max-h-[380px] overflow-auto ">
-          {coursesOffer.map((course,key)=>
-            <Course key={key} course={course}/>)}      
-          { addCourses && <AddCourse offer={addCourses} setUpdate={setUpdate} addedCourses={coursesOffer} close={setAddCourses}/>}        
-        </div>}      
+      : 
+      <>
+        { coursesOffer.length === 0 
+        ? <div className="text-red-500 flex flex-col w-full p-4">Nenhum Curso Cadastrado na Oferta "{props.offer.offer}"!</div> 
+        : <div className="flex flex-wrap max-h-[380px] overflow-auto ">
+            {coursesOffer.map((course,key)=>
+              <Course key={key} course={course}/>)}                  
+          </div>}
+        { addCourses && <AddCourse offer={addCourses} setUpdate={setUpdate} addedCourses={coursesOffer} close={setAddCourses}/>}
+      </>}  
+      { openEmail && <SelectCopyEmail offerId={openEmail}  setUpdateOffers={props.setUpdateOffers} copy={props.offer.email_copy} close={setOpenEmail}/>}    
     </div>
   )
 }
+
+//SELECT COPY EMAIL
+type SelectCopyEmailComponent = {
+  offerId:number,
+  copy:number,
+  setUpdateOffers:React.Dispatch<React.SetStateAction<boolean>>,
+  close:React.Dispatch<React.SetStateAction<number|null>>
+}
+const SelectCopyEmail : React.FC<SelectCopyEmailComponent> = (props) => {
+  const [ listCopys, setListCopys ] = useState<null|ICopyEmail[]>(null)
+  const [ copyMail, setCopyMail ] = useState(props.copy)
+  const getCopys = async () => {
+    try{
+      const copys = await api.get('listCopys')
+      setListCopys(copys.data.response)
+    }catch(err){
+      console.log(err)
+    }
+  }
+  useEffect(()=>{getCopys()},[])
+  const [ error, setError ] = useState("") 
+  const setCopyProduct = async (copyId:number) => {
+    setCopyMail(copyId)
+    props.setUpdateOffers(false)
+    try{
+      const data = {
+        email_copy:copyId
+      }
+      const response = await api.patch(`editOffer/${props.offerId}`,data)
+      console.log(response.data)
+      if (response.data.success) {
+        setError("") 
+      } else {
+        setError('Ocorreu um erro ao requisitar esta ação! '+response.data.message);
+      }
+    } catch(err){
+      console.error('Erro ao salvar a copy:', err);
+    }
+
+
+  }
+  return(
+    <Modal className="w-1/2" component={
+      <div className="flex flex-col">
+        <TitleModal 
+          icon="faEnvelope" 
+          title="Selecionar Email" 
+          subtitle="Selecione uma Copy de Email de boas vindas desta Oferta"
+          close={()=>props.close(null)}/>
+        <div className="flex flex-wrap">
+          { listCopys === null ? <LoadingBars/> :
+              listCopys.length > 0 &&
+              listCopys.map((copy,key)=>
+              <div 
+                key={key}
+                onClick={()=>setCopyProduct(copy.id == copyMail ? 0 : copy.id)}
+                className={`flex flex-col justify-center items-center w-[24%] p-4 h-[200px] m-1 rounded relative cursor-pointer
+                          ${copy.id == copyMail ? "bg-teal-800/50 hover:bg-teal-800" : "bg-neutral-800/50 hover:bg-neutral-800"} border  text-white border-teal-500`}>
+                <FontAwesomeIcon 
+                  className="text-4xl my-2 opacity-70" 
+                  icon={copy.id == copyMail ? Fas.faEnvelopeCircleCheck : Fas.faEnvelopeOpenText}/>
+                <p className="text-center text-sm">
+                {copy.title}
+                {copy.id == copyMail 
+                ? <p className="text-red-400 my-4 text-sm"><FontAwesomeIcon className="opacity-50" icon={Fas.faTimes}/> Remover </p>
+                : <p className="text-teal-600 my-4 text-sm"><FontAwesomeIcon className="opacity-50" icon={Fas.faCheck}/> Selecionar </p>}
+              </p>      
+            </div>)}
+        </div>
+        { error != "" && <p className="text-red-600">{error}</p>}
+        <div className="flex justify-end">
+          <Button name="Fechar" btn="muted" type="notline" onClick={()=>props.close(null)}/>
+        </div>
+      </div>
+    }/>)
+}
+
 //NEW OFFER
 type newOfferComponent = {
   productId:number,
@@ -233,19 +354,6 @@ const RemoveOffer : React.FC<removeOfferComponent> = (props) => {
         </div>
       </div>
     }/>
-  )
-}
-
-//HISTORIC WEBHOOKS
-type HistoricWebhooksComponent = {
-  product:IProducts,
-  close:React.Dispatch<React.SetStateAction<IProducts|null>>
-}
-const HistoricWebhooks : React.FC<HistoricWebhooksComponent> = (props) => {
-  return(
-    <div>
-      Histórico {props.product.name}
-    </div>
   )
 }
 
@@ -393,8 +501,6 @@ const Course: React.FC<ICourseComponent> = (props) => {
     </div>
   )
 }
-
-
 
 
 

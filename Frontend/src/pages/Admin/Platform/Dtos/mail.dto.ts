@@ -9,3 +9,12 @@ export interface IMail{
   pass:string;
   status:number;
 }
+
+export interface ICopyEmail{
+  id:number;
+  date:string;
+  title:string;
+  subject:string;
+  body:string;
+  status:number;
+}

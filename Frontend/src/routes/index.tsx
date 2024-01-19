@@ -48,6 +48,9 @@ import { Integrations } from '../pages/Admin/Platform/Integrations';
 import { Gamification } from '../pages/Admin/Platform/Gamefication';
 //Metrics
 import { Reports } from '../pages/Admin/Reports';
+import { StudentsReports } from '../pages/Admin/Reports/StudentsReports/index.tsx';
+import { AccessPerHour } from '../pages/Admin/Reports/AccessPerHour/index.tsx';
+import { CoursesStatistics } from '../pages/Admin/Reports/CoursesStatistics/index.tsx';
 //Settings
 import { Settings } from '../pages/Admin/Settings';
 import { Users } from '../pages/Admin/Settings/Users';
@@ -196,6 +199,9 @@ const RoutesApp = () => {
               path: '/admin/reports',
               children:[
                 { index: true, element:<Reports/>},
+                { path: '/admin/reports/students', element:<StudentsReports/>},
+                { path: '/admin/reports/access_per_hour', element:<AccessPerHour/>},
+                { path: '/admin/reports/courses_statistics', element:<CoursesStatistics/>},
               ]
             },            
             {//SETTINGS

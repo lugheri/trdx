@@ -6,5 +6,34 @@ type TextEditorComponent = {
   setText:React.Dispatch<React.SetStateAction<string>>
 }
 export const TextEditor : React.FC<TextEditorComponent> = (props) => {
-  return <ReactQuill className="w-full bg-neutral-300"  theme="snow" value={props.text} onChange={props.setText} />;
+  const modules = {
+    toolbar: [
+      [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+      [{size: []}],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{'list': 'ordered'}, {'list': 'bullet'}, 
+       {'indent': '-1'}, {'indent': '+1'}],
+      ['link', 'image', 'video'],
+      ['clean']
+    ],
+    clipboard: {
+      // toggle to add extra line breaks when pasting HTML:
+      matchVisual: false,
+    }
+  }
+  const formats = [
+    'header', 'font', 'size',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+    'link', 'image', 'video'
+  ]
+  return <ReactQuill 
+          className="w-full bg-neutral-300"  
+          theme="snow" 
+          modules={modules}
+          formats={formats}
+          value={props.text} 
+          onChange={props.setText} />;
 }
+
+

@@ -6,6 +6,7 @@ export interface IntegrationPlatformsProductsOffersInstance extends Model{
   product_id:number;
   offer:string;
   description:string;
+  email_copy:number;
   status:number;
 }
 
@@ -23,6 +24,9 @@ export const IntegrationPlatformsProductsOffers = sequelize.define<IntegrationPl
   },
   description:{
     type:DataTypes.STRING
+  },
+  email_copy:{
+    type:DataTypes.TINYINT,
   },
   status:{
     type:DataTypes.TINYINT,

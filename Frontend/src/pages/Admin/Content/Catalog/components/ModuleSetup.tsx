@@ -11,6 +11,7 @@ import { Modal, TitleModal } from "../../../../../components/Modal";
 import { InputForm, InputNumberForm, SelectForm, TextAreaForm } from "../../../../../components/Inputs";
 import { LessonsModule } from "./LessonsModule";
 import { LessonSetup } from "./LessonSetup";
+import { QuizSetup } from "./QuizSetup";
 
 
 type SetupModuleLessonsComponent = {
@@ -23,6 +24,7 @@ export const ModuleSetup : React.FC<SetupModuleLessonsComponent> = (props) => {
   const [ deleteModule, setDeleteModule ] = useState<number|boolean>(false)
 
   const [ setupLesson, setSetupLesson ] = useState<null | number>(null)
+  const [ typeLessonSetup, setTypeLessonSetup ] = useState('')
 
   const [ infoModule, setInfoModule ] = useState<IModuleCourse|null>(null)
   const getInfo = async () => {
@@ -38,7 +40,18 @@ export const ModuleSetup : React.FC<SetupModuleLessonsComponent> = (props) => {
 
   return(
     <div className="flex flex-col">
-      { setupLesson ? <LessonSetup infoModule={infoModule} course={props.course} lessonId={setupLesson} setLessonSetup={setSetupLesson} />
+      { setupLesson ? 
+        typeLessonSetup == 'Quiz' 
+          ? <QuizSetup 
+              infoModule={infoModule} 
+              course={props.course} 
+              lessonId={setupLesson} 
+              setLessonSetup={setSetupLesson} />
+          : <LessonSetup 
+              infoModule={infoModule} 
+              course={props.course} 
+              lessonId={setupLesson} 
+              setLessonSetup={setSetupLesson} />
       : infoModule === null ? <Loading/> : 
       <>
         <Card component={
@@ -66,10 +79,23 @@ export const ModuleSetup : React.FC<SetupModuleLessonsComponent> = (props) => {
             </div>     
             <Button className="flex" icon="faEdit" btn="info" name="Editar" onClick={()=>setEditModule(infoModule)}/>  
           </div>
-          { editModule && <EditModule module={infoModule} setDeleteModule={setDeleteModule} setEditModule={setEditModule}/>}
-          { deleteModule && <DeleteModule moduleName={infoModule.module} moduleId={infoModule.id} setDeleteModule={setDeleteModule} setEditModule={setEditModule} setSetupModule={props.setSetupModule}/>}
+          { editModule && <EditModule 
+                            module={infoModule} 
+                            setDeleteModule={setDeleteModule} 
+                            setEditModule={setEditModule}/>}
+          { deleteModule && <DeleteModule 
+                              moduleName={infoModule.module} 
+                              moduleId={infoModule.id} 
+                              setDeleteModule={setDeleteModule} 
+                              setEditModule={setEditModule} 
+                              setSetupModule={props.setSetupModule}/>}
         </div>}/>        
-        <LessonsModule infoModule={infoModule} setupLesson={setupLesson} setSetupLessonModule={setSetupLesson} />
+        <LessonsModule 
+          infoModule={infoModule} 
+          setupLesson={setupLesson} 
+          setSetupLessonModule={setSetupLesson}
+          setTypeLessonSetup={setTypeLessonSetup}
+           />
       </>
       }
       
@@ -128,27 +154,27 @@ const EditModule : React.FC<EditModuleComponent> = (props) => {
   return(
     <Modal component={
       <div className="flex flex-col">
-        <TitleModal icon="faEdit" title="Edite as informções do Módulo" close={()=>props.setEditModule(null)}/>
+        <TitleModal icon="faEdit" title="Edite as informações do Módulo" close={()=>props.setEditModule(null)}/>
         <form onSubmit={(e)=>saveEditModule(e)}>
-        <div className="flex flex-col min-w-[400px] p-4 mt-2 justify-center items-center">
-          <div className="flex flex-col w-full">
-          <InputForm required label="Módulo" value={name} onChange={setName} />
-          <SelectForm label="Tipo de Módulo" options={typeModules} lableKey='name' valueKey='type' value={typeModule} onChange={setTypeModule}/>
-          <TextAreaForm required label="Descrição" value={description} onChange={setDescription} />
-          <div className="flex w-full">
-            <SelectForm className="mr-1" label="Visibilidade" options={typeVisibility} lableKey='name' valueKey='type' value={visibility} onChange={setVisibility}/>
-            <InputNumberForm className="ml-1" label="Ordem de Exibição" min={1} step={1} value={order} onChange={setOrder} />
+          <div className="flex flex-col min-w-[400px] p-4 mt-2 justify-center items-center">
+            <div className="flex flex-col w-full">
+              <InputForm required label="Módulo" value={name} onChange={setName} />
+              <SelectForm label="Tipo de Módulo" options={typeModules} lableKey='name' valueKey='type' value={typeModule} onChange={setTypeModule}/>
+              <TextAreaForm required label="Descrição" value={description} onChange={setDescription} />
+              <div className="flex w-full">
+                <SelectForm className="mr-1" label="Visibilidade" options={typeVisibility} lableKey='name' valueKey='type' value={visibility} onChange={setVisibility}/>
+                <InputNumberForm className="ml-1" label="Ordem de Exibição" min={1} step={1} value={order} onChange={setOrder} />
+              </div>
+            </div>  
           </div>
-        </div>  
-        </div>
         
-        {error && <p className="text-red-500">{error}</p>}
-        <div className="flex justify-end border-t border-neutral-600 pt-2 mt-2">
-          <Button btn="muted" name='Cancelar' type='notline' onClick={()=>props.setEditModule(null)} />
-          <Button btn="error" name='Remover' icon='faTrash' onClick={()=>props.setDeleteModule(props.module.id)} />
-          <Button btn="success" icon="faFolderPlus" name='Salvar Alterações Módulo' submit />
-        </div>
-      </form>
+          {error && <p className="text-red-500">{error}</p>}
+          <div className="flex justify-end border-t border-neutral-600 pt-2 mt-2">
+            <Button btn="muted" name='Cancelar' type='notline' onClick={()=>props.setEditModule(null)} />
+            <Button btn="error" name='Remover' icon='faTrash' onClick={()=>props.setDeleteModule(props.module.id)} />
+            <Button btn="success" icon="faFolderPlus" name='Salvar Alterações Módulo' submit />
+          </div>
+        </form>
       </div>
     }/>
   )

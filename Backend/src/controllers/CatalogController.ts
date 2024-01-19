@@ -129,8 +129,7 @@ class CatalogController{
       console.error(err)
       res.json({"error":err})  
     }
-  }
- 
+  } 
 
   //Lessons
   async newLessonModule(req:Request,res:Response){
@@ -179,7 +178,6 @@ class CatalogController{
       res.json({"error":err})
     }
   }
-
   async infoLessonModule(req:Request,res:Response){
     const lessonId = parseInt(req.params.lessonId)
     try{
@@ -217,12 +215,6 @@ class CatalogController{
       res.json({"error":err})  
     }
   }
-
-
-
- 
-
-  
 
   //Attachments
   async newAttachmentsLesson(req:Request,res:Response){    
@@ -378,7 +370,6 @@ class CatalogController{
       res.json({"error":err})  
     }
   }
-
   async checkAccessLesson(req:Request,res:Response){
     const lessonId = parseInt(req.params.lessonId)
     const studentId = parseInt(req.params.studentId)
@@ -425,7 +416,6 @@ class CatalogController{
       res.json({"error":err})
     }
   }
-
   async addCoursesCommunity(req:Request,res:Response){
     const courseId : number = parseInt(req.params.courseId)
     const studentsCommunity = await studentsService.studentsCommunity();
@@ -436,6 +426,24 @@ class CatalogController{
 
     return false
   }
+
+  //Questions
+  async newQuestion(req:Request,res:Response){}
+
+  async listQuestions(req:Request,res:Response){}
+
+  async infoQuestions(req:Request,res:Response){}
+
+  async editQuestion(req:Request,res:Response){}
+
+  //Options Questions
+  async newOptionQuestion(req:Request,res:Response){}
+
+  async listOptionsQuestion(req:Request,res:Response){}
+
+  async infoOptionQuestion(req:Request,res:Response){}
+
+  async editOptionQuestion(req:Request,res:Response){}
 
 
 }

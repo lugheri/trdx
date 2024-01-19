@@ -26,7 +26,7 @@ class AuthController{
     const mailStudent = req.params.mail
     try{
       const length = 6;
-      const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%&()_-+=<>?';
+      const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$&';
       let passwordHash = '';  
       for (let i = 0; i < length; i++) {
         const randomIndex = Math.floor(Math.random() * characters.length);

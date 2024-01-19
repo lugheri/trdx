@@ -36,7 +36,7 @@ export const SideStudent: React.FC<CourseStudentComponent> = (props) => {
             <Button name="Resetar Acesso" icon="faKey" btn="info" type="outline" size="sm" block onClick={()=>setSendAccess(props.infoStudent.id)}/>
             
             { props.infoStudent.community === 0 
-              ? <Button name="Inserir da Comunidade" icon="faUsers" btn="success" type="outline" size="sm" block onClick={()=>setEditcommunityAccess(props.infoStudent.id)}/>
+              ? <Button name="Inserir na Comunidade" icon="faUsers" btn="success" type="outline" size="sm" block onClick={()=>setEditcommunityAccess(props.infoStudent.id)}/>
               : <Button name="Remover da Comunidade" icon="faUsersSlash" btn="error" type="outline" size="sm" block onClick={()=>setEditcommunityAccess(props.infoStudent.id)}/>}
             
             { props.infoStudent.status === 0 
@@ -134,9 +134,9 @@ const SendAccess : React.FC<SendAccessComponent> = (props) => {
             :<div className="flex flex-col justify-center items-center">
               <p className="text-slate-300 my-4">Nova senha resetada com sucesso!</p>
               <div className="flex flex-col justify-start">
-                <p className="text-slate-200 font-light mt-2">Link: <span className="text-teal-300">http://app.otraderquemultiplica.com.br</span></p>
+                <p className="text-slate-200 font-light mt-2">Link: <span className="text-teal-300">https://app.otraderquemultiplica.com.br</span></p>
                 <p className="text-slate-200 font-light">Usuário: <span className="text-teal-300">{props.infoStudent.mail}</span></p>
-                <p className="text-slate-200 font-light mb-2">Nova Senha: <span className="text-teal-300 font-bold">{newPass}</span></p>
+                <p className="text-slate-200 font-light mb-2">Senha: <span className="text-teal-300 font-bold">{newPass}</span></p>
               </div>
               <div className="flex justify-end mt-2 pt-1 border-t w-full border-slate-600">
                 <Button name="Concluir" btn="success" onClick={()=>props.close(null)}/>

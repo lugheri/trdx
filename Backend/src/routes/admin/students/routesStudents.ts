@@ -30,6 +30,9 @@ export default (routes: Router) => {
   //Views Lessons
   routes.get("/allLessonsViews/:studentId",StudentsController.allLessonsViews)
 
+  //Send Presence
+  routes.post("/sendPresence",StudentsController.sendPresence)
+
 
 
 

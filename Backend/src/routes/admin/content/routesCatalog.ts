@@ -64,4 +64,17 @@ export default (routes:Router)=>{
   //Update Bulk Courses
   routes.get("/addCoursesCommunity/:courseId",CatalogController.addCoursesCommunity) 
 
+  //Setup Quiz
+  //Questions
+  routes.post("/newQuestion",CatalogController.newQuestion)
+  routes.get("/listQuestions/:quiz_id",CatalogController.listQuestions)
+  routes.get("/infoQuestions/:question_id",CatalogController.infoQuestions)
+  routes.patch("/editQuestion/:question_id",CatalogController.editQuestion)
+  
+  //Options Questions
+  routes.post("/newOptionQuestion",CatalogController.newOptionQuestion)
+  routes.get("/listOptionsQuestion/:question_id",CatalogController.listOptionsQuestion)
+  routes.get("/infoOptionQuestion/:option_id",CatalogController.infoOptionQuestion)
+  routes.patch("/editOptionQuestion/:option_id",CatalogController.editOptionQuestion)
+
 }

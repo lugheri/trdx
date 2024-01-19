@@ -60,7 +60,6 @@ export const CourseSetup : React.FC<OpenCourseComponent> = (props) => {
                     <div className="flex justify-end items-center p-2 bg-gradient-to-r from-neutral-900 to-neutral-800 flex-1 w-full">
                       <Button icon="faReply" name="Voltar" btn="muted" type="notline" size="sm" className='rounded-none' onClick={()=>props.setOpenCourse(null)} />
                       <Button icon="faChartColumn" name="Estatísticas" btn="info" type="notline" size="sm" className='rounded-none'/>
-                      <Button icon="faEnvelopeOpenText" name="Configurar E-mails" btn="info" type="notline" size="sm" className='rounded-none'/>
                       <Button icon="faEdit" name="Editar Informações" btn="info" type="notline" size="sm" className='rounded-none' onClick={()=>setEditInfoCourse(true)}/>
                     </div>
                   </div>             
