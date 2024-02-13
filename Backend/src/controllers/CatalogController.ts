@@ -8,6 +8,9 @@ import LessonsAttachmentsService from '../services/LessonsAttachmentsService';
 import lessonAccessRulesService from '../services/lessonAccessRulesService';
 import moment from 'moment';
 import studentsService from '../services/studentsService';
+import { QuizQuestionDTO, QuizQuestionOptionsDTO } from './Dtos/quiz.dto';
+import quizQuestionOptionsService from '../services/quizQuestionOptionsService';
+import quizQuestionsService from '../services/quizQuestionsService';
 
 class CatalogController{
   //Courses
@@ -129,8 +132,7 @@ class CatalogController{
       console.error(err)
       res.json({"error":err})  
     }
-  }
- 
+  } 
 
   //Lessons
   async newLessonModule(req:Request,res:Response){
@@ -142,7 +144,7 @@ class CatalogController{
     try{
       const dataNewLesson = await  coursesLessonsService.createNewLessonModule(dataLesson.data)
       if(dataNewLesson){
-        res.json({"success": true,"response": dataNewLesson})  
+        res.json({"success": true,"response": dataNewLesson.id})  
         return
       }
       res.json({"error":"Falha ao criar o novo Aula!"})  
@@ -179,7 +181,6 @@ class CatalogController{
       res.json({"error":err})
     }
   }
-
   async infoLessonModule(req:Request,res:Response){
     const lessonId = parseInt(req.params.lessonId)
     try{
@@ -217,12 +218,6 @@ class CatalogController{
       res.json({"error":err})  
     }
   }
-
-
-
- 
-
-  
 
   //Attachments
   async newAttachmentsLesson(req:Request,res:Response){    
@@ -378,7 +373,6 @@ class CatalogController{
       res.json({"error":err})  
     }
   }
-
   async checkAccessLesson(req:Request,res:Response){
     const lessonId = parseInt(req.params.lessonId)
     const studentId = parseInt(req.params.studentId)
@@ -425,7 +419,6 @@ class CatalogController{
       res.json({"error":err})
     }
   }
-
   async addCoursesCommunity(req:Request,res:Response){
     const courseId : number = parseInt(req.params.courseId)
     const studentsCommunity = await studentsService.studentsCommunity();
@@ -435,6 +428,146 @@ class CatalogController{
 
 
     return false
+  }
+
+  //Questions
+  async newQuestion(req:Request,res:Response){
+    const dataQuestion = QuizQuestionDTO.safeParse(req.body)
+    if(!dataQuestion.success){
+      res.json({"error":true,"message":dataQuestion.error})
+      return
+    }
+    try{
+      const dataNewQuestion = await quizQuestionsService.createNewQuestion(dataQuestion.data)
+      if(dataNewQuestion){
+        res.json({"success": true,"response": dataNewQuestion})  
+        return
+      }
+      res.json({"error":true,"message":"Falha ao criar o nova Questão!"})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":true,"message":err})  
+    } 
+  }
+  async getLastOrderQuestion(req:Request,res:Response){
+    const quizId : number = parseInt(req.params.quiz_id)
+    try{
+      const lastOrderQuestion = await quizQuestionsService.lastOrderQuestion(quizId)
+      res.json({"success": true,"response": lastOrderQuestion})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":true,"message":err})  
+    }
+  }
+  async listQuestions(req:Request,res:Response){
+    const quizId : number = parseInt(req.params.quiz_id)
+    try{
+      const listQuestion = await quizQuestionsService.listQuestions(quizId)
+      res.json({"success": true,"response": listQuestion})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":true,"message":err})  
+    }
+  }
+  async infoQuestions(req:Request,res:Response){
+    const questionId : number = parseInt(req.params.question_id)
+    try{
+      const question = await quizQuestionsService.infoQuestion(questionId) 
+      res.json({"success": true,"response": question})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+  async editQuestion(req:Request,res:Response){
+    const questionId : number = parseInt(req.params.question_id)    
+    const dataQuestion = QuizQuestionDTO.safeParse(req.body)
+    if(!dataQuestion.success){
+      res.json({"error": dataQuestion.error})  
+      return
+    }
+    try{
+      const edit = await quizQuestionsService.editQuestion(questionId, dataQuestion.data)
+      res.json({"success": true,"response": edit})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+
+  //Options Questions
+  async newOptionQuestion(req:Request,res:Response){
+    const dataQuestionOption = QuizQuestionOptionsDTO.safeParse(req.body)
+    if(!dataQuestionOption.success){
+      res.json({"error":true,"message":dataQuestionOption.error})
+      return
+    }
+    try{
+      const dataNewOption = await quizQuestionOptionsService.createNewQuestionOptions(dataQuestionOption.data)
+      if(dataNewOption){
+        res.json({"success": true,"response": dataNewOption})  
+        return
+      }
+      res.json({"error":true,"message":"Falha ao criar o opção de resposta!"})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    } 
+  }
+  async getLastOrderOption(req:Request,res:Response){
+    const questionId : number = parseInt(req.params.question_id)
+    try{
+      const lastOrderOption = await quizQuestionOptionsService.lastOrderOptions(questionId)
+      res.json({"success": true,"response": lastOrderOption})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":true,"message":err})  
+    }
+  }
+  async listOptionsQuestion(req:Request,res:Response){
+    const questionId : number = parseInt(req.params.question_id)
+    try{
+      const listOptionsQuestion = await quizQuestionOptionsService.listQuestionsOptions(questionId)
+      res.json({"success": true,"response": listOptionsQuestion})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+  async infoOptionQuestion(req:Request,res:Response){
+    const optionId : number = parseInt(req.params.option_id)
+    try{
+      const options = await quizQuestionOptionsService.infoQuestionOption(optionId) 
+      res.json({"success": true,"response": options})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+  async editOptionQuestion(req:Request,res:Response){
+    const optionId : number = parseInt(req.params.option_id)
+    const dataOptionQuestion = QuizQuestionOptionsDTO.safeParse(req.body)
+    if(!dataOptionQuestion.success){
+      res.json({"error": dataOptionQuestion.error})  
+      return
+    }
+    try{
+      const edit = await quizQuestionOptionsService.editQuestionOption(optionId, dataOptionQuestion.data)
+      res.json({"success": true,"response": edit})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
   }
 
 

@@ -1,9 +1,13 @@
 import { Request, Response } from 'express';
 import integrationPlatformService from '../services/integrationPlatformService';
-import { IntegrationCoursesDTO, IntegrationOfferDTO, IntegrationPlatformDTO, IntegrationProductDTO } from './Dtos/integration.dto';
+import { EmailCopyDTO, IntegrationCoursesDTO, IntegrationOfferDTO, IntegrationPlatformDTO, IntegrationProductDTO } from './Dtos/integration.dto';
 import IntegrationProductService from '../services/IntegrationProductService';
 import IntegrationOffersService from '../services/IntegrationOffersService';
 import IntegrationCoursesService from '../services/IntegrationCoursesService';
+import integrationHooksHistoryService from '../services/integrationHooksHistoryService';
+import emailCopyService from '../services/emailCopyService';
+import mailAccountService from '../services/mailAccountService';
+import nodemailer from 'nodemailer';
 
 class IntegrationsController{
   //Platforms
@@ -121,9 +125,7 @@ class IntegrationsController{
       console.error(err)
       res.json({"error":"Falha ao recuperar produto!"}) 
     }
-  }
-
-  
+  }  
   async editProduct(req:Request,res:Response){
     const product_id = parseInt(req.params.product_id)
     const dataProduct = IntegrationProductDTO.safeParse(req.body)       
@@ -306,13 +308,153 @@ class IntegrationsController{
     }
   }
 
-  //Emails
+  //Hooks
+  async listHooks(req:Request,res:Response){
+    const integration = req.params.integration
+    const product_id = parseInt(req.params.product_id)
+    const page = parseInt(req.params.page)
+    try{
+      const listHooks = await integrationHooksHistoryService.listIntegrationHooks(page,integration,product_id)
+      if(listHooks){
+        res.json({"success": true,"response": listHooks})  
+        return
+      }
+      res.json({"error":"Falha ao recuperar hooks!"})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao recuperar hooks!"}) 
+    }
+  }
+  async infoHooks(req:Request,res:Response){
+    const hook_id = parseInt(req.params.hook_id)
+    try{
+      const infoHook = await integrationHooksHistoryService.getHook(hook_id)
+      if(infoHook){
+        res.json({"success": true,"response": infoHook})  
+        return
+      }
+      res.json({"error":"Falha ao recuperar hook!"})  
 
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao recuperar hook!"}) 
+    }
 
+  }
 
-
-
- 
+  //Emails Copys
+  async newCopy(req:Request,res:Response){
+    const dataCopy = EmailCopyDTO.safeParse(req.body)
+    if(!dataCopy.success){
+      res.json({"error":dataCopy.error})
+      return
+    }
+    try{
+      //Create a new credential
+      const dataNewCopy = await emailCopyService.newCopy(dataCopy.data)
+      if(dataNewCopy){
+        res.json({"success": true,"response": dataNewCopy})  
+        return
+      }
+      res.json({"error":"Falha ao cadastrar copy!"})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
+  async listCopys(req:Request,res:Response){
+    try{
+      const listCopys = await emailCopyService.getCopys()
+      if(listCopys){
+        res.json({"success": true,"response": listCopys})  
+        return
+      }
+      res.json({"error":"Falha ao recuperar copys!"})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao recuperar copys!"}) 
+    }
+  }
+  async infoCopy(req:Request,res:Response){
+    const copy_id = parseInt(req.params.copy_id)
+    try{
+      const infoCopy = await emailCopyService.infoCopy(copy_id)
+      if(infoCopy){
+        res.json({"success": true,"response": infoCopy})  
+        return
+      }
+      res.json({"error":"Falha ao recuperar copy!"})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao recuperar copy!"}) 
+    }
+  }
+  async editCopy(req:Request,res:Response){
+    const copy_id = parseInt(req.params.copy_id)
+    const dataCopy = EmailCopyDTO.safeParse(req.body)       
+    if(!dataCopy.success){
+      res.json({"error": dataCopy.error})  
+      return
+    }
+    try{
+      const edit = await emailCopyService.editCopy(copy_id, dataCopy.data)
+      res.json({"success": true,"response": edit})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }  
+  async deleteCopy(req:Request,res:Response){
+    const copy_id = parseInt(req.params.copy_id)
+    try{
+      await emailCopyService.removeCourse(copy_id)
+      res.json({"success": true,"response": true})  
+    }catch(err){
+      console.error(err)
+      res.json({"error":"Falha ao remover copy!"}) 
+    }
+  } 
+  //Send Test Copy
+  async sendTestCopy(req:Request,res:Response){
+    const dataSend = req.body
+    const listAccounts = await mailAccountService.listAccounts()
+    const dataAccount = listAccounts[0]
+    if(!dataAccount){
+      res.json({"error":"Conta de E-mail não localizada"})
+        return
+    }
+    // Configurações do transporte (SMTP)
+    const transporter = nodemailer.createTransport({
+      host: dataAccount.host , // Endereço do servidor SMTP
+      port: dataAccount.port,
+      secure: dataAccount.secure == 1 ? true : false, // Usar SSL
+      auth: {
+        user: dataAccount.user, // Usuário do servidor SMTP
+        pass: dataAccount.pass, // Senha do servidor SMTP
+      },
+    });
+    // Opções do e-mail
+    const mailOptions = {                
+      from: `${dataSend.from} <${dataAccount.user}>`, // Seu e-mail
+      to: dataSend.mailTo, // Endereço do destinatário
+      cc: "", // Cópia
+      bcc: "", // Cópia Oculta
+      subject: dataSend.subject,
+      html: dataSend.body,
+    };    
+    // Envia o e-mail
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Erro ao enviar e-mail:', error);
+        res.json({"success": false,"message":`Erro ao enviar e-mail: ${error}`})
+      } else {
+        console.info('E-mail enviado com sucesso! ID:', info.messageId);
+        res.json({"success": true,"message":`E-mail enviado com sucesso! ID:${info.messageId}`})
+      }
+    });
+  }
 }
 
 export default new IntegrationsController();

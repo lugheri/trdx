@@ -18,6 +18,14 @@ class CoursesValidityContractsService{
     return allContrats
   }
 
+  async endDataContractStudent(studentId:number){
+    const dataContract = await CoursesValidityContracts.findOne({
+      where:{student_id:studentId},
+      order:[['end_validity','DESC']]
+    })
+    return dataContract
+  }
+
   async addContract(dataContract:AddContractValidityType):Promise<CoursesValidityContractsInstances>{
     const newContract = await CoursesValidityContracts.create(dataContract)
     return newContract

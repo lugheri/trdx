@@ -9,6 +9,8 @@ import coursesValidityContractsService from '../services/coursesValidityContract
 import moment from 'moment';
 import nodemailer from 'nodemailer';
 import sendMail from '../services/sendMail';
+import integrationHooksHistoryService from '../services/integrationHooksHistoryService';
+import emailCopyService from '../services/emailCopyService';
 
 
 interface IHotmartApi_V1{
@@ -79,6 +81,19 @@ class ApiController{
 
   async hotmart(req: Request,res: Response){
     const dataPost = req.body as IHotmartApi_V1
+    //Register hook
+    const dataHook = {
+      product_id:dataPost.prod,
+      product_name:dataPost.prod_name,
+      integration:'Hotmart',
+      offer:dataPost.off,
+      pay_status:dataPost.status,
+      student_name:dataPost.name,
+      student_mail:dataPost.email,
+      data_post: JSON.stringify(dataPost)
+    }
+
+    await integrationHooksHistoryService.createNewCourse(dataHook)
     //Checking approved status
     if(dataPost.status != 'approved'){
       res.json({success:true,message:"Parece que esta compra ainda não foi aprovada!"})
@@ -182,10 +197,24 @@ class ApiController{
     })
 
     //Send Mail
+    //Get Data Copy
+    const copyEmail = await emailCopyService.infoCopy(offerInfo.email_copy)
+    if(!copyEmail){
+      res.json({success:true,message:`Nenhum email de boas vindas cadastrado para esta oferta ${offer} do ${product_name}(${product_id}) nas configurações de integração!`})
+      return
+    }
+
     let copy=null;
     let hiddenCopy='lugheri@live.com';
-    let subject = '[Escola O Trader que Multiplica] Seus dados de acesso';
-    let bodyText = ""
+    let subject = copyEmail.subject
+    let bodyText = copyEmail.body.replace('_NOME_', student_name)
+                                 .replace('_EMAIL_', student_mail)
+                                 .replace('_SENHA_', passwordHash)
+
+
+
+/*
+
     if(product_id == 2304719){
       subject = '[Comunidade TraderX] Seu acesso está aqui!';
       bodyText = `<p style="font-size:18px;margin-bottom:10px">${student_name}, parabéns pela decisão de entrar na Comunidade TraderX.</p>
@@ -264,7 +293,7 @@ class ApiController{
               <p>Espero muito em breve poder contar a sua história de sucesso!<br/>
               <p>Abração,<br/>
               Guilherme</p>`;
-    }
+    }*/
     const from = 'Guilherme Cardoso'
     const fromMail = 'suporte@otraderquemultiplica.com.br'
     sendMail.sendMail(from,fromMail,student_mail,subject,bodyText,copy,hiddenCopy)  

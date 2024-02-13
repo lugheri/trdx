@@ -6,6 +6,7 @@ import LessonsCommentsService from "../services/LessonsCommentsService";
 import coursesValidityContractsService from "../services/coursesValidityContractsService";
 import lessonsViewedService from "../services/lessonsViewedService";
 import md5 from 'md5';
+import { redisGet, redisSet } from "../config/redis";
 
 class StudentsController{
   async newStudent(req:Request, res:Response){ 
@@ -28,7 +29,6 @@ class StudentsController{
       res.json({"error":err})  
     }
   }
-
   async getStudent(req:Request, res:Response){ 
     const studentId : number = parseInt(req.params.studentId)
     try{
@@ -40,7 +40,6 @@ class StudentsController{
       res.json({"error":err})  
     }
   }
-
   async lastStudentAccess(req:Request, res:Response){
     const studentId : number = parseInt(req.params.studentId)
     try{
@@ -51,8 +50,7 @@ class StudentsController{
       console.error(err)
       res.json({"error":err})  
     }
-  } 
-  
+  }   
   async editStudent(req:Request, res:Response){
     const studentId : number = parseInt(req.params.studentId)
     
@@ -69,8 +67,7 @@ class StudentsController{
       console.error(err)
       res.json({"error":err})  
     }
-  }
-  
+  }  
   async removeStudent(req:Request, res:Response){ 
     const studentId : number = parseInt(req.params.studentId)
     try{
@@ -125,7 +122,6 @@ class StudentsController{
       res.json({"error":err})  
     }
   }
-
   async searchStudentOld(req:Request, res:Response){
     const searchParams = SearchStudentDTO.safeParse(req.body)
     if(!searchParams.success){
@@ -142,7 +138,6 @@ class StudentsController{
       res.json({"error":err})  
     }
   }
-
   async checkCommunityStatusStudent(req:Request, res:Response){
     const studentId : number = parseInt(req.params.studentId)
     try{
@@ -178,7 +173,6 @@ class StudentsController{
   }
 
   
-
   async studentsCourses(req:Request, res:Response){
     const studentId : number = parseInt(req.params.studentId)
     try{
@@ -255,6 +249,50 @@ class StudentsController{
       console.error(err)
       res.json({"error":err})  
     }
+  }
+
+  //Send Presence
+  async sendPresence(req:Request,res:Response){
+    const studentId = parseInt(req.body.studentId)
+    const course = parseInt(req.body.course)
+    const module = parseInt(req.body.module)
+    const lesson = parseInt(req.body.lesson)
+    type IPresence = [{
+      student:number,
+      course:number,
+      module:number,
+      lesson:number
+    }]
+    const activeSessions:IPresence|null = await redisGet('activeSessions')
+    if(activeSessions === null){
+      const sessions:IPresence = [{
+        student:studentId,
+        course:course,
+        module:module,
+        lesson:lesson
+      }]
+      await redisSet('activeSessions',sessions,60)
+      res.json(true)
+      return
+    }
+
+    const index = activeSessions.findIndex(student => student.student === studentId);
+    if (index !== -1) {
+      activeSessions[index].course = course;
+      activeSessions[index].module = module;
+      activeSessions[index].lesson = lesson;
+    } else {
+      const newStudent = {
+        student: studentId,
+        course: course,
+        module: module, 
+        lesson: lesson
+      };    
+      activeSessions.push(newStudent);
+    }
+    await redisSet('activeSessions',activeSessions,60)
+    res.json(true)
+    return
   }
 
   

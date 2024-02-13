@@ -40,41 +40,59 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
       setValidityCourse(contract.data.response) 
     }catch(e){console.log(e)}
   }
-  
-  useEffect(()=>{
-    const getInfoLesson = async () => {
-      try{
-        const info = await api.get(`infoLesson/${props.lesson_id}`)
-        
-        setInfoLesson(info.data.response)
-      }catch(err){
-        console.log(err)
-      }      
-    }
-    const getWatchedLesson = async () => {
-      try{
-        const watch = await api.get(`getWatchedLesson/${props.student_id}/${props.lesson_id}`)
-        setScoreLesson(watch.data.response ? watch.data.response.score : null )
-        setWatchedLesson(watch.data.response ? true : false)
-      }catch(err){
-        console.log(err)
-      }  
-    }
 
-    const getAttachmentsLesson = async () => {
-      try{
-        const attachments = await api.get(`getAttachmentsLesson/${props.lesson_id}`)   
-        setAttachmentsLesson(attachments.data.response)
-      }catch(err){
-        console.log(err)
-      } 
-    }
+  const getInfoLesson = async () => {
+    try{
+      const info = await api.get(`infoLesson/${props.lesson_id}`)
+      
+      setInfoLesson(info.data.response)
+    }catch(err){
+      console.log(err)
+    }      
+  }
+  const getWatchedLesson = async () => {
+    try{
+      const watch = await api.get(`getWatchedLesson/${props.student_id}/${props.lesson_id}`)
+      setScoreLesson(watch.data.response ? watch.data.response.score : null )
+      setWatchedLesson(watch.data.response ? true : false)
+    }catch(err){
+      console.log(err)
+    }  
+  }
+  const getAttachmentsLesson = async () => {
+    try{
+      const attachments = await api.get(`getAttachmentsLesson/${props.lesson_id}`)   
+      setAttachmentsLesson(attachments.data.response)
+    }catch(err){
+      console.log(err)
+    } 
+  }  
+  useEffect(()=>{    
     getInfoLesson()
     getWatchedLesson()
     getAttachmentsLesson()
     checkValidity()
   },[props.lesson_id])
 
+  const sendPresence = async () => {
+    try{
+      const data = {
+        studentId:props.student_id,
+        course:props.course_id,
+        module:props.module_id,
+        lesson:props.lesson_id
+      }
+      await api.post('sendPresence',data) 
+    }catch(err){
+      console.log(err)
+    } 
+  }
+  const [update,setUpdate] = useState(0)
+  useEffect(()=>{
+    sendPresence()
+    const timer=update+1
+    setTimeout(()=>{setUpdate(timer)},30000)
+  },[update,props.lesson_id])
   
   const watchLesson = async () => {
     try{

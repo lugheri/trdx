@@ -18,6 +18,7 @@ import routesMail from './admin/platform/routesMail';
 import routesIntegrations from './admin/platform/routesIntegrations';
 
 // :: Metrics
+import routesMetrics from './admin/metrics/routesMetrics';
 // :: Setup
 
 
@@ -48,6 +49,7 @@ routesMail(routes)
 routesIntegrations(routes)
 
 // :: Metrics
+routesMetrics(routes)
 // :: Setup
 
 

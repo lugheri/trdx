@@ -29,17 +29,17 @@ class CoursesLessonsService{
     return totalLessons
   }
 
-  async createNewLessonModule(dataLessonModule:ModulesLessonModuleType):Promise<boolean|CoursesLessonsInstance>{
+  async createNewLessonModule(dataLessonModule:ModulesLessonModuleType):Promise<null|CoursesLessonsInstance>{
     await redisDel(`Lessons:TotalLessonsCourse:[${dataLessonModule.course_id}]`)
     await redisDel(`Lessons:TotalLessonsModule:[${dataLessonModule.module_id}]`)
     await redisDel(`Lessons:LessonsModule:[${dataLessonModule.module_id}]`)
 
     const [newLessonModule,created] = await CoursesLessons.findOrCreate({
-      where: { module_id: dataLessonModule.module_id, course_id:dataLessonModule.course_id, link:dataLessonModule.link,status:1},
+      where: { module_id: dataLessonModule.module_id, course_id:dataLessonModule.course_id, name:dataLessonModule.name,status:1},
       defaults:dataLessonModule
     });
     console.info(created)
-    return newLessonModule.id ? newLessonModule : false
+    return newLessonModule.id ? newLessonModule : null
   }
   async lessonsModulesCourse(moduleId:number):Promise<CoursesLessonsInstance[]>{
     const redisKey=`Lessons:LessonsModule:[${moduleId}]`

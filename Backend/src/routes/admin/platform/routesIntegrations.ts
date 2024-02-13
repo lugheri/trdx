@@ -29,7 +29,16 @@ export default (routes:Router)=>{
   routes.patch('/editCoursePlatform/:course_id',IntegrationsController.editCourse)
   routes.delete('/deleteCoursePlatform/:course_id',IntegrationsController.deleteCourse)
 
+  //History Hooks
+  routes.get('/listHooks/:page/:integration/:product_id',IntegrationsController.listHooks)
+  routes.get('/infoHooks/:hook_id',IntegrationsController.infoHooks)
 
-  //Emails
 
+  //Emails Copys
+  routes.post('/newCopy',IntegrationsController.newCopy)
+  routes.get('/listCopys',IntegrationsController.listCopys)
+  routes.get('/infoCopy/:copy_id',IntegrationsController.infoCopy)
+  routes.patch('/editCopy/:copy_id',IntegrationsController.editCopy)
+  routes.delete('/deleteCopy/:copy_id',IntegrationsController.deleteCopy)
+  routes.post('/sendTestCopy',IntegrationsController.sendTestCopy)
 }
