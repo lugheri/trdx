@@ -41,9 +41,9 @@ export const StudentsReports = () => {
   },[update])
 
 
-  const [ newCommunity, setNewCommunity] = useState<null | number[]>(null)
-  const [ newStudents, setNewStudents] = useState<null | number[]>(null)
-  const [ dateNewStudents, setDateNewStudents] = useState<null | string[]>(null)
+  const [ newCommunity, setNewCommunity] = useState<number[]>([])
+  const [ newStudents, setNewStudents] = useState<number[]>([])
+  const [ dateNewStudents, setDateNewStudents] = useState<string[]>([])
   const getNewStudents = async () => {
     try{
       const newStudent = await api.get('newStudentsLast20days')
@@ -72,8 +72,8 @@ export const StudentsReports = () => {
   }
 
   
-  const [courses, setCourses ] = useState<null|string[]>(null)
-  const [average, setAverage ] = useState<null|number[]>(null)
+  const [courses, setCourses ] = useState<string[]>([])
+  const [average, setAverage ] = useState<number[]>([])
   
   const getSatisfaction = async () => {
     try{
@@ -150,7 +150,10 @@ export const StudentsReports = () => {
         </div>
         <div className="flex">
         { activesAccess === null ? <LoadingBars/> :    
-          <AccessChart series={[activesAccess,inactiveAccess,endAccess,expiredAccess]} />}
+          <AccessChart series={[activesAccess,
+                                inactiveAccess === null ? 0 : inactiveAccess,
+                                endAccess === null ? 0 : endAccess,
+                                expiredAccess === null ? 0 : expiredAccess]} />}
         </div>
       </div>
       
@@ -285,8 +288,8 @@ const SatisfactionChart : React.FC<SatisfactionChartComponent> = (props) => {
       height: 350,
       type: 'bar',
       events: {
-        click: function(chart, w, e) {
-          // console.log(chart, w, e)
+        click: function() {
+          console.log('chart, w, e')
         }
       }
     },

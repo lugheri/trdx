@@ -15,7 +15,7 @@ export const Profile = () => {
   const userData:Student|null = authenticated ? authenticated.userData : null  
   const [ photo, setPhoto ] = useState<number>(0)
   return(
-    <div className="flex flex-col">
+    <div className="mr-4 ml-4 md:ml-28 lg:ml-28 xl:ml-28 2xl:ml-28">
       <TitlePage         
         title="Minha Conta" 
         description="Gerencie os seus dados e algumas configurações de sua plataforma"/>

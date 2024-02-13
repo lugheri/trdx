@@ -1,0 +1,49 @@
+---
+version: "3.7"
+services:
+  reverse-proxy: 
+    image: traefik:v2.6
+    command: 
+      - --providers.docker=true
+      - --providers.docker.endpoint=unix:///var/run/docker.sock
+      - --providers.docker.swarmMode=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=exitoied
+      - --entryPoints.web.address=:80
+      - --entryPoints.websecure.address=:443
+      - --entryPoints.api.address=:3000
+#      - --entryPoints.redis.address=:7000
+#      - --entryPoints.nginx.address=:9000
+      - --certificatesresolvers.letsencryptresolver.acme.httpchallenge=true
+      - --certificatesresolvers.letsencryptresolver.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.letsencryptresolver.acme.email=suporte@megaconecta.com.br
+      - --certificatesresolvers.letsencryptresolver.acme.storage=/letsencrypt/acme.json
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      # - --api.insecure=true
+      # - --api.dashboard=true
+      # - --api.debug=true
+      # - --log.level=DEBUG
+    ports:
+      - 80:80
+#      - 7000:7000
+      # - 8080:8080  
+      - 443:443
+      - 3000:3000
+#      - 9000:9000
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-certificates:/letsencrypt
+    networks: 
+      - exitoied
+    deploy: 
+      placement: 
+        constraints: 
+          - node.role == manager
+networks: 
+  exitoied: 
+    external: true
+volumes:
+  traefik-certificates:
+...
+

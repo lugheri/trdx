@@ -68,7 +68,7 @@ export const LessonsModule: React.FC<LessonsModuleComponent> = (props)=> {
                   </div>
                   {orderLesson && <LessonsOrder module_id={orderLesson} order_module={props.infoModule.order} lessons={lessons} close={setOrderLesson}/> }                 
                 </div>}
-      {newLesson && <NewLesson course_id={props.infoModule.course_id}  moduleId={newLesson} moduleOrder={props.infoModule.order} setNewLesson={setNewLesson} totalLessons={lessons ? lessons.length : 0}/>}      
+      {newLesson && <NewLesson course_id={props.infoModule.course_id} setSetupLesson={props.setSetupLessonModule} moduleId={newLesson} moduleOrder={props.infoModule.order} setNewLesson={setNewLesson} totalLessons={lessons ? lessons.length : 0}/>}      
     </div>}/>
   )
 }
@@ -117,7 +117,8 @@ type NewLessonComponent = {
   moduleId:number,
   moduleOrder:number,
   setNewLesson: React.Dispatch<React.SetStateAction<null | number>>,
-  totalLessons:number
+  totalLessons:number,
+  setSetupLesson: React.Dispatch<React.SetStateAction<null | number>>,
 }
 const NewLesson : React.FC<NewLessonComponent> = (props) => {
   const [ error, setError ] = useState<null | string>(null)
@@ -162,6 +163,7 @@ const NewLesson : React.FC<NewLessonComponent> = (props) => {
       const response = await api.post('newLessonModule/',data)
       if (response && response.data && response.data.success) {
         props.setNewLesson(null)
+        props.setSetupLesson(response.data.response)
       } else {
         console.log(response.data.error)
         setError('Ocorreu um erro ao requisitar esta ação! '+response.data.error);

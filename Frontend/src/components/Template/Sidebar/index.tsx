@@ -14,6 +14,8 @@ import Book from '/img/svg/book.svg';
 import BookActive from '/img/svg/book_active.svg';
 import Insta from '/img/svg/insta.svg';
 import InstaActive from '/img/svg/insta_active.svg';
+import Community from '/img/svg/comunidade.svg';
+import CommunityActive from '/img/svg/comunidade_active.svg';
 import Ytube from '/img/svg/youtube.svg';
 import YtubeActive from '/img/svg/youtube_active.svg';
 import Exit from '/img/svg/exit.svg';
@@ -39,6 +41,7 @@ export const Sidebar = () => {
   const side = [
     {to:"/",icon:Home,iconActive:HomeActive,target:"",name:"Home"},
     {to:"/coursesGallery",icon:Book,iconActive:BookActive,target:"",name:"Meus Cursos"},
+    {to:"/communityStudent",icon:Community,iconActive:CommunityActive,target:"",name:"Comunidade"},
     {to:"https://www.instagram.com/guilhermecardosox/",icon:Insta,iconActive:InstaActive,target:"_blank",name:"Instagram"},
     {to:"https://www.youtube.com/c/GuilhermeCardoso",icon:Ytube,iconActive:YtubeActive,target:"_blank",name:"Canal do Youtube"},
     {to:"/Profile",icon:"Profile",iconActive:"",target:"",name:"Minha Conta"},

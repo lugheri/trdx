@@ -67,12 +67,14 @@ export default (routes:Router)=>{
   //Setup Quiz
   //Questions
   routes.post("/newQuestion",CatalogController.newQuestion)
+  routes.get("/getLastOrderQuestion/:quiz_id",CatalogController.getLastOrderQuestion)
   routes.get("/listQuestions/:quiz_id",CatalogController.listQuestions)
   routes.get("/infoQuestions/:question_id",CatalogController.infoQuestions)
   routes.patch("/editQuestion/:question_id",CatalogController.editQuestion)
   
   //Options Questions
   routes.post("/newOptionQuestion",CatalogController.newOptionQuestion)
+  routes.get("/getLastOrderOption/:question_id",CatalogController.getLastOrderOption)
   routes.get("/listOptionsQuestion/:question_id",CatalogController.listOptionsQuestion)
   routes.get("/infoOptionQuestion/:option_id",CatalogController.infoOptionQuestion)
   routes.patch("/editOptionQuestion/:option_id",CatalogController.editOptionQuestion)

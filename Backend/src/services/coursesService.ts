@@ -8,8 +8,7 @@ class CoursesService{
     const [newCourse,created] = await Courses.findOrCreate({
       where: { name: dataCourse.name},
       defaults:dataCourse
-    });
-    console.info(created)
+    });   
     return newCourse.id ? newCourse : false
   }
 
