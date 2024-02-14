@@ -33,6 +33,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             console.log('GetUserData',getUserData.data.response,`/getUser/${dataToken.userId}`)   
             setUserData(getUserData.data.response)           
             const credential = userData ? await api.get(`/getCredential/${userData.credential}`) : null
+            
             setLevelAccess(credential ? credential.data.response.level_id : 0)
           }else{
             const getStudentData = await api.get(`/getStudent/${dataToken.userId}`, {
@@ -40,6 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 authorization: localStorage.getItem('Token')
               }
             });
+            console.log('USER DATA STUDENT',getStudentData.data.response)
             setUserData(getStudentData.data.response)
           }                  
          

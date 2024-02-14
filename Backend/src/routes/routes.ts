@@ -26,6 +26,7 @@ import routesMetrics from './admin/metrics/routesMetrics';
 import routesClassRoom from './platform/routesClassRoom';
 import routesSystem from './admin/routesSystem';
 import routesUsers from './admin/routesUsers';
+import routesCommunity from './platform/routesCommunity';
 import routesProfileStudents from './platform/routesProfileStudent';
 import routesSecurity from './admin/routesSecurity';
 
@@ -54,20 +55,13 @@ routesMetrics(routes)
 
 
 
-
-
 // ::::::::::::::::::::::::::::::::::::::::  S T U D E N T   A R E A  ::::::::::::::::::::::::::::::::::::::::
-
-
-
-
 //PLATFORM
 routesClassRoom(routes)
 
 
-
-
 //Community
+routesCommunity(routes)
 //Students
 routesProfileStudents(routes)
 //Support

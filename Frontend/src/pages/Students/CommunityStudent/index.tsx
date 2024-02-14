@@ -10,8 +10,10 @@ import { CommunityChatInput } from "./components/CommunityChatInput";
 export const CommunityStudent = () => {
   const authenticated = useAuth();  
   const userData:Student|null = authenticated ? authenticated.userData : null  
+  console.log('User Data',userData)
 
   const [openUserInfo, setOpenUserInfo ] = useState(false)
+  const [update, setUpdate ] = useState(true)
   return(
     userData == null ? (
     <LoadingBars/>
@@ -24,8 +26,14 @@ export const CommunityStudent = () => {
         
         <div className="flex justify-start items-center h-[75vh] lg:h-[84vh]">
           <div className={`bg-neutral-900 h-full rounded-md p-4 flex-col ${openUserInfo === true ? "hidden lg:flex lg:flex-1" : "flex flex-1" }`}>
-            <CommunityConversationBody/>
-            <CommunityChatInput/>
+            <CommunityConversationBody 
+              userdata={userData}
+              setUpdate={setUpdate}
+              update={update}
+              />
+            <CommunityChatInput 
+              userdata={userData}
+              setUpdate={setUpdate} />
           </div>  
           { openUserInfo && <CommunityUserInfo userdata={userData} openUserInfo={setOpenUserInfo}/>}
         </div>
