@@ -1,4 +1,5 @@
-import { CommunityMessageType } from "../controllers/Dtos/community.dto";
+import { CommunityMediaType, CommunityMessageType } from "../controllers/Dtos/community.dto";
+import { CommunityMedia } from "../models/CommunityMedia";
 import { CommunityMessages } from "../models/CommunityMessage";
 
 class CommunityMessageService{
@@ -7,14 +8,25 @@ class CommunityMessageService{
     return data ? true : false
   }
 
+  async newMediaMessage(dataMediaMessage:CommunityMediaType){
+    const data = await CommunityMedia.create(dataMediaMessage)
+    return data ? data.id : null
+  }
+
+
   async listMessages(page:number){
-    const p = page - 1
-    const qtdRegPage = 15
-    const offset = qtdRegPage * p 
+    const totalMessages = await CommunityMessages.count({
+      where: { status: 1 }
+    })
+        
+    
+    const qtdRegPage = 10
+    const calcInit = totalMessages-(qtdRegPage*page)
+    const init = calcInit < 0 ? 0 : calcInit
     const messages = await CommunityMessages.findAll({
       where: { status: 1 },
       order:[['id','ASC']],
-      offset:offset,
+      offset:init,
       limit:qtdRegPage
     })
     return messages
@@ -28,6 +40,11 @@ class CommunityMessageService{
       limit:1
     })
     return message ? message.user_id : 0
+  }
+
+  async loadMedia(mediaId:number){
+    const data = await CommunityMedia.findByPk(mediaId)
+    return data
   }
 
   async editMessages(message_id:number,dataMessage:CommunityMessageType){}

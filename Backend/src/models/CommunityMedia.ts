@@ -5,8 +5,9 @@ export interface CommunityMediaInstance extends Model{
   id:number;
   date_created:string;
   user_id:number;
-  directory:string;
+  file:string;
   type_media:string;
+  duration:number;
   status:number;
 }
 
@@ -23,11 +24,14 @@ export const CommunityMedia = sequelize.define<CommunityMediaInstance>("Communit
   user_id:{
     type:DataTypes.INTEGER
   },
-  directory:{
+  file:{
     type:DataTypes.STRING
   },
   type_media:{
     type:DataTypes.STRING
+  },
+  duration:{
+    type:DataTypes.INTEGER
   },
   status:{
     type:DataTypes.INTEGER,
