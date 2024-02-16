@@ -13,8 +13,9 @@ export type CommunityMessageType = z.infer<typeof CommunityMessageDTO>
 
 export const CommunityMediaDTO = z.object({
   user_id: z.optional(z.number()),
-  directory:z.optional(z.string()),
+  file:z.optional(z.string()),
   type_media:z.optional(z.string()),
+  duration:z.optional(z.number()).default(0),
   status: z.optional(z.literal(1).or(z.literal(0))).default(1)
 })
 export type CommunityMediaType = z.infer<typeof CommunityMediaDTO>

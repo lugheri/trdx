@@ -10,3 +10,13 @@ export interface ICommunityMessage{
   media:number;
   status:number;
 }
+
+export interface ICommunityMedia{
+  id:number;
+  date_created:string;
+  user_id:number;
+  file:string;
+  type_media:string;
+  duration:number;
+  status:number;
+}

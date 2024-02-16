@@ -24,9 +24,11 @@ export const CommunityStudent = () => {
           userdata={userData} 
           openUserInfo={setOpenUserInfo}/>
         
-        <div className="flex justify-start items-center h-[75vh] lg:h-[84vh]">
-          <div className={`bg-neutral-900 h-full rounded-md p-4 flex-col ${openUserInfo === true ? "hidden lg:flex lg:flex-1" : "flex flex-1" }`}>
+        <div className="flex justify-start items-center h-[75vh] lg:h-[84vh] ">
+          <div 
+            className={`bg-neutral-900 h-full rounded-md p-4 flex-col ${openUserInfo === true ? "hidden lg:flex lg:flex-1" : "flex flex-1 lg:px-[12rem]" }`}>
             <CommunityConversationBody 
+              page={1}
               userdata={userData}
               setUpdate={setUpdate}
               update={update}
