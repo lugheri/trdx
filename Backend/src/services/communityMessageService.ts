@@ -20,7 +20,7 @@ class CommunityMessageService{
     })
         
     
-    const qtdRegPage = 10
+    const qtdRegPage = 30
     const calcInit = totalMessages-(qtdRegPage*page)
     const init = calcInit < 0 ? 0 : calcInit
     const messages = await CommunityMessages.findAll({
