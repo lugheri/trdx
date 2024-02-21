@@ -13,8 +13,6 @@ type PropsType = {
 }
 
 export const CommunityMessageBox = (props:PropsType) => { 
-
-
   return(
     <div className="flex flex-col">
       { props.userdata.id === props.message.user_id ? (
@@ -35,9 +33,9 @@ const MyMessage = (props:PropsMessageType) => {
     <div className="flex flex-1 justify-end ">
       <div className="max-w-1/3 py-1 px-4 flex ">       
         <div className="flex flex-col flex-1 justify-end">
-          <div className="bg-teal-700 p-3 text-white text-sm font-light  rounded-md rounded-se-none">
+          <div className="bg-teal-700 p-3 text-white text-sm font-light shadow shadow-neutral-950/50 rounded-md rounded-se-none">
             { props.message.media === 0 ? (
-              props.message.id
+              props.message.message
             ) : (
               <LoadMedia mediaId={props.message.media} />
             )}
@@ -56,7 +54,7 @@ const OtherMessage = (props:PropsMessageType) => {
             <div className="mx-2 w-10 ">
             </div>
             <div className="flex flex-col flex-1">              
-              <div className="bg-neutral-700 p-4 mb-1 text-white text-sm font-light rounded-md rounded-ss-none">
+              <div className="bg-neutral-700 p-4 mb-1 text-white text-sm font-light shadow shadow-neutral-950/50 rounded-md rounded-ss-none">
               { props.message.media === 0 ? (
                 props.message.message
               ) : (
@@ -74,7 +72,7 @@ const OtherMessage = (props:PropsMessageType) => {
               class="w-10 h-10 my-1 mx-2 group-hover:hidden"/>
             <div className="flex flex-col flex-1">
               <p className="text-white/50 text-xs mt-3 mb-1">{props.message.user_name}</p>
-              <div className="bg-neutral-700 p-4 mb-1 text-white text-sm font-light rounded-md rounded-ss-none">
+              <div className="bg-neutral-700 p-4 mb-1 text-white text-sm font-light rounded-md rounded-ss-none shadow shadow-neutral-950/50">
                 {props.message.message}
               </div>
             </div> 

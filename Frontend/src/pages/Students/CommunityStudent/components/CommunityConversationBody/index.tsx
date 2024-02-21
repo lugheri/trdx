@@ -12,64 +12,28 @@ type PropsType = {
   setUpdate:React.Dispatch<React.SetStateAction<boolean>>
 }
 export const CommunityConversationBody = (props:PropsType) => {
-  const [ error, setError ] = useState<string|null>(null)
-  const [ nextPage, setNextPage ] = useState<number|null>(null)
-  
-
-   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-
-  useEffect(() => {
-    const container = messagesEndRef.current;
-    if (!container) return;
-   // container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
-  }, []);
-
-  useEffect(() => {
-    const container = messagesContainerRef.current;
-    if (!container) return;
-    const handleScroll = () => {
-      if (container.scrollTop <= 0) {
-        console.log('O usuário rolou para o topo do componente!');
-        console.log('Page',props.page)
-        console.log('Next Page',nextPage)
-        setNextPage(nextPage === null ? 2 : nextPage+1)        
-      }
-    };
-    container.addEventListener('scroll', handleScroll);
-    return () => {
-      container.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
   
+  useEffect(() => {
+    setTimeout(() => {
+      const container = messagesContainerRef.current;
+      //if (!container) return;
+      container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+      }, 1500); 
+  }, []);
+
 
   return(
-    <div className="flex-1 overflow-auto pb-4"  ref={messagesContainerRef}>         
-        { nextPage ? (
-        <PageMessage 
-          page={nextPage}  
-          setUpdate={props.setUpdate} 
-          update={props.update} 
-          userdata={props.userdata}/>
-      ) : (
-        <div className="flex justify-center items-center">
-          <button 
-          className="bg-blue-300 py-1 px-2 opacity-80 hover:opacity-100 text-white/50 text-sm"
-          onClick={()=>setNextPage(nextPage === null ? props.page+1 : nextPage+1)}>Carregar mensagens mais antigas - {props.page}</button>
-        </div>
-      )}
-       
+    <div className="flex-1 overflow-auto pb-4"  ref={messagesContainerRef}>   
       <PageMessage 
         page={1}        
         setUpdate={props.setUpdate} 
         update={props.update} 
-        userdata={props.userdata}/>
-
+        userdata={props.userdata}
+        messagesContainerRef={messagesContainerRef}/>
       <div ref={messagesEndRef}/> 
-      
     </div>
   )
 }
@@ -78,11 +42,49 @@ type PropsTypeMessage = {
   page:number,
   userdata:Student,
   update:boolean,
-  setUpdate:React.Dispatch<React.SetStateAction<boolean>>;
+  setUpdate:React.Dispatch<React.SetStateAction<boolean>>,
+  messagesContainerRef:React.MutableRefObject<HTMLDivElement>
 }
 const PageMessage = (props:PropsTypeMessage) => {
   const [ error, setError ] = useState<string|null>(null)
-  const [ lastMessages, setLastMessages ] = useState<null|ICommunityMessage[]>(null)
+  const [ lastMessages, setLastMessages ] = useState<null|ICommunityMessage[]>(null)  
+  const [ nextPage, setNextPage ] = useState<number|null>(null)
+  const container = props.messagesContainerRef.current;
+
+  useEffect(() => {
+      if (!container) return;
+    const handleScroll = () => {
+      if (container.scrollTop <= 0) {
+        console.log('O usuário rolou para o topo do componente!');     
+        setNextPage(props.page+1)
+      }     
+    };
+    container.addEventListener('scroll', handleScroll);
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (container) {       
+        const bottomPosition = container.scrollHeight - container.scrollTop - container.clientHeight;
+        if (bottomPosition < 100) {
+          container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+        }
+      }
+    }, 1500); // Roda a cada 5 segundos
+
+    return () => clearInterval(interval);
+  }, []); //
+
+
+
+
+
+
+
+
   const getMessages = async () => {
     try{
       const messages = await api.get(`listMessagesCommunity/${props.page}`)
@@ -95,7 +97,7 @@ const PageMessage = (props:PropsTypeMessage) => {
     }catch(err){
       console.log(err)
       setError('Ocorreu um erro ao exibir as mensagens')
-    }
+    }6
   }
   useEffect(() => {
     props.update == true ? getMessages() : props.setUpdate(false)
@@ -113,13 +115,32 @@ const PageMessage = (props:PropsTypeMessage) => {
       <p className="text-red-500">{error}</p>
     ) : lastMessages === null ? (
       <LoadingBars/>
-    ) : lastMessages.length === 0 ? (
-      <p>Vazio</p>
-    ) : lastMessages.map((message,key)=>(
-      <CommunityMessageBox 
-        key={key}
-        userdata={props.userdata}
-        message={message}/> 
-      ))   
+    ) : lastMessages.length === 0 ? 
+      props.page == 1 && (<p> Nenhuma mensagem recebida</p>) 
+    : (
+      <>
+        { nextPage && <PageMessage
+                        page={nextPage}
+                        setUpdate={props.setUpdate}
+                        update={props.update} 
+                        userdata={props.userdata}
+                        messagesContainerRef={props.messagesContainerRef}/>}
+        <div className="flex flex-col w-full"> 
+          { nextPage === null && lastMessages[0].id >= 10 && (            
+            <div className="flex justify-center items-center">
+              <button 
+                className="bg-blue-300 py-1 px-2 opacity-80 hover:opacity-100 text-dark text-sm font-light rounded mb-4 shadow-md"
+                onClick={()=>setNextPage(props.page+1)}>Carregar mensagens mais antigas</button>
+            </div>
+          )}   
+          { lastMessages.map((message,key)=>(
+            <CommunityMessageBox 
+              key={key}
+              userdata={props.userdata}
+              message={message}/> 
+            ))}
+        </div> 
+      </>
+    ) 
   )
 }

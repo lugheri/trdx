@@ -31,8 +31,7 @@ export const CommunityStudent = () => {
               page={1}
               userdata={userData}
               setUpdate={setUpdate}
-              update={update}
-              />
+              update={update}/>
             <CommunityChatInput 
               userdata={userData}
               setUpdate={setUpdate} />
