@@ -8,28 +8,61 @@ import { LoadingBars } from "../../../../../components/Loading";
 import WaveSurfer from 'wavesurfer.js';
 //import RecorderPlugin from 'wavesurfer.js/dist/plugins/record';
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm.js'
+import { Button } from "../../../../../components/Buttons";
+import { Modal } from "../../../../../components/Modal";
 
 type PropsType = {
   userdata:Student,
   setUpdate:React.Dispatch<React.SetStateAction<boolean>>
 }
 export const CommunityChatInput = (props:PropsType) => {
-  const [message, setMessage] = useState('');
   const [ error, setError ] = useState<string|null>(null)
+  
+  //TEXT MESSAGE
+  const [message, setMessage] = useState('');
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [ recordAudio, setRecordAudio ] = useState(false)
-
-  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+  
+  const handleMessageChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(event.target.value);
   };
-
   useEffect(() => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = 'auto';
       textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;    
     }
   }, [message]);
+  
+  //AUDIO MESSAGE
+  const [ recordAudio, setRecordAudio ] = useState(false)
+  
+  //FILE MESSAGE
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [changeTypeFile, setChangeTypeFile] = useState(false)
+  const [files, setFiles] = useState<File[]>([]);
 
+  
+  const changeFile = (type:'img'|'doc') => {
+    setChangeTypeFile(false)
+    fileInputRef.current.setAttribute('accept', `${type == 'img' ? 'image/*' : '.pdf,.doc,.docx'}`);
+    fileInputRef.current.click();
+  }
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const inputFiles = event.target.files
+    if(!inputFiles) return;   
+
+    const filesArray: File[] = [];
+    for(let i = 0; i<inputFiles.length;i++){
+      const file = inputFiles[i];
+      filesArray.push(file);
+    }
+    setFiles((prevFiles) => [...prevFiles, ...filesArray])
+  }
+
+
+
+
+  //SUBMIT
   const handleSubmit = async (event:FormEvent) => {
     setError(null)
     event.preventDefault();  
@@ -58,14 +91,20 @@ export const CommunityChatInput = (props:PropsType) => {
   };
 
 
+
+
   return(
     props.userdata ? 
-      recordAudio === true ? (
+      recordAudio === true ? 
         <RecordAudio userdata={props.userdata} setRecordAudio={setRecordAudio} setError={setError}/>
-      ) : (
-        <div className="flex justify-center items-center">        
+      : files.length > 0 ? 
+        <ListFiles userdata={props.userdata} files={files} setFiles={setFiles} setError={setError}/> 
+      : (
+        <div className="flex justify-center items-center">   
+          <input type="file" multiple ref={fileInputRef} onChange={handleFileChange} className="hidden"/> 
+
           <form onSubmit={(e)=>handleSubmit(e)} className="flex w-full">
-            <div className="bg-neutral-700 rounded-md flex flex-1 p-1 min-h-12">
+            <div className="bg-neutral-700 rounded-md flex flex-1 p-1 min-h-12 relative">
               <button className="mx-1 text-white/50 hover:text-white">
                 <FontAwesomeIcon icon={Far.faSmile}/>
               </button> 
@@ -74,11 +113,21 @@ export const CommunityChatInput = (props:PropsType) => {
                 ref={textAreaRef}
                 placeholder="Digite uma Mensagem"
                 value={message}
-                onChange={handleChange}
+                onChange={handleMessageChange}
                 rows={1}
                 style={{ resize: 'none', overflowY: 'hidden' }}
               />
-              <button className="mx-1 text-white/50 hover:text-white">
+              { changeTypeFile && (
+                <div className="flex flex-col rounded shadow bg-neutral-600 p-2 absolute right-2 bottom-10 z-10">
+                  <button className="text-white/80 font-light text-left hover:text-white p-1" onClick={()=>changeFile('doc')}>
+                    <FontAwesomeIcon className="text-indigo-400" icon={Fas.faFileLines}/> Documentos
+                  </button>
+                  <button className="text-white/80 font-light text-left hover:text-white p-1" onClick={()=>changeFile('img')}>
+                    <FontAwesomeIcon className="text-blue-400" icon={Fas.faImages}/> Imagens
+                  </button>
+                </div>
+              )}
+              <button className="mx-1 text-white/50 hover:text-white" onClick={()=>setChangeTypeFile(!changeTypeFile)} >
                 <FontAwesomeIcon icon={Far.faFile}/>
               </button> 
             </div>
@@ -100,6 +149,47 @@ export const CommunityChatInput = (props:PropsType) => {
   )
 }
 
+//File Input
+type PropsListFiles = {
+  userdata:Student,
+  setError:React.Dispatch<React.SetStateAction<string|null>>,
+  files:File[],
+  setFiles:React.Dispatch<React.SetStateAction<File[]>>
+}
+const ListFiles = (props:PropsListFiles) => {
+  
+  props.files ? console.log('Files Data', props.files) : console.log('Files Data', 'empty')
+  return(
+    <Modal component={
+      <div className="flex flex-col">
+        <p>Listar Arquivos</p>
+        <div className="flex">
+          {props.files.map((file, key) => ( <FileItem file={file} key={key}/> ))}
+        </div>
+        <div className="flex">
+          <Button name="cancelar" onClick={()=>props.setFiles([])}/>
+        </div>
+
+      </div>
+    }/>
+  )
+}
+type PropsFileItem = { file:File }
+const FileItem = (props:PropsFileItem) => {
+  props.file ? console.log('File Data', props.file) : console.log('File Data', 'empty')
+  return(
+    <div className="flex flex-col">
+     { props.file.type.startsWith('image/') ? (
+        <img 
+          src={URL.createObjectURL(props.file)} 
+          alt={`Image ${props.file.name}`} 
+          style={{ width: '100px', height: 'auto', margin: '5px' }} />
+       ) : (
+        <FontAwesomeIcon icon={Fas.faFile}/>
+       )}
+    </div>
+  )
+}
 
 //Record Audio
 type PropsRecord = {
@@ -110,7 +200,7 @@ type PropsRecord = {
 const RecordAudio = (props:PropsRecord) => {
  
   const [ recorderAudio, setRecorderAudio ] = useState(false)
-  const [isRecording, setIsRecording] = useState(false);
+  const [ isRecording, setIsRecording] = useState(false);
 
   const media_recorder = useRef<MediaRecorder>(null);
   const recorder_control = useRef<any>({});  

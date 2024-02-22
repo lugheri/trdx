@@ -39,8 +39,10 @@
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.11.2",
     "react-slick": "^0.29.0",
+    "react-toastify": "^10.0.4",
     "react-youtube": "^10.1.0",
     "slick-carousel": "^1.8.1",
+    "uuid": "^9.0.1",
     "wavesurfer.js": "^7.1.5"
   },
   "devDependencies": {
@@ -51,6 +53,8 @@
     "@types/moment": "^2.13.0",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
+    "@types/react-toastify": "^4.1.0",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "@vitejs/plugin-react": "^4.0.0",
