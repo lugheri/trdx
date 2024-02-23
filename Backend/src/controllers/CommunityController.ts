@@ -4,6 +4,8 @@ import communityMessageService from "../services/communityMessageService";
 import moment from "moment";
 import fs from 'fs';
 import path from 'path';
+import sharp from 'sharp';
+import { unlink } from 'fs/promises'
 
 class CommunityController{
   async listMessagesCommunity(req:Request,res:Response){
@@ -124,8 +126,100 @@ class CommunityController{
     }
   }
 
-  async newMediaMessage(req:Request,res:Response){
-    
+  async newFileMessage(req:Request,res:Response){
+    const userId = parseInt(req.body.user_id)
+    console.log('FILE',req.file)
+    console.log('body',req.body)
+    if(req.file){      
+      const tempFilePath = req.file.path;
+      const destinationDirectory = './public/media/';
+      const typeMedia = req.file.mimetype.startsWith('image/') ? "image":"doc"
+      let filename:string
+      if(typeMedia == "image"){
+        filename = `${userId}_${req.file.filename}.${req.file.originalname}`
+        await sharp(tempFilePath)
+              .resize(256)
+              .toFile(`${destinationDirectory}${filename}`);
+        await unlink(tempFilePath)
+      }else{    
+        filename = `${userId}_${req.file.originalname}`;
+        const newFilePath = path.join(destinationDirectory, filename);
+        fs.rename(tempFilePath, newFilePath, (err) => {
+          if (err) {
+            res.json({
+              "error":true,
+              "message":"Erro ao mover o arquivo:",
+              "info":err
+            })
+            return
+          }         
+        });
+        
+      }
+      
+      //Save File
+      const dataMedia = CommunityMediaDTO.safeParse({ 
+        user_id: userId,
+        file:filename,
+        type_media:typeMedia,     
+        duration:0,
+      })
+      if(dataMedia.success){
+        try{
+          const mediaId = await communityMessageService.newMediaMessage(dataMedia.data)
+          if(mediaId === null){
+            res.json({
+              "error":true,
+              "message":"Ocorreu um erro ao gerar id da midia"
+            })
+            return
+          }
+          //Save Data Message
+          const dataMessage = CommunityMessageDTO.safeParse({ 
+            is_student: parseInt(req.body.is_student),
+            user_id: userId,
+            user_photo:parseInt(req.body.user_photo),
+            user_name:req.body.user_name,
+            user_last_message: await communityMessageService.getUserLastMessage(),
+            message:req.body.message,
+            media: mediaId,
+          })
+          if(dataMessage.success){
+            try{
+              await communityMessageService.newMessage(dataMessage.data)
+              res.json({"success":true})
+            }catch(err){
+              res.json({
+                "error":true,
+                "message":"Ocorreu um erro ao salvar a mensagem",
+                "error_info":err
+              })
+            }
+            return
+          }
+          res.json({
+            "error":true,
+            "message":dataMessage.error.message
+          })
+          return
+        }catch(err){
+          res.json({
+            "error":true,
+            "message":"Ocorreu um erro ao salvar a midia",
+            "error_info":err
+          })
+          console.log(err)
+          return
+        }
+      }else{
+        res.json({
+          "error":true,
+          "message":dataMedia.error.message
+        })
+        return
+      }  
+    }
+    res.json({"error":true, "message":"No file received"})     
   }
   
   async editMessage(req:Request,res:Response){
