@@ -6,6 +6,8 @@ import api from "../../../../../services/api"
 import { LoadingBars } from "../../../../../components/Loading"
 import { Button } from "../../../../../components/Buttons"
 import { urlBase } from "../../../../../utils/baseUrl"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faFile } from "@fortawesome/free-solid-svg-icons"
 
 type PropsType = {
   userdata:Student,
@@ -31,13 +33,13 @@ type PropsMessageType = {
 const MyMessage = (props:PropsMessageType) => {
   return(
     <div className="flex flex-1 justify-end ">
-      <div className="max-w-1/3 py-1 px-4 flex ">       
+      <div className="py-1 px-4 flex">       
         <div className="flex flex-col flex-1 justify-end">
-          <div className="bg-teal-700 p-3 text-white text-sm font-light shadow shadow-neutral-950/50 rounded-md rounded-se-none">
+          <div className="bg-teal-700 max-w-[250px] lg:max-w-[500px] text-white text-sm font-light shadow shadow-neutral-950/50 rounded-md rounded-se-none">
             { props.message.media === 0 ? (
-              props.message.message
+              <p className="m-3">{props.message.message}</p>
             ) : (
-              <LoadMedia mediaId={props.message.media} />
+              <LoadMedia mediaId={props.message.media}  message={props.message.message}  />
             )}
           </div>
         </div> 
@@ -48,17 +50,17 @@ const MyMessage = (props:PropsMessageType) => {
 const OtherMessage = (props:PropsMessageType) => {
   return(
     <div className="flex flex-1">
-      <div className="max-w-1/3 flex ">
+      <div className="flex overflow-hidden">
         { props.message.user_last_message === props.message.user_id ? (
           <>
             <div className="mx-2 w-10 ">
             </div>
             <div className="flex flex-col flex-1">              
-              <div className="bg-neutral-700 p-4 mb-1 text-white text-sm font-light shadow shadow-neutral-950/50 rounded-md rounded-ss-none">
+              <div className="bg-neutral-700 max-w-[200px] lg:max-w-[500px] mb-1 text-white text-sm font-light shadow shadow-neutral-950/50 rounded-md rounded-ss-none">
               { props.message.media === 0 ? (
-                props.message.message
+                <p className="m-3">{props.message.message}</p>
               ) : (
-                <LoadMedia mediaId={props.message.media} />
+                <LoadMedia mediaId={props.message.media} message={props.message.message} />
               )}
               </div>
             </div> 
@@ -72,8 +74,12 @@ const OtherMessage = (props:PropsMessageType) => {
               class="w-10 h-10 my-1 mx-2 group-hover:hidden"/>
             <div className="flex flex-col flex-1">
               <p className="text-white/50 text-xs mt-3 mb-1">{props.message.user_name}</p>
-              <div className="bg-neutral-700 p-4 mb-1 text-white text-sm font-light rounded-md rounded-ss-none shadow shadow-neutral-950/50">
-                {props.message.message}
+              <div className="bg-neutral-700 max-w-[200px] lg:max-w-[500px] mb-1 text-white text-sm font-light rounded-md rounded-ss-none shadow shadow-neutral-950/50">
+                { props.message.media === 0 ? (
+                  <p className="m-3">{props.message.message}</p>
+                ) : (
+                  <LoadMedia mediaId={props.message.media} message={props.message.message} />
+                )}
               </div>
             </div> 
           </>
@@ -84,7 +90,8 @@ const OtherMessage = (props:PropsMessageType) => {
 }
 
 type PropsMedia = {
-  mediaId:number
+  mediaId:number,
+  message:string
 }
 const LoadMedia = (props:PropsMedia) => {
   const [ dataMedia, setDataMedia ] = useState<ICommunityMedia|null|false>(null)
@@ -111,6 +118,25 @@ const LoadMedia = (props:PropsMedia) => {
       <p>Impossivel carregar os dados</p>
     ) : dataMedia.type_media=="audio" ? (
       <CustomAudio seconds={dataMedia.duration} src={`${urlBase}/media/${dataMedia.file}`}  />
+    ) : dataMedia.type_media=="image" ? (
+      <div className="flex flex-col">
+        <div className="bg-slate-200 rounded">
+          <img src={`${urlBase}/media/${dataMedia.file}`} style={{width:'100%',height:'auto'}}/>
+        </div>
+        {props.message != "" && <p className="m-3">{props.message}</p>}
+      </div>
+    ) : dataMedia.type_media=="doc" ? (
+      <div className="flex flex-col">
+        <div className="flex justify-center items-center bg-slate-700 p-4 rounded ">
+          <a 
+            className="opacity-90 hover:opacity-100 flex justify-center items-center"
+            href={`${urlBase}/media/${dataMedia.file}`} target="_blank" rel="noopener noreferrer">
+            <FontAwesomeIcon 
+            className="mr-2 text-2xl text-pink-500" icon={faFile}/> {dataMedia.file}
+          </a>
+        </div>
+        {props.message != "" && <p className="m-3">{props.message}</p>}
+      </div>
     ) : (
       <div>
         {dataMedia.file}
@@ -151,7 +177,7 @@ const CustomAudio = (props:PropsAudio) => {
   }
 
   return(
-    <div className="flex justify-center items-center ">
+    <div className="flex justify-center items-center mx-3">
     <audio 
       ref={audioRef} 
       src={props.src} 
