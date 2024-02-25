@@ -1,7 +1,7 @@
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import * as Far from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { Student } from "../../../../../contexts/Dtos/auth.dto";
 import api from "../../../../../services/api";
 import { LoadingBars } from "../../../../../components/Loading";
@@ -10,6 +10,9 @@ import WaveSurfer from 'wavesurfer.js';
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm.js'
 import { Button } from "../../../../../components/Buttons";
 import { Modal } from "../../../../../components/Modal";
+import EmojiPicker, { EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react';
+import DOMPurify from 'dompurify';
+
 
 type PropsType = {
   userdata:Student,
@@ -18,22 +21,12 @@ type PropsType = {
 export const CommunityChatInput = (props:PropsType) => {
   const [ error, setError ] = useState<string|null>(null)
   
-  //TEXT MESSAGE
-  const [message, setMessage] = useState('');
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  
-  const handleMessageChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(event.target.value);
-  };
-  useEffect(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current.style.height = 'auto';
-      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;    
-    }
-  }, [message]);
-
   //SUBMIT TEXT MESSAGE
+  const [showPicker, setShowPicker] = useState(false);
+  const [ message, setMessage ]= useState('');
+
   const handleSubmit = async (event:FormEvent) => {
+    setShowPicker(false);
     setError(null)
     event.preventDefault();  
     if(message != ""){
@@ -43,15 +36,17 @@ export const CommunityChatInput = (props:PropsType) => {
           user_id: props.userdata.id,
           user_photo: props.userdata.photo === null ? 0 : props.userdata.photo,
           user_name:props.userdata.name,
-          message:message,
+          message:DOMPurify.sanitize(message, { ALLOWED_TAGS: ['img','br'] }),
           media: 0
         }
         console.log('Data',data)
+        props.setUpdate(true)
+        console.log('Updated')
         const r = await api.post('newMessage',data)
         if(r.data.error){setError(r.data.message)
           return
         }
-        props.setUpdate(true)
+       
       }catch(err){
         setError('Ocorreu um erro ao disparar a mensagem')
         console.log(err)
@@ -60,10 +55,8 @@ export const CommunityChatInput = (props:PropsType) => {
     }
   };
   
-
   //AUDIO MESSAGE
-  const [ recordAudio, setRecordAudio ] = useState(false)
-  
+  const [ recordAudio, setRecordAudio ] = useState(false)  
 
   //FILE MESSAGE
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -88,7 +81,6 @@ export const CommunityChatInput = (props:PropsType) => {
     setFiles((prevFiles) => [...prevFiles, ...filesArray])
   }
   
-
   return(
     props.userdata ? 
       recordAudio === true ? 
@@ -96,23 +88,13 @@ export const CommunityChatInput = (props:PropsType) => {
       : files.length > 0 ? 
         <ListFiles userdata={props.userdata} files={files} setFiles={setFiles} setError={setError}/> 
       : (
-        <div className="flex justify-center items-center">   
-          <input type="file"  ref={fileInputRef} onChange={handleFileChange} className="hidden"/> 
-
+        <div className="flex justify-center items-center">
+          <input type="file"  ref={fileInputRef} onChange={handleFileChange} className="hidden"/>                
           <form onSubmit={(e)=>handleSubmit(e)} className="flex w-full">
             <div className="bg-neutral-700 rounded-md flex flex-1 p-1 min-h-12 relative">
-              <button className="mx-1 text-white/50 hover:text-white">
-                <FontAwesomeIcon icon={Far.faSmile}/>
-              </button> 
-              <textarea
-                className="mx-1 flex-1 bg-transparent border-none focus:ring-0 text-white font-light text-sm"
-                ref={textAreaRef}
-                placeholder="Digite uma Mensagem"
-                value={message}
-                onChange={handleMessageChange}
-                rows={1}
-                style={{ resize: 'none', overflowY: 'hidden' }}
-              />
+              <TextInput 
+                message={message} setMessage={setMessage} 
+                showPicker={showPicker} setShowPicker={setShowPicker}/>             
               { changeTypeFile && (
                 <div className="flex flex-col rounded shadow bg-neutral-600 p-2 absolute right-2 bottom-10 z-10">
                   <button className="text-white/80 font-light text-left hover:text-white p-1" onClick={()=>changeFile('doc')}>
@@ -145,6 +127,81 @@ export const CommunityChatInput = (props:PropsType) => {
   )
 }
 
+
+
+//TextInput
+type TextInputProps = {
+  setShowPicker: React.Dispatch<React.SetStateAction<boolean>>,
+  showPicker:boolean,
+  setMessage: React.Dispatch<React.SetStateAction<string>>,
+  message:string
+}
+const TextInput = (props:TextInputProps) => {
+  //EMOJI
+  const editableDivText = useRef<HTMLDivElement>(null);//Div de Edicao de Texto  
+  
+  const handleEmojiSelect = (emoji: EmojiClickData) => {
+    const size = '24px'
+    const emojiLink = `<img src='${emoji.imageUrl}' style='display: inline;width:${size}'/>`
+    props.setMessage(props.message+emojiLink)
+  };
+
+  useEffect(() => {
+    if (editableDivText.current) {
+      editableDivText.current.focus(); // Foca na div editável
+      const selection = window.getSelection();
+      if (selection) {
+        const range = document.createRange();
+        range.selectNodeContents(editableDivText.current);
+        range.collapse(false); // Move o cursor para o final
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    }
+  }, [props.message]);
+  
+  
+
+  const handleMessageHTMLChange= (event: React.ChangeEvent<HTMLDivElement>) => {
+    const div = editableDivText.current;
+    if (div) {     
+      
+      props.setMessage(div.innerHTML);     
+    }
+    props.setShowPicker(false);
+  };
+
+  return(
+    <div className="flex flex-1">
+      <button 
+        type="button"
+        className="mx-1 text-white/50 hover:text-white"
+        onClick={() => props.setShowPicker(!props.showPicker)}>
+        <FontAwesomeIcon icon={Far.faSmile}/>
+      </button>
+      { props.showPicker && (
+        <div className="absolute bottom-14  rounded-lg shadow">
+          <EmojiPicker theme={Theme.DARK}
+            emojiStyle={EmojiStyle.APPLE}
+            reactionsDefaultOpen={true}
+            searchPlaceholder="Pesquisar emoji..."
+            onEmojiClick={handleEmojiSelect}/>
+        </div>)
+      } 
+
+      <div 
+        ref={editableDivText}
+        contentEditable={true} 
+        className="mx-1 p-1 flex-1 border-none text-white font-light text-sm focus-visible:outline-none"
+        dangerouslySetInnerHTML={{ __html: props.message }}
+        onInput={handleMessageHTMLChange}/>        
+    </div>
+  )
+}
+
+
+
+
 //File Input
 type PropsListFiles = {
   userdata:Student,
@@ -154,10 +211,7 @@ type PropsListFiles = {
 }
 const ListFiles = (props:PropsListFiles) => {
   const [message, setMessage] = useState('');
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const handleMessageChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(event.target.value);
-  };
+  const [showPicker, setShowPicker] = useState(false);  
 
   const sendFile = async () => {
     console.log('FILES >> ',props.files)
@@ -171,7 +225,7 @@ const ListFiles = (props:PropsListFiles) => {
           message:message,
           file: props.files[0],
         }
-     
+    
         const r = await api.post('newFileMessage',data,{
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -202,15 +256,12 @@ const ListFiles = (props:PropsListFiles) => {
           ))}
         </div>
         <div className="flex justify-between items-center border-t border-slate-500 m-4 pt-4">
-        <textarea
-          className="mx-1 flex-1 bg-slate-700 rounded border-none focus:ring-0 text-white font-light text-sm"
-          ref={textAreaRef}
-          placeholder="Digite uma Mensagem"
-          value={message}
-          onChange={handleMessageChange}
-          rows={1}
-          style={{ resize: 'none', overflowY: 'hidden' }}
-          />
+          <div className="bg-slate-700 rounded-md flex flex-1 p-1 min-h-12 relative">
+
+            <TextInput 
+                message={message} setMessage={setMessage} 
+                showPicker={showPicker} setShowPicker={setShowPicker}/> 
+          </div>
         
           <Button btn="muted" icon="faX" type="notline" onClick={()=>props.setFiles([])}/>
           <Button btn="success" icon="faPaperPlane" onClick={()=>sendFile()}/>

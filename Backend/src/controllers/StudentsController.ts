@@ -150,6 +150,8 @@ class StudentsController{
     }
   }
 
+ 
+
   async resetPass(req:Request, res:Response){
     const studentId : number = parseInt(req.params.studentId)
     try{

@@ -13,10 +13,13 @@ const upload = multer({
 
 export default (routes: Router) => {
   //Community
+  routes.post('/setOnline',CommunityController.setOnline)
+  routes.get('/getInfoMembers',CommunityController.getInfoMembers)
   routes.get("/listMessagesCommunity/:page",CommunityController.listMessagesCommunity)
   routes.post("/newMessage",CommunityController.newMessage)
   routes.get("/loadMedia/:mediaId",CommunityController.loadMedia)
   routes.post("/newAudioMessage",CommunityController.newAudioMessage)
   routes.post("/newFileMessage",upload.single('file'),CommunityController.newFileMessage)
   routes.put("/editMessage/:message_id",CommunityController.editMessage)
+  
 }

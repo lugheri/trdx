@@ -14,7 +14,6 @@ type PropsType = {
 export const CommunityConversationBody = (props:PropsType) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-
   
   useEffect(() => {
     setTimeout(() => {
@@ -26,7 +25,7 @@ export const CommunityConversationBody = (props:PropsType) => {
 
 
   return(
-    <div className="flex-1 overflow-auto pb-4"  ref={messagesContainerRef}>   
+    <div className="flex-1 overflow-auto pb-4 scrollBarCommunity"  ref={messagesContainerRef}>   
       <PageMessage 
         page={1}        
         setUpdate={props.setUpdate} 
@@ -97,10 +96,14 @@ const PageMessage = (props:PropsTypeMessage) => {
     }catch(err){
       console.log(err)
       setError('Ocorreu um erro ao exibir as mensagens')
-    }6
+    }
   }
   useEffect(() => {
-    props.update == true ? getMessages() : props.setUpdate(false)
+    console.log('Update Atualizado',props.update)
+    if(props.update){
+      getMessages()
+      props.setUpdate(false)
+    }
   }, [props.update]); 
 
   useEffect(() => {

@@ -9,12 +9,14 @@ import { urlBase } from "../../../../../utils/baseUrl"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFile } from "@fortawesome/free-solid-svg-icons"
 
+
 type PropsType = {
   userdata:Student,
   message:ICommunityMessage
 }
 
-export const CommunityMessageBox = (props:PropsType) => { 
+export const CommunityMessageBox = (props:PropsType) => {  
+
   return(
     <div className="flex flex-col">
       { props.userdata.id === props.message.user_id ? (
@@ -29,15 +31,15 @@ export const CommunityMessageBox = (props:PropsType) => {
 type PropsMessageType = {
   message:ICommunityMessage
 }
-
 const MyMessage = (props:PropsMessageType) => {
-  return(
+  
+    return(
     <div className="flex flex-1 justify-end ">
       <div className="py-1 px-4 flex">       
         <div className="flex flex-col flex-1 justify-end">
           <div className="bg-teal-700 max-w-[250px] lg:max-w-[500px] text-white text-sm font-light shadow shadow-neutral-950/50 rounded-md rounded-se-none">
             { props.message.media === 0 ? (
-              <p className="m-3">{props.message.message}</p>
+              <div className="m-3" dangerouslySetInnerHTML={{ __html: props.message.message }} />
             ) : (
               <LoadMedia mediaId={props.message.media}  message={props.message.message}  />
             )}
@@ -58,7 +60,7 @@ const OtherMessage = (props:PropsMessageType) => {
             <div className="flex flex-col flex-1">              
               <div className="bg-neutral-700 max-w-[200px] lg:max-w-[500px] mb-1 text-white text-sm font-light shadow shadow-neutral-950/50 rounded-md rounded-ss-none">
               { props.message.media === 0 ? (
-                <p className="m-3">{props.message.message}</p>
+                <div className="m-3" dangerouslySetInnerHTML={{ __html: props.message.message }} />
               ) : (
                 <LoadMedia mediaId={props.message.media} message={props.message.message} />
               )}
@@ -76,7 +78,7 @@ const OtherMessage = (props:PropsMessageType) => {
               <p className="text-white/50 text-xs mt-3 mb-1">{props.message.user_name}</p>
               <div className="bg-neutral-700 max-w-[200px] lg:max-w-[500px] mb-1 text-white text-sm font-light rounded-md rounded-ss-none shadow shadow-neutral-950/50">
                 { props.message.media === 0 ? (
-                  <p className="m-3">{props.message.message}</p>
+                  <div className="m-3" dangerouslySetInnerHTML={{ __html: props.message.message }} />
                 ) : (
                   <LoadMedia mediaId={props.message.media} message={props.message.message} />
                 )}
@@ -123,7 +125,7 @@ const LoadMedia = (props:PropsMedia) => {
         <div className="bg-slate-200 rounded">
           <img src={`${urlBase}/media/${dataMedia.file}`} style={{width:'100%',height:'auto'}}/>
         </div>
-        {props.message != "" && <p className="m-3">{props.message}</p>}
+        {props.message != "" && <div className="m-3" dangerouslySetInnerHTML={{ __html: props.message }} />}
       </div>
     ) : dataMedia.type_media=="doc" ? (
       <div className="flex flex-col">
@@ -135,7 +137,7 @@ const LoadMedia = (props:PropsMedia) => {
             className="mr-2 text-2xl text-pink-500" icon={faFile}/> {dataMedia.file}
           </a>
         </div>
-        {props.message != "" && <p className="m-3">{props.message}</p>}
+        {props.message != "" && <div className="m-3" dangerouslySetInnerHTML={{ __html: props.message }} />}
       </div>
     ) : (
       <div>
