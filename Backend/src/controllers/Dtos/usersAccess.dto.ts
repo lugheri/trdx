@@ -9,6 +9,7 @@ export type UserAccessType = z.infer<typeof UserAccessDTO>;
 
 //USERS
 export const UserDataDTO = z.object({
+  photo: z.optional(z.number()).default(0),
   name:z.string(),
   mail:z.string(),
   credential: z.number(),
@@ -21,6 +22,11 @@ export type UserDataType = z.infer<typeof UserDataDTO>;
 export const UserDataPartialDTO = UserDataDTO.partial();
 export type UserDataPartialType = z.infer<typeof UserDataPartialDTO>;
 
+export const PhotoProfileUserDTO = z.object({
+  name:z.string(),
+  user_id:z.number().or(z.string())  
+})
+export type PhotoProfileUserType = z.infer<typeof PhotoProfileUserDTO>;
 
 export const PaginationUserDTO = z.object({
   status: z.optional(z.literal(1).or(z.literal(0))).default(1),

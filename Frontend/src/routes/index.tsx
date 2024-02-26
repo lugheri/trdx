@@ -27,7 +27,7 @@ import { SatisfactionContent } from '../pages/Admin/Content/Satisfaction';
 //Community
 import { Community } from '../pages/Admin/Community';
 import { Members } from '../pages/Admin/Community/Members';
-import { Relationship } from '../pages/Admin/Community/Relationship';
+import { Chat } from '../pages/Admin/Community/Chat/index.tsx';
 import { CommunitySettings } from '../pages/Admin/Community/CommunitySettings';
 import { CommunityOthers } from '../pages/Admin/Community/Others';
 //Students
@@ -155,7 +155,7 @@ const RoutesApp = () => {
               children:[
                 { index: true, element:<Community/>},
                 { path: '/admin/community/members', element:<Members/>},
-                { path: '/admin/community/relationship', element:<Relationship/>},
+                { path: '/admin/community/chat', element:<Chat/>},
                 { path: '/admin/community/others', element:<CommunityOthers/>},
                 { path: '/admin/community/settings', element:<CommunitySettings/>},
               ]

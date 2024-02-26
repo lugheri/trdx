@@ -1,26 +1,22 @@
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react"
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import * as Far from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
-import { Student } from "../../../../../contexts/Dtos/auth.dto";
-import api from "../../../../../services/api";
-import { LoadingBars } from "../../../../../components/Loading";
+import { User } from "../../../../../contexts/Dtos/auth.dto"
 import WaveSurfer from 'wavesurfer.js';
-//import RecorderPlugin from 'wavesurfer.js/dist/plugins/record';
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm.js'
-import { Button } from "../../../../../components/Buttons";
-import { Modal } from "../../../../../components/Modal";
-import EmojiPicker, { EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react';
 import DOMPurify from 'dompurify';
-
+import api from "../../../../../services/api";
+import EmojiPicker, { EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react';
+import { Modal } from "../../../../../components/Modal";
+import { Button } from "../../../../../components/Buttons";
 
 type PropsType = {
-  userdata:Student,
+  userdata:User,
   setUpdate:React.Dispatch<React.SetStateAction<boolean>>
 }
-export const CommunityChatInput = (props:PropsType) => {
+export const ChatInput_AdmCommunity = (props:PropsType) => {
   const [ error, setError ] = useState<string|null>(null)
-  
   //SUBMIT TEXT MESSAGE
   const [showPicker, setShowPicker] = useState(false);
   const [ message, setMessage ]= useState('');
@@ -28,7 +24,7 @@ export const CommunityChatInput = (props:PropsType) => {
   const handleSubmit = async (event:FormEvent) => {
     setShowPicker(false);
     setError(null)
-    event.preventDefault();  
+    event.preventDefault(); 
     if(message != ""){
       try{
         const data = {
@@ -45,16 +41,15 @@ export const CommunityChatInput = (props:PropsType) => {
         const r = await api.post('newMessage',data)
         if(r.data.error){setError(r.data.message)
           return
-        }
-       
+        }       
       }catch(err){
         setError('Ocorreu um erro ao disparar a mensagem')
         console.log(err)
       }
       if (message.trim() !== '') {setMessage('');}
     }
-  };
-  
+  }
+
   //AUDIO MESSAGE
   const [ recordAudio, setRecordAudio ] = useState(false)  
 
@@ -62,7 +57,7 @@ export const CommunityChatInput = (props:PropsType) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [changeTypeFile, setChangeTypeFile] = useState(false)
   const [files, setFiles] = useState<File[]>([]);
-  
+
   const changeFile = (type:'img'|'doc') => {
     setChangeTypeFile(false)
     fileInputRef.current.setAttribute('accept', `${type == 'img' ? 'image/*' : '.pdf,.doc,.docx'}`);
@@ -80,13 +75,13 @@ export const CommunityChatInput = (props:PropsType) => {
     }
     setFiles((prevFiles) => [...prevFiles, ...filesArray])
   }
-  
+
   return(
     props.userdata ? 
       recordAudio === true ? 
         <RecordAudio userdata={props.userdata} setRecordAudio={setRecordAudio} setError={setError}/>
       : files.length > 0 ? 
-        <ListFiles userdata={props.userdata} files={files} setFiles={setFiles} setError={setError}/> 
+        <ListFiles userdata={props.userdata} files={files} setFiles={setFiles} setError={setError}/>
       : (
         <div className="flex justify-center items-center">
           <input type="file"  ref={fileInputRef} onChange={handleFileChange} className="hidden"/>                
@@ -122,12 +117,9 @@ export const CommunityChatInput = (props:PropsType) => {
             </button>  
           </form>
         </div>
-      )
-    : (<LoadingBars/>)
-  )
+      ) : (<LoadingBars/>)
+    )
 }
-
-
 
 //TextInput
 type TextInputProps = {
@@ -164,8 +156,7 @@ const TextInput = (props:TextInputProps) => {
 
   const handleMessageHTMLChange= () => {
     const div = editableDivText.current;
-    if (div) {     
-      
+    if (div) {
       props.setMessage(div.innerHTML);     
     }
     props.setShowPicker(false);
@@ -201,10 +192,9 @@ const TextInput = (props:TextInputProps) => {
 
 
 
-
 //File Input
 type PropsListFiles = {
-  userdata:Student,
+  userdata:User,
   setError:React.Dispatch<React.SetStateAction<string|null>>,
   files:File[],
   setFiles:React.Dispatch<React.SetStateAction<File[]>>
@@ -270,6 +260,7 @@ const ListFiles = (props:PropsListFiles) => {
     }/>
   )
 }
+
 type PropsFileItem = { file:File, size:string }
 const FileItem = (props:PropsFileItem) => {
   props.file ? console.log('File Data', props.file) : console.log('File Data', 'empty')
@@ -291,9 +282,10 @@ const FileItem = (props:PropsFileItem) => {
   )
 }
 
+
 //Record Audio
 type PropsRecord = {
-  userdata:Student,
+  userdata:User,
   setError:React.Dispatch<React.SetStateAction<string|null>>
   setRecordAudio:React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -424,9 +416,7 @@ const RecordAudio = (props:PropsRecord) => {
       }
     }
   }   
-  useEffect(()=>{
-    isRecording == false && newAudioMessage()
-  },[isRecording])
+  useEffect(()=>{ isRecording == false && newAudioMessage() },[isRecording])
   return(
     <div className="flex justify-center items-center">        
       <div className="flex w-full lg:w-3/4">

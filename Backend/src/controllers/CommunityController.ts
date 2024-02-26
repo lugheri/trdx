@@ -15,10 +15,10 @@ class CommunityController{
     
     const studentId:string = req.body.user_id
     const check = await checkSet(redisKey,`user:${studentId}`)
-    console.log('Check',check)
+    //console.log('Check',check)
 
     if(check===false){
-      console.log('addSet',redisKey,`user:${studentId}`)
+      //console.log('addSet',redisKey,`user:${studentId}`)
       await addSet(redisKey,`user:${studentId}`)
     }
     res.json(true)
