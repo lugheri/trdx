@@ -74,6 +74,19 @@ class StudentsService{
     await redisSet(redisKey,totalStudents)
     return totalStudents
   }
+
+  async totalCommunityMembers():Promise<number>{
+    const redisKey = `totalCommunityMembers`
+    const totalCommunityMembersRedis = await redisGet(redisKey)
+    if(totalCommunityMembersRedis!=null){return totalCommunityMembersRedis}
+    const totalMembers = await Students.count({
+      where:{community:1,status:1}
+    })
+    await redisSet(redisKey,totalMembers)
+    return totalMembers
+  }
+
+
   async totalFilteredStudents(params:string,value:string,filter:null|number,status:number):Promise<number>{
     const filterCondition = filter ? { community: filter } : {};
     const paramsSearch = params ? {[params]: { [Op.like]: `%${value}%`}} : {};
@@ -128,7 +141,7 @@ class StudentsService{
 
 
 
-
+  
 
   async studentsCommunity(){    
     const students = await Students.findAll({where: {community:1,status:1}})

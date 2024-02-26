@@ -73,6 +73,75 @@ export const redisDelAll = async () => {
 
 
 
+//SETS
+
+export const addSet = async (key:string,member:string,expires?:number|undefined) => {
+  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : 'prod'
+  const keyReg = environment+':'+key  
+  const defaultExpires = 30; 
+  let expire_time =  expires ?? defaultExpires;
+  
+  try{
+   //console.log("EXPIRE TIME >>",keyReg,expire_time)
+    await client.sAdd(keyReg,member)
+    await client.expire(keyReg,expire_time)
+    return true
+  }catch(e){
+    console.error('Redis sAdd Error',e)
+    return false
+  }  
+}
+export const remSet = async (key:string,member:string) => {
+  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : 'prod'
+  const keyReg = environment+':'+key
+  try{
+    await client.sRem(keyReg,member)
+    return true
+  }catch(e){
+    console.error('Redis remSet Error',e)
+    return false 
+  }
+}
+
+export const checkSet = async (key:string,member:string) => {
+  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : 'prod'
+  const keyReg = environment+':'+key
+  try{
+    const check = await client.sIsMember(keyReg,member)
+    return check
+  }catch(e){
+    console.error('Redis checkSet Error',e)
+    return false 
+  }
+}
+
+
+
+export const getSet = async (key:string) => {
+  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : 'prod'
+  const keyReg = environment+':'+key
+  try{
+    const result = await client.sMembers(keyReg);
+    if(result === null){ return null}
+    return result
+  }catch(e){
+    console.error('Redis Get Sets',e)
+    return false
+  }
+}
+export const countSet = async (key:string) => {
+  const environment = process.env.ENVIRONMENT === 'DEV' ? 'dev' : 'prod'
+  const keyReg = environment+':'+key
+  try {
+    const total = await client.sCard(keyReg)
+    return total
+  }catch(e){
+    console.error('Redis sCard Error',e)
+    return false 
+  }
+}
+
+
 
 
 export default client;

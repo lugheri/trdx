@@ -7,11 +7,10 @@ import { CommunityUserInfo } from "./components/CommunityUserInfo";
 import { CommunityConversationBody } from "./components/CommunityConversationBody";
 import { CommunityChatInput } from "./components/CommunityChatInput";
 
+
 export const CommunityStudent = () => {
   const authenticated = useAuth();  
   const userData:Student|null = authenticated ? authenticated.userData : null  
-  console.log('User Data',userData)
-
   const [openUserInfo, setOpenUserInfo ] = useState(false)
   const [update, setUpdate ] = useState(true)
   return(
@@ -32,6 +31,7 @@ export const CommunityStudent = () => {
               userdata={userData}
               setUpdate={setUpdate}
               update={update}/>
+             
             <CommunityChatInput 
               userdata={userData}
               setUpdate={setUpdate} />

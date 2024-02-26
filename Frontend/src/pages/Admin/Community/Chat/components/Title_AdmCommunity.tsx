@@ -1,27 +1,18 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { StudentProfilePhoto } from "../../../../../components/StudentProfilePhoto"
-import { Student } from "../../../../../contexts/Dtos/auth.dto"
-import { faEllipsisVertical, faSearch } from "@fortawesome/free-solid-svg-icons"
 import { useEffect, useState } from "react"
+import { User } from "../../../../../contexts/Dtos/auth.dto"
 import api from "../../../../../services/api"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faSearch } from "@fortawesome/free-solid-svg-icons"
+import { UserProfilePhoto } from "../../../../../components/UserProfilePhoto"
 
 type PropsType = {
-  userdata:Student,
-  openUserInfo:React.Dispatch<React.SetStateAction<boolean>>
+  userdata:User
 }
 
-export const CommunityTitleBar = (props:PropsType) => {
+export const Title_AdmCommunity = (props:PropsType) => {
   const [ member, setMember ] = useState(0)
   const [ onLine, setOnline ] = useState(0)
   
-  const changeStatusOnline = async () => {
-    try{
-      await api.post('setOnline',{"user_id":props.userdata.id})
-    }catch(err){
-      console.log(err)
-    }
-  }
-
   const getInfoMembers = async () => {
     try{
       const data = await api.get('getInfoMembers')
@@ -32,17 +23,14 @@ export const CommunityTitleBar = (props:PropsType) => {
     }
   }
   useEffect(()=>{
-    const interval = setInterval(() => {
-      changeStatusOnline()
-      getInfoMembers()
-    }, 1500);
+    const interval = setInterval(() => { getInfoMembers() }, 1500);
     return () => clearInterval(interval);
   },[])
   return(
     <div className="flex bg-neutral-800 rounded-md justify-between items-center p-4 mb-2 h-[10vh]">
       <div className="flex flex-1 justify-start items-center">
-        <StudentProfilePhoto 
-          student_id={props.userdata.id} 
+        <UserProfilePhoto  
+          user_id={props.userdata.id} 
           photo_id={0} 
           autoUpdate={true} 
           class="w-[50px] h-[50px] my-1 mx-2 group-hover:hidden"/>
@@ -58,12 +46,7 @@ export const CommunityTitleBar = (props:PropsType) => {
       <div className="flex lg:flex-1 justify-end items-center">
         <button className="text text-white/50 hover:text-white mx-2">
           <FontAwesomeIcon icon={faSearch}/>
-        </button>
-        <button 
-          className="text text-white/50 hover:text-white mx-2" 
-          onClick={()=>props.openUserInfo(true)}>
-          <FontAwesomeIcon icon={faEllipsisVertical}/>
-        </button>
+        </button>        
       </div>
     </div>  
   )

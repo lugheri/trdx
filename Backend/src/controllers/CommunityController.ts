@@ -6,8 +6,31 @@ import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 import { unlink } from 'fs/promises'
+import studentsService from "../services/studentsService";
+import { addSet, checkSet, countSet } from "../config/redis";
 
 class CommunityController{
+  async setOnline(req:Request,res:Response){
+    const redisKey = `onLineMembers`
+    
+    const studentId:string = req.body.user_id
+    const check = await checkSet(redisKey,`user:${studentId}`)
+    //console.log('Check',check)
+
+    if(check===false){
+      //console.log('addSet',redisKey,`user:${studentId}`)
+      await addSet(redisKey,`user:${studentId}`)
+    }
+    res.json(true)
+  }
+
+  async getInfoMembers(req:Request,res:Response){
+    const allMembers = await studentsService.totalCommunityMembers()
+    const onLineMembers = await countSet('onLineMembers')
+    res.json({'members':allMembers,'onLine':onLineMembers})
+
+  }
+  
   async listMessagesCommunity(req:Request,res:Response){
     const page = parseInt(req.params.page)
     try{

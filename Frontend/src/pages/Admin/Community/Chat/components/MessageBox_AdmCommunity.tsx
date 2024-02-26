@@ -1,22 +1,19 @@
 import { useEffect, useRef, useState } from "react"
 import { StudentProfilePhoto } from "../../../../../components/StudentProfilePhoto"
-import { Student } from "../../../../../contexts/Dtos/auth.dto"
-import { ICommunityMedia, ICommunityMessage } from "../../Dto/community.dto"
+import { User } from "../../../../../contexts/Dtos/auth.dto"
+import { ICommunityMedia, ICommunityMessage } from "../../../../Students/CommunityStudent/Dto/community.dto"
 import api from "../../../../../services/api"
 import { LoadingBars } from "../../../../../components/Loading"
-import { Button } from "../../../../../components/Buttons"
 import { urlBase } from "../../../../../utils/baseUrl"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFile } from "@fortawesome/free-solid-svg-icons"
-
+import { Button } from "../../../../../components/Buttons"
 
 type PropsType = {
-  userdata:Student,
+  userdata:User,
   message:ICommunityMessage
 }
-
-export const CommunityMessageBox = (props:PropsType) => {  
-
+export const MessageBox_AdmCommunity = (props:PropsType) => {
   return(
     <div className="flex flex-col">
       { props.userdata.id === props.message.user_id ? (
@@ -31,9 +28,8 @@ export const CommunityMessageBox = (props:PropsType) => {
 type PropsMessageType = {
   message:ICommunityMessage
 }
-const MyMessage = (props:PropsMessageType) => {
-  
-    return(
+const MyMessage = (props:PropsMessageType) => {  
+  return(
     <div className="flex flex-1 justify-end ">
       <div className="py-1 px-4 flex">       
         <div className="flex flex-col flex-1 justify-end">
