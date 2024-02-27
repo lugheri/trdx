@@ -2,13 +2,13 @@ import { QuizQuestionType } from "../controllers/Dtos/quiz.dto";
 import { QuizQuestion, QuizQuestionInstance } from "../models/QuizQuestions";
 
 class QuizQuestionsService{
-  async createNewQuestion(dataQuestion:QuizQuestionType):Promise<boolean|QuizQuestionInstance>{
+  async createNewQuestion(dataQuestion:QuizQuestionType):Promise<null|QuizQuestionInstance>{
     const [newQuestion,created] = await QuizQuestion.findOrCreate({
       where: { quiz_id:dataQuestion.quiz_id, type_question:dataQuestion.type_question, question:dataQuestion.question,status:1},
       defaults:dataQuestion
     })
     console.info(created)
-    return newQuestion.id ? newQuestion : false
+    return newQuestion.id ? newQuestion : null
   }
 
   async lastOrderQuestion(quizId:number):Promise<number>{

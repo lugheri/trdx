@@ -10,6 +10,7 @@ import api from "../../../../../services/api";
 import EmojiPicker, { EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react';
 import { Modal } from "../../../../../components/Modal";
 import { Button } from "../../../../../components/Buttons";
+import { LoadingBars } from "../../../../../components/Loading";
 
 type PropsType = {
   userdata:User,

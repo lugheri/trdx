@@ -1,12 +1,12 @@
 import { FormEvent, useEffect, useState } from "react"
-import { IOptionQuestionQuiz, IQuestionQuiz } from "../../Dtos/quiz.dto"
-import api from "../../../../../services/api"
-import { LoadingBars } from "../../../../../components/Loading"
+import { IOptionQuestionQuiz, IQuestionQuiz } from "../../../Dtos/quiz.dto"
+import api from "../../../../../../services/api"
+import { LoadingBars } from "../../../../../../components/Loading"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faSquareCheck, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { Button } from "../../../../../components/Buttons";
-import { Modal, TitleModal } from "../../../../../components/Modal";
-import { InputNumberForm, SelectForm, TextAreaForm } from "../../../../../components/Inputs";
+import { Button } from "../../../../../../components/Buttons";
+import { Modal, TitleModal } from "../../../../../../components/Modal";
+import { InputNumberForm, SelectForm, TextAreaForm } from "../../../../../../components/Inputs";
 
 interface IOptionsQuestionQuizProps{
   question:IQuestionQuiz;

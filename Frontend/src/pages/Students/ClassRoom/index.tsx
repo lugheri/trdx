@@ -32,13 +32,19 @@ export const ClassRoom = () => {
       const fl = await api.get(`firstLessonModule/${moduleOpen}`)
       const firstLessonModule: number = moduleOpen > 0 && fl.data.response
       console.log("module open",moduleOpen)
-      console.log("lesson",moduleOpen > 0 ? firstLessonModule : info.data.response['nextLesson'] === 0 ? info.data.response['lastLesson'] : info.data.response['nextLesson'])
+      console.log("lesson",
+                  moduleOpen > 0 ? 
+                    firstLessonModule 
+                    : info.data.response['nextLesson'] === 0 ? 
+                      info.data.response['lastLesson'] 
+                      : info.data.response['nextLesson'])
       console.log("firstLessonModule",firstLessonModule)
       
-      setLessonId(moduleOpen > 0 ? firstLessonModule : 
-                 info.data.response['nextLesson'] === 0 ? info.data.response['lastLesson'] : info.data.response['nextLesson'] )
-      
-
+      setLessonId(moduleOpen > 0 ? 
+                  firstLessonModule
+                  : info.data.response['nextLesson'] === 0 ? 
+                    info.data.response['lastLesson'] 
+                    : info.data.response['nextLesson'] )
     }catch(err){console.log(err)}
   }
   const getInfoCourse = async () => {
@@ -58,11 +64,7 @@ export const ClassRoom = () => {
     lessonId == 0 && continueLesson()
   },[])
 
-  const [ checkLesson, setCheckLesson ] = useState<number|null>(null)
-  
- 
-
-  
+  const [ checkLesson, setCheckLesson ] = useState<number|null>(null) 
 
 
   return(
@@ -94,7 +96,7 @@ export const ClassRoom = () => {
                             
                             />}         
       </div>
-     
+    
       <div className={`${mobileSide == 'lesson' ? "flex" : "hidden"} md:overflow-auto md:flex flex-col md:w-1/3 relative px-2`}>
         <SideModule 
           studentId={userData ? userData.id : 0}
