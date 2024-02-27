@@ -11,7 +11,8 @@ import { Modal, TitleModal } from "../../../../../components/Modal";
 import { InputForm, InputNumberForm, SelectForm, TextAreaForm } from "../../../../../components/Inputs";
 import { LessonsModule } from "./LessonsModule";
 import { LessonSetup } from "./LessonSetup";
-import { QuizSetup } from "./QuizSetup";
+import { QuizSetup } from "../QuizSetup";
+
 
 
 type SetupModuleLessonsComponent = {

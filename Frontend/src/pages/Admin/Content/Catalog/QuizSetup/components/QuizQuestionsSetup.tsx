@@ -1,12 +1,12 @@
 import { FormEvent, useEffect, useState } from "react"
-import { IQuestionQuiz } from "../../Dtos/quiz.dto"
-import api from "../../../../../services/api"
-import { LoadingBars } from "../../../../../components/Loading"
+import { IQuestionQuiz } from "../../../Dtos/quiz.dto"
+import api from "../../../../../../services/api"
+import { LoadingBars } from "../../../../../../components/Loading"
 import * as Far from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button } from "../../../../../components/Buttons";
-import { Modal, TitleModal } from "../../../../../components/Modal";
-import { InputNumberForm, SelectForm, TextAreaForm } from "../../../../../components/Inputs";
+import { Button } from "../../../../../../components/Buttons";
+import { Modal, TitleModal } from "../../../../../../components/Modal";
+import { InputNumberForm, SelectForm, TextAreaForm } from "../../../../../../components/Inputs";
 import { faAlignJustify, faSquareCheck, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { OptionsQuestionQuiz } from "./QuizOptionsQuestionSetup";
 
@@ -63,7 +63,7 @@ interface IEmptyQuestionsProps{
 const EmptyQuestions : React.FC<IEmptyQuestionsProps> = (props) => {
   return(
     <div className="flex flex-col w-full">
-      <p className="text-slate-100 text-sm">Configure as perguntas do Questionário</p>
+      <p className="text-slate-100 text-sm">Crie as perguntas do Questionário</p>
       <div 
         className="bg-slate-800/40 w-full my-2 flex flex-col justify-center items-center px-2 py-8 rounded border border-teal-400">
         <FontAwesomeIcon className="text-white/50 text-6xl my-2" icon={Far.faQuestionCircle}/>

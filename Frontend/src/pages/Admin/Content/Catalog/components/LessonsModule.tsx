@@ -68,7 +68,14 @@ export const LessonsModule: React.FC<LessonsModuleComponent> = (props)=> {
                   </div>
                   {orderLesson && <LessonsOrder module_id={orderLesson} order_module={props.infoModule.order} lessons={lessons} close={setOrderLesson}/> }                 
                 </div>}
-      {newLesson && <NewLesson course_id={props.infoModule.course_id} setSetupLesson={props.setSetupLessonModule} moduleId={newLesson} moduleOrder={props.infoModule.order} setNewLesson={setNewLesson} totalLessons={lessons ? lessons.length : 0}/>}      
+      {newLesson && <NewLesson 
+                      course_id={props.infoModule.course_id} 
+                      setSetupLesson={props.setSetupLessonModule} 
+                      setTypeLessonSetup={props.setTypeLessonSetup}
+                      moduleId={newLesson} 
+                      moduleOrder={props.infoModule.order} 
+                      setNewLesson={setNewLesson} 
+                      totalLessons={lessons ? lessons.length : 0}/>}      
     </div>}/>
   )
 }
@@ -119,6 +126,7 @@ type NewLessonComponent = {
   setNewLesson: React.Dispatch<React.SetStateAction<null | number>>,
   totalLessons:number,
   setSetupLesson: React.Dispatch<React.SetStateAction<null | number>>,
+  setTypeLessonSetup: React.Dispatch<React.SetStateAction<string>>
 }
 const NewLesson : React.FC<NewLessonComponent> = (props) => {
   const [ error, setError ] = useState<null | string>(null)
@@ -140,14 +148,8 @@ const NewLesson : React.FC<NewLessonComponent> = (props) => {
 
   const saveNewLesson = async (e:FormEvent) => {
     e.preventDefault()
-
-
-
-
     const match = link.match(/vimeo\.com\/(\d+)/);
-
     await nextOrder()
-
     try{
       const data = {
         course_id:props.course_id,
@@ -164,6 +166,7 @@ const NewLesson : React.FC<NewLessonComponent> = (props) => {
       if (response && response.data && response.data.success) {
         props.setNewLesson(null)
         props.setSetupLesson(response.data.response)
+        props.setTypeLessonSetup(typeContent == 'video' ? 'Aula' : 'Quiz')
       } else {
         console.log(response.data.error)
         setError('Ocorreu um erro ao requisitar esta ação! '+response.data.error);

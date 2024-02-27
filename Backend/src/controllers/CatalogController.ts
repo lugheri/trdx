@@ -8,9 +8,10 @@ import LessonsAttachmentsService from '../services/LessonsAttachmentsService';
 import lessonAccessRulesService from '../services/lessonAccessRulesService';
 import moment from 'moment';
 import studentsService from '../services/studentsService';
-import { QuizQuestionDTO, QuizQuestionOptionsDTO } from './Dtos/quiz.dto';
+import { QuizQuestionDTO, QuizQuestionOptionsDTO, QuizQuestionSettingsDTO } from './Dtos/quiz.dto';
 import quizQuestionOptionsService from '../services/quizQuestionOptionsService';
 import quizQuestionsService from '../services/quizQuestionsService';
+import quizSettingsService from '../services/quizSettingsService';
 
 class CatalogController{
   //Courses
@@ -143,7 +144,23 @@ class CatalogController{
     }
     try{
       const dataNewLesson = await  coursesLessonsService.createNewLessonModule(dataLesson.data)
-      if(dataNewLesson){
+      if(dataNewLesson){         
+        if(dataNewLesson.type_lesson == 'Quiz'){
+          //New Settings
+          const dataSettings = QuizQuestionSettingsDTO.safeParse({quiz_id:dataNewLesson.id})
+          try{
+            if(!dataSettings.success){
+              res.json({"error":true,"message":dataSettings.error})
+              return
+            }
+            await quizSettingsService.createNewSettings(dataSettings.data)
+            res.json({"success": true,"response": dataNewLesson.id})  
+            return
+          }catch(err){
+            console.error(err)
+            res.json({"error":true,"message":err})  
+          }    
+        }
         res.json({"success": true,"response": dataNewLesson.id})  
         return
       }
@@ -567,6 +584,35 @@ class CatalogController{
     }catch(err){
       console.error(err)
       res.json({"error":err})  
+    }
+  }
+
+  //Settings Questions
+  async infoSettingsQuestion(req:Request,res:Response){
+    const quiz_id : number = parseInt(req.params.quiz_id)
+    try{
+      const settings = await quizSettingsService.infoQuestionSettings(quiz_id) 
+      res.json({"success": true,"response": settings})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":true,"message":err})  
+    }
+  }
+  async editSettingsQuestion(req:Request,res:Response){
+    const quiz_id : number = parseInt(req.params.quiz_id)
+    const dataSettinhsQuestion = QuizQuestionSettingsDTO.safeParse(req.body)
+    if(!dataSettinhsQuestion.success){
+      res.json({"error":true,"message":dataSettinhsQuestion.error})  
+      return
+    }
+    try{
+      const edit = await quizSettingsService.editQuestionSettings(quiz_id,dataSettinhsQuestion.data)
+      res.json({"success": true,"response": edit})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":true,"message":err})  
     }
   }
 
