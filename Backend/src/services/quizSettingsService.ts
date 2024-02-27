@@ -1,4 +1,4 @@
-import { QuizQuestionSettingsType } from "../controllers/Dtos/quiz.dto"
+import { QuizQuestionSettingsPartialType, QuizQuestionSettingsType } from "../controllers/Dtos/quiz.dto"
 import { QuizSettings, QuizSettingsInstance } from "../models/QuizSettings"
 
 
@@ -16,7 +16,7 @@ class QuizSettingsService{
     return infoQuestion
   }
 
-  async editQuestionSettings(quiz_id:number,dataQuestionSettings:QuizQuestionSettingsType):Promise<boolean>{
+  async editQuestionSettings(quiz_id:number,dataQuestionSettings:QuizQuestionSettingsPartialType):Promise<boolean>{
     await QuizSettings.update(dataQuestionSettings,{where:{quiz_id:quiz_id}})
     return true
   }

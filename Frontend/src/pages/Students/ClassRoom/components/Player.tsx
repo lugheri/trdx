@@ -19,6 +19,7 @@ interface VideoPlayerProps {
   nameCourse:string,
   student_id:number,
   studentName:string,
+  setTypeQuiz:React.Dispatch<React.SetStateAction<boolean>>,
   setLessonId:React.Dispatch<React.SetStateAction<number>>,
   setCheckLesson:React.Dispatch<React.SetStateAction<number|null>>,
   setModuleOpen:React.Dispatch<React.SetStateAction<number>>,
@@ -43,8 +44,7 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
 
   const getInfoLesson = async () => {
     try{
-      const info = await api.get(`infoLesson/${props.lesson_id}`)
-      
+      const info = await api.get(`infoLesson/${props.lesson_id}`)      
       setInfoLesson(info.data.response)
     }catch(err){
       console.log(err)
@@ -74,6 +74,12 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
     checkValidity()
   },[props.lesson_id])
 
+  useEffect(()=>{
+    if(infoLesson){
+      infoLesson.type_lesson === 'Quiz' ? props.setTypeQuiz(true) : props.setTypeQuiz(false)
+    }
+  },[infoLesson])
+
   const sendPresence = async () => {
     try{
       const data = {
@@ -87,6 +93,7 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
       console.log(err)
     } 
   }
+
   const [update,setUpdate] = useState(0)
   useEffect(()=>{
     sendPresence()

@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { Button } from "../../../../../../components/Buttons"
 import { Card } from "../../../../../../components/Cards"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons"
 import api from "../../../../../../services/api"
 import { ISettingsQuiz } from "../../../Dtos/quiz.dto"
-import { InputNumberForm, SelectForm } from "../../../../../../components/Inputs"
+import { InputForm, InputNumberForm, SelectForm, TextAreaForm } from "../../../../../../components/Inputs"
 import { LoadingBars } from "../../../../../../components/Loading"
 import { Modal, TitleModal } from "../../../../../../components/Modal"
 
@@ -51,7 +51,41 @@ export const QuizSettings = (props:Props) => {
     { "name":"Não","value":0}
   ]
 
-  useEffect(()=>{getSettingsQuiz()},[])
+  useEffect(()=>{getSettingsQuiz()},[editQuizScreen])
+
+
+  const handleShowModules = async (value:string) => {
+
+    console.log('handleShowModules',value)
+    setShowModules(parseInt(value))
+    await saveSettings( { show_modules:parseInt(value) })
+  }
+  const handlePassingThreshold = async (value:number) => {
+    setPassingThreshold(value)
+    await saveSettings( { passing_threshold:value })
+  }
+  const handleTimeRetry = async (value:number) => {
+    setTimeRetry(value)
+    const data = { hours_retry_on_fail:value }
+    await saveSettings(data)
+  }
+
+  const saveSettings = async (data:any) => {
+    try{
+      const r = await api.patch(`editSettingsQuestion/${props.quizId}`,data)
+      if(r.data.success){
+        return
+      }
+      setError('Ocorreu um erro ao salvar os dados!')
+      setMessageError(r.data.message)
+    }catch(err){
+      setError('Ocorreu um erro ao salvar os dados!')
+      setMessageError(err)
+    }
+  }  
+
+
+
 
   return(
     error !== null ? (
@@ -127,7 +161,7 @@ export const QuizSettings = (props:Props) => {
                 lableKey="name"
                 valueKey="value"
                 value={showModules}
-                onChange={setShowModules}
+                onChange={handleShowModules}
                 label="Exibir Módulos do Curso"/>
             </div>  
             <div className="flex w-full">
@@ -137,7 +171,7 @@ export const QuizSettings = (props:Props) => {
                 max={100}
                 step={5} 
                 label="Aproveitamento Mínimo para Aprovação (%)"
-                onChange={setPassingThreshold}/>
+                onChange={handlePassingThreshold}/>
             </div>  
             <div className="flex w-full">
               <InputNumberForm
@@ -145,7 +179,7 @@ export const QuizSettings = (props:Props) => {
                 min={0}
                 step={1} 
                 label="Tempo Mínimo para Retentativa (Em Horas)"
-                onChange={setTimeRetry}/>
+                onChange={handleTimeRetry}/>
             </div>  
           </div>}/>          
       </div>
@@ -165,9 +199,43 @@ type EditQuizScreenProps = {
   close:React.Dispatch<React.SetStateAction<"home"|"appr"|"repr"|null>>
 }
 const EditQuizScreen = (props:EditQuizScreenProps) => {
+  const [ error, setError ] = useState<string|null>(null)
+  const [ errorMessage, setErrorMessage ] = useState<string|null>(null)
+  const [ title1, setTitle1 ] = useState(props.screen == "home" ? props.settings.home_title_1 : props.screen == "appr" ? props.settings.approved_title_1 : props.settings.reproved_title_1)
+  const [ title2, setTitle2 ] = useState(props.screen == "home" ? props.settings.home_title_2 : props.screen == "appr" ? props.settings.approved_title_2 : props.settings.reproved_title_2)
+  const [ text, setText ] = useState(props.screen == "home" ? props.settings.home_text : props.screen == "appr" ? props.settings.approved_text : props.settings.reproved_text)
+
+  const handleSubmit = async (e:FormEvent) => {
+    e.preventDefault()
+    try{
+      const data = props.screen == "home" ? {
+                    home_title_1:title1,
+                    home_title_2:title2,
+                    home_text:text
+                  } : props.screen == "appr" ? {
+                    approved_title_1:title1,
+                    approved_title_2:title2,
+                    approved_text:text
+                  } : {
+                    reproved_title_1:title1,
+                    reproved_title_2:title2,
+                    reproved_text:text
+                  }
+      const r = await api.patch(`editSettingsQuestion/${props.quizId}`,data)
+      if(r.data.success){
+        props.close(null)
+        return
+      }
+      setError('Ocorreu um erro ao salvar os dados!')
+      setErrorMessage(r.data.message)
+    }catch(err){
+      setError('Ocorreu um erro ao salvar os dados!')
+      setErrorMessage(err)
+    }
+  }
   return(
-    <Modal className="w-1/2" component={
-      <div className="flex flex-col">
+    <Modal className="w-full" component={
+      <form className="flex flex-col" onSubmit={handleSubmit}>
         <TitleModal 
           icon="faEdit"
           title={`Editar Tela ${props.screen == "home" ? 
@@ -176,23 +244,33 @@ const EditQuizScreen = (props:EditQuizScreenProps) => {
                                 "de Aprovação" 
                               : "de Reprovação" } do Questionário`} 
           close={()=>props.close(null)}/>
-        
-        { props.screen == "home" ? (
-          <div className="flex flex-col my-4">
-            <p>Tela Inicial</p>
-          </div>    
-        ) : props.screen == "appr" ? (
-          <div className="flex flex-col my-4">
-            <p>Tela de Aprovação</p>
-          </div> 
-        ) : (
-          <div className="flex flex-col my-4">
-            <p>Tela de Reprovação</p>
+        <div className="flex justify-center items-center">
+          <div className="flex flex-col justify-center items-center w-1/3 h-full bg-neutral-900 px-2 py-10 mx-2 rounded-md">
+            <p className="text-white font-bold text-lg">{title1}</p>
+            <p className="text-green-500 font-bold text-lg mb-1">{title2}</p>
+            <p className="text-white/80 font-light text-xs text-center">{text}</p>          
           </div>
-        )}
-        <div className="flex justify-end border-t border-slate-600 pt-4">
-          <Button btn="muted" name="Cancelar" type="notline" onClick={()=>props.close(null)}/>
+          <div className="flex flex-col my-4 w-2/3">
+            <InputForm 
+              label="Titulo 1"
+              value={title1}
+              onChange={setTitle1}/>  
+            <InputForm 
+              label="Titulo 1"
+              value={title2}
+              onChange={setTitle2}/>
+            <TextAreaForm
+              label="Texto"
+              value={text}
+              onChange={setText}/>
+          </div>
         </div>  
-      </div>}/>
+      
+        <div className="flex justify-end border-t border-slate-600 pt-4">
+          { error && <p className="text-red-500" title={errorMessage}>{error}</p>}
+          <Button btn="muted" name="Cancelar" type="notline" onClick={()=>props.close(null)}/>
+          <Button btn="success" icon="faFloppyDisk" name="Salvar" submit/>
+        </div>  
+      </form>}/>
   )
 }

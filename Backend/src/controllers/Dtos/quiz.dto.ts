@@ -35,3 +35,6 @@ export const QuizQuestionSettingsDTO = z.object({
   show_modules:z.optional(z.number()).default(0),
   passing_threshold:z.optional(z.number()).default(0)})
 export type QuizQuestionSettingsType = z.infer<typeof QuizQuestionSettingsDTO>;
+
+export const QuizQuestionSettingsPartialDTO = QuizQuestionSettingsDTO.partial();
+export type QuizQuestionSettingsPartialType = z.infer<typeof QuizQuestionSettingsPartialDTO>;

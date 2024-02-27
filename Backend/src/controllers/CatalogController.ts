@@ -8,7 +8,7 @@ import LessonsAttachmentsService from '../services/LessonsAttachmentsService';
 import lessonAccessRulesService from '../services/lessonAccessRulesService';
 import moment from 'moment';
 import studentsService from '../services/studentsService';
-import { QuizQuestionDTO, QuizQuestionOptionsDTO, QuizQuestionSettingsDTO } from './Dtos/quiz.dto';
+import { QuizQuestionDTO, QuizQuestionOptionsDTO, QuizQuestionSettingsDTO, QuizQuestionSettingsPartialDTO } from './Dtos/quiz.dto';
 import quizQuestionOptionsService from '../services/quizQuestionOptionsService';
 import quizQuestionsService from '../services/quizQuestionsService';
 import quizSettingsService from '../services/quizSettingsService';
@@ -601,17 +601,17 @@ class CatalogController{
   }
   async editSettingsQuestion(req:Request,res:Response){
     const quiz_id : number = parseInt(req.params.quiz_id)
-    const dataSettinhsQuestion = QuizQuestionSettingsDTO.safeParse(req.body)
-    if(!dataSettinhsQuestion.success){
-      res.json({"error":true,"message":dataSettinhsQuestion.error})  
+    const dataSettingsQuestion = QuizQuestionSettingsPartialDTO.safeParse(req.body)
+    if(!dataSettingsQuestion.success){
+      res.json({"error":true,"message":dataSettingsQuestion.error})  
       return
     }
     try{
-      const edit = await quizSettingsService.editQuestionSettings(quiz_id,dataSettinhsQuestion.data)
+      const edit = await quizSettingsService.editQuestionSettings(quiz_id,dataSettingsQuestion.data)
       res.json({"success": true,"response": edit})  
       return
     }catch(err){
-      console.error(err)
+      console.error('Erro >>',err)
       res.json({"error":true,"message":err})  
     }
   }

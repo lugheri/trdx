@@ -55,10 +55,10 @@ export const TextAreaForm: React.FC<TextAreaType> = (props) => {
     <div className="flex flex-col flex-1">
       {!props.label ? false 
       : (<label className="font-semibold italic text-sm text-neutral-300  py-1">
-         {props.label}
+        {props.label}
         </label>)}
       <textarea 
-         className={` font-light shadow text-white border rounded-md p-2 placeholder:italic placeholder:font-light placeholder:text-neutral-400 mb-4 bg-neutral-500/20 border-neutral-700 focus:border-b-4 focus:border-x-0 focus:border-t-0 focus:ring-0 focus:border-teal-600 ${props.className} `} 
+        className={` font-light shadow text-white border rounded-md p-2 placeholder:italic placeholder:font-light placeholder:text-neutral-400 mb-4 bg-neutral-500/20 border-neutral-700 focus:border-b-4 focus:border-x-0 focus:border-t-0 focus:ring-0 focus:border-teal-600 ${props.className} `} 
         value={props.value}
         placeholder={props.placeholder} 
         required={props.required}
@@ -91,7 +91,7 @@ export const SelectForm: React.FC<SelectType> = (props) => {
                 value={option[props.valueKey]}>
                   {option[props.lableKey]}
               </option>
-             ))}
+            ))}
       </select>
     </div>
   ) 
