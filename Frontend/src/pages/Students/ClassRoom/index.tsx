@@ -67,62 +67,51 @@ export const ClassRoom = () => {
 
   const [ checkLesson, setCheckLesson ] = useState<number|null>(null) 
 
-  const [ typeQuiz, setTypeQuiz ] = useState(false)
-
-
   return(
-    typeQuiz ? (
-      <Quiz 
-        lessonId={lessonId} 
-        userdata={userData}/>
-    ) : (    
-      <div className="flex flex-col md:flex-row h-full overflow-auto mr-1 ml-1 md:ml-28
-                      lg:ml-28 xl:ml-28 2xl:ml-28 ">                  
-        <div className="flex flex-1 flex-col md:h-[100%] md:relative md:overflow-auto pb-2">  
-          <Player
-            course_id={courseId} nameCourse={infoCourse ? infoCourse.name : ""}
-            module_id={moduleOpen} 
-            lesson_id={lessonId} setLessonId={setLessonId}
-            student_id={userData ? userData.id : 0}          
-            studentName={userData ? userData.name : ""}
-            setTypeQuiz={setTypeQuiz}
-            setModuleOpen={setModuleOpen}
-            setOpenNotePad={setOpenNotePad} setOpenNotePadMobile={setOpenNotePadMobile}
-            setMobileSide={setMobileSide} mobileSide={mobileSide}   
-            setCheckLesson={setCheckLesson}       
-            />
-            {/*Load Mobile Side */} 
-            { openNotePadMobile && <NotePad 
-                              course_id={courseId} 
-                              nameCourse={infoCourse ? infoCourse.name : ""}
-                              module_id={moduleOpen}
-                              lesson_id={lessonId}
-                              student_id={userData ? userData.id : 0}
-                              setClose={setOpenNotePad} 
-                              setCloseMobile={setOpenNotePadMobile}
-                              
-                              />}         
-        </div>    
-        <div className={`${mobileSide == 'lesson' ? "flex" : "hidden"} md:overflow-auto md:flex flex-col md:w-1/3 relative px-2`}>
-          <SideModule 
-            studentId={userData ? userData.id : 0}
-            checkLesson={checkLesson}
-            courseId={courseId}
-            imageCourse={infoCourse ? infoCourse.image : 0}
-            moduleOpen={moduleOpen} setModuleOpen={setModuleOpen}
-            lessonId={lessonId} setLessonId={setLessonId}/>         
-          { openNotePad && <NotePad 
-                              course_id={courseId} 
-                              nameCourse={infoCourse ? infoCourse.name : ""}
-                              module_id={moduleOpen}
-                              lesson_id={lessonId}
-                              student_id={userData ? userData.id : 0}
-                              setClose={setOpenNotePad} 
-                              setCloseMobile={setOpenNotePadMobile}
-                              />}        
-          </div>
+    <div className="flex flex-col md:flex-row h-full overflow-auto mr-1 ml-1 md:ml-28
+                    lg:ml-28 xl:ml-28 2xl:ml-28 ">                  
+      <div className="flex flex-1 flex-col md:h-[100%] md:relative md:overflow-auto pb-2">  
+        <Player
+          course_id={courseId} nameCourse={infoCourse ? infoCourse.name : ""}
+          module_id={moduleOpen} 
+          lesson_id={lessonId} setLessonId={setLessonId}
+          student_id={userData ? userData.id : 0}          
+          studentName={userData ? userData.name : ""}          
+          setModuleOpen={setModuleOpen}
+          setOpenNotePad={setOpenNotePad} setOpenNotePadMobile={setOpenNotePadMobile}
+          setMobileSide={setMobileSide} mobileSide={mobileSide}   
+          setCheckLesson={setCheckLesson}       
+          />
+        {/*Load Mobile Side */} 
+        { openNotePadMobile && 
+          <NotePad 
+            course_id={courseId} 
+            nameCourse={infoCourse ? infoCourse.name : ""}
+            module_id={moduleOpen}
+            lesson_id={lessonId}
+            student_id={userData ? userData.id : 0}
+            setClose={setOpenNotePad} 
+            setCloseMobile={setOpenNotePadMobile}/>}         
+      </div>    
+      <div className={`${mobileSide == 'lesson' ? "flex" : "hidden"} md:overflow-auto md:flex flex-col md:w-1/3 relative px-2`}>
+        <SideModule 
+          studentId={userData ? userData.id : 0}
+          checkLesson={checkLesson}
+          courseId={courseId}
+          imageCourse={infoCourse ? infoCourse.image : 0}
+          moduleOpen={moduleOpen} setModuleOpen={setModuleOpen}
+          lessonId={lessonId} setLessonId={setLessonId}/>         
+        { openNotePad && 
+          <NotePad 
+            course_id={courseId} 
+            nameCourse={infoCourse ? infoCourse.name : ""}
+            module_id={moduleOpen}
+            lesson_id={lessonId}
+            student_id={userData ? userData.id : 0}
+            setClose={setOpenNotePad} 
+            setCloseMobile={setOpenNotePadMobile}/>}        
       </div>
-    )
+    </div>
   )
 }
 

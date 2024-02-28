@@ -70,7 +70,7 @@ export const ButtonDefault : React.FC<ButtonDefaultComponent> = (props) =>{
 export const Button : React.FC<ButtonType> = (props) => {
   const { btn, type, size, border } = props;
   const getClassNames = () => {
-    const btnDefault = "bg-[#2ecc71] text-white hover:bg-[#27ae60]"
+    const btnDefault = "bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow-md hover:bg-gradient-to-r from-[#2eff2a] to-[#88ff8c]"
 
     const btnLight = "bg-[#ececec] text-neutral-900 hover:bg-[#777] border border-[#ececec]"
     const btnOutlineLight = "border border-[#ececec] text-white hover:bg-[#ececec] hover:text-neutral-600"

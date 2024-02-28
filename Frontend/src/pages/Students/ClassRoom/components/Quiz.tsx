@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Student } from "../../../../contexts/Dtos/auth.dto";
 import { ISettingsQuiz } from "../../../Admin/Content/Dtos/quiz.dto";
-import { ILessons } from "../../Dtos/courses.dto";
+import { ILessons, IModules } from "../../Dtos/courses.dto";
 import api from "../../../../services/api";
-import { LoadingBars } from "../../../../components/Loading";
+import { Loading, LoadingBars } from "../../../../components/Loading";
 
 type Props = {
   lessonId:number;
@@ -16,6 +16,7 @@ export const Quiz = (props:Props) => {
   const getInfoLesson = async () => {
     try{
       const info = await api.get(`infoLesson/${props.lessonId}`)      
+      console.log('infoLesson',info.data)
       setInfoLesson(info.data.response)
     }catch(err){
       console.log(err)
@@ -26,9 +27,11 @@ export const Quiz = (props:Props) => {
     try{
       const info = await api.get(`infoSettingsQuestion/${props.lessonId}`)
       console.log('Settings',info.data)
-      info.data.success ? 
+      if(info.data.success){ 
         setSettings(info.data.response)
-      : setError('Ocorreu um erro interno')
+        return
+      }
+      setError('Ocorreu um erro interno')
     }catch(err){
       console.log(err)
       setError('Ocorreu um erro ao recuperar as configurações do questionário')
@@ -44,18 +47,43 @@ export const Quiz = (props:Props) => {
     <div className="flex flex-col justify-center items-center">
       { error !== null ? (
         <p className="text-red-500">{error}</p>
-      ):(
-        <>
-          <p className="text-white">Quiz : {props.lessonId}</p>
-          { settings === null ? <LoadingBars/> : (
-            <div className="flex flex-col">
-              <p className="text-white font-bold">{settings.home_title_1}</p>
-              <p className="text-green-500 font-bold">{settings.home_title_2}</p>
-              <p className="text-white/80 font-light">{settings.home_text}</p>
-            </div>
-          )}
-        </>
+      ) : settings === null ? 
+        <LoadingBars/> : (
+        <div className="flex flex-col w-full h-[100vh] justify-center items-center">
+          { settings.show_modules === 1 && <ModulesList courseId={infoLesson.course_id} moduleId={infoLesson.module_id} />}
+          <p className="text-white font-bold text-5xl">{settings.home_title_1}</p>
+          <p className="text-[#0f0] font-bold text-5xl">{settings.home_title_2}</p>
+          <p className="text-white/80 font-light text-xl mt-2">{settings.home_text}</p>
+        </div>
       )}
     </div>
+  )
+}
+
+type ModuleListProps = {
+  moduleId:number
+  courseId:number
+}
+const ModulesList = (props:ModuleListProps) => {
+  const [ modules, setModules ] = useState<IModules[]|null>(null)
+  const getModules = async () => {
+    try{
+      const m = await api.get(`modulesCourse/${props.courseId}`)
+      setModules(m.data.response)
+    }catch(err){
+      console.log(err)
+    }
+  }
+  useEffect(()=>{getModules()},[])
+
+  return(
+    modules === null ? <Loading/>
+    : modules.length == 0 ? (<></>) 
+    : modules.map((module,key)=>(
+      <div className="bg-green-500 p-4 rounded m-1" key={key}>
+        {module.module}
+      </div>
+
+    ))
   )
 }
