@@ -6,12 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IAttachmentsLesson, ILessons } from "../../Dtos/courses.dto"
 import api from '../../../../services/api';
-import { Loading, LoadingBars } from '../../../../components/Loading';
+import { LoadingBars } from '../../../../components/Loading';
 import { CommentsLesson } from './CommentsLesson';
 import { urlBase } from '../../../../utils/baseUrl';
 import moment from 'moment';
-import { ISettingsQuiz } from '../../../Admin/Content/Dtos/quiz.dto';
-import { Button } from '../../../../components/Buttons';
+import { QuizStart } from './Quiz';
 
 
 interface VideoPlayerProps {
@@ -50,14 +49,7 @@ export const Player : React.FC<VideoPlayerProps> = (props) => {
   useEffect(()=>{    
     getInfoLesson()
     checkValidity()
-  },[props.lesson_id])
-
-  /*
-  useEffect(()=>{
-    if(infoLesson){
-      infoLesson.type_lesson === 'Quiz' ? props.setTypeQuiz(true) : props.setTypeQuiz(false)
-    }
-  },[infoLesson])*/
+  },[props.lesson_id])  
 
   const sendPresence = async () => {
     try{
@@ -163,55 +155,6 @@ const AwaitingRelease = (props:AwaitingReleaseProps) => {
   )
 }
 
-
-//Quiz Start 
-type QuizStartProps = {
-  infoLesson:ILessons,
-  student_id:number,
-  course_id:number,
-  module_id:number,
-  studentName:string,
-}
-const QuizStart = (props:QuizStartProps) => {
-  const [ error, setError ] = useState<string|null>(null)
-  const [ settings, setSettings ] = useState<ISettingsQuiz|null>(null)
-
-  const getQuizSettings = async () => {
-    try{
-      const infoSett = await api.get(`infoSettingsQuestion/${props.infoLesson.id}`)
-      if(infoSett.data.success){ 
-        setSettings(infoSett.data.response)
-        return
-      }
-      setError('Ocorreu um erro interno')
-    }catch(err){
-      console.log(err)
-      setError('Ocorreu um erro ao recuperar as configurações do questionário')
-    }      
-  }
-
-  useEffect(()=>{getQuizSettings()},[])
-
-  return(
-    <div className="flex flex-col justify-center items-center w-full h-[80vh] lg:h-[100vh]">
-      { error === null ? 
-        settings === null ? <Loading/> : (
-        <>
-        <div className="flex flex-col justify-center items-center">
-          <p className="text-white font-black text-2xl lg:text-5xl text-center">{settings.home_title_1}</p>
-          <p className="text-[#0f0] font-black text-2xl lg:text-5xl mb-4 text-center">{settings.home_title_2}</p>
-          <p className="text-white/80 my-4 font-light text-center">{settings.home_text}</p>
-
-        </div>
-        
-        <Button className='mt-12 py-4 px-4 lg:w-1/3' name="Iniciar Questionário" />
-        </>
-      ) : (
-        <p className="text-red-500">{error}</p>
-      )}
-    </div>
-  )
-}
 //LessonComponent
 type LessonProps = {
   accessLesson:boolean|null,
@@ -480,3 +423,7 @@ const RatingButton : React.FC<{lesson_id:number,student_id:number,rate:number}> 
     </div>
   )
 }
+
+
+
+

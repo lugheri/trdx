@@ -82,4 +82,7 @@ export default (routes:Router)=>{
   //Questions Settings
   routes.get("/infoSettingsQuestion/:quiz_id",CatalogController.infoSettingsQuestion)
   routes.patch("/editSettingsQuestion/:quiz_id",CatalogController.editSettingsQuestion)
+
+  //Student Page Routes Quiz
+  routes.get("/nextQuestion/:quiz_id/:last_question_id",CatalogController.nextQuestion)
 }

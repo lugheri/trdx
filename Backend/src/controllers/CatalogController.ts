@@ -616,6 +616,23 @@ class CatalogController{
     }
   }
 
+  //Students Page
+  async nextQuestion(req:Request,res:Response){
+    const quiz_id = parseInt(req.params.quiz_id)
+    const last_question_id = parseInt(req.params.last_question_id)
+    console.log("quiz_id",quiz_id)
+    console.log("last_question_id",last_question_id)
+    try{
+      const nextQuestion = await quizQuestionsService.nextQuestion(quiz_id,last_question_id)
+      res.json({"success": true,"response": nextQuestion})  
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error":true,"message":err}) 
+    }
+
+  }
+
 
 }
 export default new CatalogController();

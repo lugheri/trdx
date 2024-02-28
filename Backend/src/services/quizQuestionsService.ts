@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { QuizQuestionType } from "../controllers/Dtos/quiz.dto";
 import { QuizQuestion, QuizQuestionInstance } from "../models/QuizQuestions";
 
@@ -26,6 +27,15 @@ class QuizQuestionsService{
       order:[['order','ASC']],
     })
     return listQuestions
+  }
+
+  async nextQuestion(quizId:number,lastQuestionId:number):Promise<QuizQuestionInstance|null>{
+    const nextQuestion = await QuizQuestion.findOne({
+      where:{quiz_id:quizId,id:{[Op.gt]:lastQuestionId}},
+      order:[['order','ASC']],
+    })
+    
+    return nextQuestion
   }
 
   async infoQuestion(questionId:number):Promise<QuizQuestionInstance|null>{
