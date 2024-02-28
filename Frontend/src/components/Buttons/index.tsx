@@ -70,7 +70,7 @@ export const ButtonDefault : React.FC<ButtonDefaultComponent> = (props) =>{
 export const Button : React.FC<ButtonType> = (props) => {
   const { btn, type, size, border } = props;
   const getClassNames = () => {
-    const btnDefault = "bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow-md hover:bg-gradient-to-r from-[#2eff2a] to-[#88ff8c]"
+    const btnDefault = "bg-gradient-to-r from-[#88ff8c] to-[#2eff2a] shadow-[#24ff0055] shadow-md hover:bg-green-500"
 
     const btnLight = "bg-[#ececec] text-neutral-900 hover:bg-[#777] border border-[#ececec]"
     const btnOutlineLight = "border border-[#ececec] text-white hover:bg-[#ececec] hover:text-neutral-600"
@@ -126,10 +126,10 @@ export const Button : React.FC<ButtonType> = (props) => {
 
   return (
     <button 
-      type={ props.submit ? "submit" : "button" }
-      className={style+" "+props.className}
+      type={ props.disabled ? "button" : props.submit ? "submit" : "button" }
+      className={`${style} ${props.className} ${props.disabled && "opacity-30 cursor-no-drop"}`}
       title={ props.title ? props.title : ""}
-      onClick={props.onClick}>
+      onClick={props.disabled ? ()=>{return false} : props.onClick}>
         { props.icon ? (<FontAwesomeIcon className="m-1" icon={Fas[props.icon] as IconProp}/>) : false}  
         { props.iconBrand ? (<FontAwesomeIcon className="m-1" icon={Fab[props.iconBrand] as IconProp}/>) : false} 
         { props.name ? props.name : false}

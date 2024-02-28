@@ -85,4 +85,11 @@ export default (routes:Router)=>{
 
   //Student Page Routes Quiz
   routes.get("/nextQuestion/:quiz_id/:last_question_id",CatalogController.nextQuestion)
+  routes.get("/previousQuestion/:quiz_id/:next_question_id",CatalogController.previousQuestion)
+  //Answers
+  routes.post("/answerQuestion",CatalogController.answerQuestion)
+  routes.get("/infoAnswerQuestion/:answer_idn",CatalogController.infoAnswerQuestion)
+  routes.patch("/editAnswerQuestion/:answer_idn",CatalogController.editAnswerQuestion)
+  //End Quiz
+  routes.post("/endQuiz",CatalogController.endQuiz)
 }

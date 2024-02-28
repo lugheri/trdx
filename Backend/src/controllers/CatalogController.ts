@@ -8,10 +8,12 @@ import LessonsAttachmentsService from '../services/LessonsAttachmentsService';
 import lessonAccessRulesService from '../services/lessonAccessRulesService';
 import moment from 'moment';
 import studentsService from '../services/studentsService';
-import { QuizQuestionDTO, QuizQuestionOptionsDTO, QuizQuestionSettingsDTO, QuizQuestionSettingsPartialDTO } from './Dtos/quiz.dto';
+import { QuizQuestionDTO, QuizQuestionOptionsDTO, QuizQuestionSettingsDTO, QuizQuestionSettingsPartialDTO, QuizStudentAnswerDTO, StudentsQuizDTO } from './Dtos/quiz.dto';
 import quizQuestionOptionsService from '../services/quizQuestionOptionsService';
 import quizQuestionsService from '../services/quizQuestionsService';
 import quizSettingsService from '../services/quizSettingsService';
+import studentsQuizService from '../services/studentsQuizService';
+import quizStudentsAnswersService from '../services/quizStudentsAnswersService';
 
 class CatalogController{
   //Courses
@@ -630,7 +632,89 @@ class CatalogController{
       console.log(err)
       res.json({"error":true,"message":err}) 
     }
+  }
 
+  async previousQuestion(req:Request,res:Response){
+    const quiz_id = parseInt(req.params.quiz_id)
+    const next_question_id = parseInt(req.params.next_question_id)
+    console.log("quiz_id",quiz_id)
+    console.log("next_question_id",next_question_id)
+    try{
+      const previousQuestion = await quizQuestionsService.previousQuestion(quiz_id,next_question_id)
+      res.json({"success": true,"response": previousQuestion})  
+      return
+    }catch(err){
+      console.log(err)
+      res.json({"error":true,"message":err}) 
+    }
+  }
+
+  async answerQuestion(req:Request,res:Response){
+    const dataAnswer = QuizStudentAnswerDTO.safeParse(req.body)
+    if(!dataAnswer.success){
+      res.json({"error":true,"message":dataAnswer.error})
+      return
+    }
+    try{
+      const answer = await quizStudentsAnswersService.newAnswerQuizStudent(dataAnswer.data)
+      if(answer){
+        res.json({"success": true,"response": answer})  
+        return
+      }
+      res.json({"error":true,"message":"Falha ao salvar dados!"})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    } 
+  }
+
+  async infoAnswerQuestion(req:Request,res:Response){
+    const answerId : number = parseInt(req.params.answer_id)
+    try{
+      const infoAnswer = await quizStudentsAnswersService.infoQuizStudentAnswer(answerId)
+      res.json({"success": true,"response": infoAnswer})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":true,"message":err})  
+    }
+  }
+  async editAnswerQuestion(req:Request,res:Response){
+    const answerId : number = parseInt(req.params.answer_id)
+    const dataAnswer = QuizStudentAnswerDTO.safeParse(req.body)
+    if(!dataAnswer.success){
+      res.json({"error":true,"message":dataAnswer.error})  
+      return
+    }
+    try{
+      const edit = await quizStudentsAnswersService.editQuizStudentAnswer(answerId,dataAnswer.data)
+      res.json({"success": true,"response": edit})  
+      return
+    }catch(err){
+      console.error('Erro >>',err)
+      res.json({"error":true,"message":err})  
+    }
+  }
+
+  async endQuiz(req:Request,res:Response){
+    const dataEndQuiz = StudentsQuizDTO.safeParse(req.body)
+    if(!dataEndQuiz.success){
+      res.json({"error":true,"message":dataEndQuiz.error})
+      return
+    }
+    try{
+      const data = await studentsQuizService.createData(dataEndQuiz.data)
+      if(data){
+        res.json({"success": true,"response": data})  
+        return
+      }
+      res.json({"error":true,"message":"Falha ao salvar dados!"})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    } 
   }
 
 

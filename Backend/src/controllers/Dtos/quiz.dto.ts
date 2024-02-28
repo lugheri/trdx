@@ -38,3 +38,21 @@ export type QuizQuestionSettingsType = z.infer<typeof QuizQuestionSettingsDTO>;
 
 export const QuizQuestionSettingsPartialDTO = QuizQuestionSettingsDTO.partial();
 export type QuizQuestionSettingsPartialType = z.infer<typeof QuizQuestionSettingsPartialDTO>;
+
+export const QuizStudentAnswerDTO = z.object({
+  student_id:z.optional(z.number()),
+  quiz_id:z.optional(z.number()),
+  question_id:z.optional(z.number()),
+  option_id:z.optional(z.number()),
+  answer:z.optional(z.string()),
+  correct_answer:z.optional(z.number())
+})
+export type QuizStudentAnswerType = z.infer<typeof QuizStudentAnswerDTO>;
+
+export const StudentsQuizDTO = z.object({
+  student_id:z.optional(z.number()),
+  quiz_id:z.optional(z.number()),
+  date:z.optional(z.string()),
+  grade_average:z.optional(z.number())
+})
+export type StudentsQuizType = z.infer<typeof StudentsQuizDTO>;

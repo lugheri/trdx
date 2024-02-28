@@ -38,6 +38,16 @@ class QuizQuestionsService{
     return nextQuestion
   }
 
+  async previousQuestion(quizId:number,next_question_id:number):Promise<QuizQuestionInstance|null>{
+    const previousQuestion = await QuizQuestion.findOne({
+      where:{quiz_id:quizId,id:{[Op.lt]:next_question_id}},
+      order:[['order','DESC']],
+    })    
+    return previousQuestion
+  }
+
+  
+
   async infoQuestion(questionId:number):Promise<QuizQuestionInstance|null>{
     const infoQuestion = await QuizQuestion.findByPk(questionId)
     return infoQuestion
