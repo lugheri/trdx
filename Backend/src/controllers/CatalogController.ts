@@ -670,9 +670,10 @@ class CatalogController{
   }
 
   async infoAnswerQuestion(req:Request,res:Response){
-    const answerId : number = parseInt(req.params.answer_id)
+    const question_id : number = parseInt(req.params.question_id)
+    const student_id : number = parseInt(req.params.student_id)
     try{
-      const infoAnswer = await quizStudentsAnswersService.infoQuizStudentAnswer(answerId)
+      const infoAnswer = await quizStudentsAnswersService.infoQuizStudentAnswer(question_id,student_id)
       res.json({"success": true,"response": infoAnswer})  
       return
     }catch(err){
@@ -681,14 +682,15 @@ class CatalogController{
     }
   }
   async editAnswerQuestion(req:Request,res:Response){
-    const answerId : number = parseInt(req.params.answer_id)
+    const question_id : number = parseInt(req.params.question_id)
+    const student_id : number = parseInt(req.params.student_id)
     const dataAnswer = QuizStudentAnswerDTO.safeParse(req.body)
     if(!dataAnswer.success){
       res.json({"error":true,"message":dataAnswer.error})  
       return
     }
     try{
-      const edit = await quizStudentsAnswersService.editQuizStudentAnswer(answerId,dataAnswer.data)
+      const edit = await quizStudentsAnswersService.editQuizStudentAnswer(question_id,student_id,dataAnswer.data)
       res.json({"success": true,"response": edit})  
       return
     }catch(err){

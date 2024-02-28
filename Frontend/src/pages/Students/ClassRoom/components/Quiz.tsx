@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Student } from "../../../../contexts/Dtos/auth.dto";
-import { IOptionQuestionQuiz, IQuestionQuiz, ISettingsQuiz } from "../../../Admin/Content/Dtos/quiz.dto";
+import { IAnswersQuiz, IOptionQuestionQuiz, IQuestionQuiz, ISettingsQuiz } from "../../../Admin/Content/Dtos/quiz.dto";
 import { ILessons, IModules } from "../../Dtos/courses.dto";
 import api from "../../../../services/api";
 import { Loading, LoadingBars } from "../../../../components/Loading";
 import { Button } from "../../../../components/Buttons";
 import { Modal } from "../../../../components/Modal";
+import { TextAreaForm } from "../../../../components/Inputs";
 
 type Props = {
   infoLesson:ILessons,
@@ -83,8 +84,10 @@ const QuizQuestions = (props:QuizQuestionsProps) => {
         </div>
         <Questions 
           quizId={props.infoLesson.id}
+          studentId={props.studentId}
           lastQuestionId={lastQuestionId}
-          setLastQuestionId={setLastQuestionId}/>
+          setLastQuestionId={setLastQuestionId}
+          settings={props.settings}/>
       </div>
     }/>
   )
@@ -92,7 +95,9 @@ const QuizQuestions = (props:QuizQuestionsProps) => {
 
 type QuestionsProps = { 
   quizId:number,
-  lastQuestionId:number;
+  studentId:number,
+  lastQuestionId:number,
+  settings:ISettingsQuiz,
   setLastQuestionId:React.Dispatch<React.SetStateAction<number>>
 }
 const Questions = (props:QuestionsProps) => {
@@ -101,7 +106,6 @@ const Questions = (props:QuestionsProps) => {
   const [ question, setQuestion ] = useState<IQuestionQuiz|null|''>('')
   const [ options, setOptions ] = useState<IOptionQuestionQuiz[]|null>(null)
   const [ selected, setSelected ] = useState<number|null>(null)
-
  
   const previousQuestion = async (question:number) => {
     try{
@@ -110,6 +114,7 @@ const Questions = (props:QuestionsProps) => {
         const dataQ : IQuestionQuiz = q.data.response
         console.log('PREVIOUS',dataQ)
         props.setLastQuestionId(dataQ.order == 1 ? 0 : dataQ.id-1)
+        setSelected(null)
         return
       }
       setError(q.data.message)
@@ -128,9 +133,11 @@ const Questions = (props:QuestionsProps) => {
         if(dataQ.type_question === "O"){
           const o = await api.get(`listOptionsQuestion/${dataQ.id}`)
           setOptions(o.data.response)
+          setSelected(null)
           return
         }       
         setOptions([])
+
         return
       }
       setError(q.data.message)
@@ -138,8 +145,6 @@ const Questions = (props:QuestionsProps) => {
       setError('Ocorreu um erro interno')
     }
   }
-
-
 
   useEffect(()=>{nextQuestion()},[props.lastQuestionId])
 
@@ -149,17 +154,23 @@ const Questions = (props:QuestionsProps) => {
         { question === '' ? <LoadingBars/> 
         : question === null ? 
         ( 
-          <p>Fim</p>
+          <EndQuiz quizId={props.quizId} studentId={props.studentId} settings={props.settings}/>
         ):(
           <div className="flex flex-col">
             <p className="text-white text-3xl font-light mb-3">
               {question.order}. {question.question}
             </p>
-
-            { options === null ? <LoadingBars/> 
+            { question.type_question == 'D' ? (
+              <TextAnswer
+                question_id={question.id}
+                quizId={props.quizId}
+                setSelected={setSelected}
+                studentId={props.studentId}
+              />
+            ) : options === null ? <LoadingBars/> 
             : options.length == 0 ? <p className="text-white/50">Sem Opções</p>
             : options.map((option,key)=>(
-              <OptionAnswer key={key} option={option} selected={selected} setSelected={setSelected}/>
+              <OptionAnswer key={key} option={option} selected={selected} setSelected={setSelected} quizId={props.quizId} studentId={props.studentId}/>
             ))}
 
             <div className="flex justify-end items-center my-8">
@@ -186,19 +197,64 @@ const Questions = (props:QuestionsProps) => {
 type OptionAnswerProps = {
   option:IOptionQuestionQuiz,
   selected:number|null,
-  setSelected:React.Dispatch<React.SetStateAction<number|null>>
+  setSelected:React.Dispatch<React.SetStateAction<number|null>>,
+  studentId:number,
+  quizId:number
 }
 const OptionAnswer = (props:OptionAnswerProps) => {
-  const letters = ['a','b','c','d']
+  const letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 
-  const AnswerQuestion = () => {
-    if(props.selected==null){
-      console.log('Respondendo Questao')
-    }else{
-      console.log('Atualizando resposta da questao')
+  const infoAnswer = async () => {
+    try{
+      const a = await api.get(`infoAnswerQuestion/${props.option.question_id}/${props.studentId}`)
+      const answer:IAnswersQuiz = a.data.response     
+      if(answer){
+        console.log('Answer',answer.option_id)
+        props.setSelected(answer.option_id)
+      }
+
+    }catch(err){
+      console.log(err)
     }
-    props.setSelected(props.option.id)
+  }
+  useEffect(()=>{infoAnswer()},[props.option])
 
+  const AnswerQuestion = async () => {
+    console.log('AnswerQuestion',props.selected)
+    if(props.selected==null){
+      {/*Respondendo questao */}
+      const data = {
+        student_id:props.studentId,
+        quiz_id:props.quizId,
+        question_id:props.option.question_id,
+        option_id:props.option.id,
+        answer:'',
+        correct_answer:props.option.correct_answer
+      }
+      console.log('data',data)
+      props.setSelected(props.option.id)
+      const r = await api.post('answerQuestion',data)
+      if(r.data.error){
+        console.log(r.data.message)
+        return        
+      }
+    }else{
+      {/*Atualizando resposta da questao*/}
+      const data = {
+        student_id:props.studentId,
+        quiz_id:props.quizId,
+        question_id:props.option.question_id,
+        option_id:props.option.id,
+        answer:'',
+        correct_answer:props.option.correct_answer
+      }
+      props.setSelected(props.option.id)
+      const r = await api.patch(`editAnswerQuestion/${props.option.question_id}/${props.studentId}`,data)
+      if(r.data.error){
+        console.log(r.data.message)
+        return        
+      }
+    }
   }
   
   return(
@@ -212,9 +268,79 @@ const OptionAnswer = (props:OptionAnswerProps) => {
                   : "bg-white border-green-500 border-0 hover:border-4"}`}
         ></div>
       <p className="text-white text-2xl font-light">
-        {letters[props.option.order-1]}) {props.option.answer} - ({props.option.id} = {props.selected})
+        {letters[props.option.order-1]}) {props.option.answer}
       </p>
     </button>
+  )
+}
+
+type TextAnswerProps = {
+  studentId:number,
+  quizId:number,
+  question_id:number,
+  setSelected:React.Dispatch<React.SetStateAction<number|null>>
+}
+const TextAnswer = (props:TextAnswerProps) => {
+  const [ answer, setAnswer ] = useState('')
+  const [ answerId, setAnswerId ] = useState(0)
+  const infoAnswer = async () => {
+    try{
+      const a = await api.get(`infoAnswerQuestion/${props.question_id}/${props.studentId}`)
+      const answer:IAnswersQuiz = a.data.response     
+      if(answer){
+        console.log('Answer',answer.option_id)
+        setAnswer(answer.answer)
+        setAnswerId(answer.id)
+      }
+
+    }catch(err){
+      console.log(err)
+    }
+  }
+  useEffect(()=>{infoAnswer()},[props.question_id])
+
+  const AnswerQuestion = async () => {
+    if(answerId==0){
+      {/*Respondendo questao */}
+      const data = {
+        student_id:props.studentId,
+        quiz_id:props.quizId,
+        question_id:props.question_id,
+        option_id:0,
+        answer:answer,
+        correct_answer:0
+      }
+      console.log('data',data)
+      props.setSelected(1)
+      const r = await api.post('answerQuestion',data)
+      if(r.data.error){
+        console.log(r.data.message)
+        return        
+      }
+    }else{
+      {/*Atualizando resposta da questao*/}
+      const data = {
+        student_id:props.studentId,
+        quiz_id:props.quizId,
+        question_id:props.question_id,
+        option_id:0,
+        answer:answer,
+        correct_answer:0
+      }
+      props.setSelected(1)
+      const r = await api.patch(`editAnswerQuestion/${props.question_id}/${props.studentId}`,data)
+      if(r.data.error){
+        console.log(r.data.message)
+        return        
+      }
+    }
+  }
+  
+  return(
+    <div className='flex flex-col'>
+      <TextAreaForm value={answer} onChange={setAnswer}/>
+      <Button name="salvar" onClick={()=>AnswerQuestion()}/>
+    </div>
   )
 }
 
@@ -256,4 +382,22 @@ const ListModules = (props:ListModulesProps) => {
       </div>
     )    
   )
+}
+
+
+type EndQuizProps = {
+  studentId:number,
+  quizId:number,
+  settings:ISettingsQuiz
+}
+const EndQuiz = (EndQuizProps:EndQuizProps) => {
+  const endingQuiz = () => {
+    console.log('eNDING')
+  }
+  return(
+    <div className="flex flex-col justify-center items-center">
+
+    </div>
+  )
+
 }

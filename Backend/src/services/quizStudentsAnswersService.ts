@@ -10,13 +10,13 @@ class QuizStudentsAnswersService{
     console.info(created)
     return newAnswer.id ? newAnswer : false
   }
-  async infoQuizStudentAnswer(answerId:number):Promise<QuizStudentsAnswersInstance|null>{
-    const infoQuestion = await QuizStudentsAnswers.findOne({where:{id:answerId}})
+  async infoQuizStudentAnswer(question_id:number,student_id:number):Promise<QuizStudentsAnswersInstance|null>{
+    const infoQuestion = await QuizStudentsAnswers.findOne({where:{question_id:question_id,student_id:student_id}})
     return infoQuestion
   }
 
-  async editQuizStudentAnswer(answerId:number,dataAnswer:QuizStudentAnswerType):Promise<boolean>{
-    await QuizStudentsAnswers.update(dataAnswer,{where:{id:answerId}})
+  async editQuizStudentAnswer(question_id:number,student_id:number,dataAnswer:QuizStudentAnswerType):Promise<boolean>{
+    await QuizStudentsAnswers.update(dataAnswer,{where:{question_id:question_id,student_id:student_id}})
     return true
   }
 }

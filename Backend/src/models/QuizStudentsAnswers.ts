@@ -36,6 +36,6 @@ export const QuizStudentsAnswers = sequelize.define<QuizStudentsAnswersInstance>
     type:DataTypes.TINYINT,
   }
 },{
-  tableName: 'quiz_student_answers',
+  tableName: 'quiz_students_answers',
   timestamps:false
 })

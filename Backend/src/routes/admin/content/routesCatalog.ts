@@ -88,8 +88,8 @@ export default (routes:Router)=>{
   routes.get("/previousQuestion/:quiz_id/:next_question_id",CatalogController.previousQuestion)
   //Answers
   routes.post("/answerQuestion",CatalogController.answerQuestion)
-  routes.get("/infoAnswerQuestion/:answer_idn",CatalogController.infoAnswerQuestion)
-  routes.patch("/editAnswerQuestion/:answer_idn",CatalogController.editAnswerQuestion)
+  routes.get("/infoAnswerQuestion/:question_id/:student_id",CatalogController.infoAnswerQuestion)
+  routes.patch("/editAnswerQuestion/:question_id/:student_id",CatalogController.editAnswerQuestion)
   //End Quiz
   routes.post("/endQuiz",CatalogController.endQuiz)
 }

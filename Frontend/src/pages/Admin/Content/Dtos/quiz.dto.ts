@@ -34,3 +34,13 @@ export interface ISettingsQuiz{
   show_modules:number;
   passing_threshold:number;
 }
+
+export interface IAnswersQuiz{
+  id:number;
+  student_id:number;
+  quiz_id:number;
+  question_id:number;
+  option_id:number;
+  answer:string;
+  correct_answer:number;
+}
