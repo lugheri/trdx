@@ -302,6 +302,10 @@ const EditOption : React.FC<IEditOptionProps> = (props) => {
   const editOption = async (e:FormEvent) => {
     e.preventDefault()
     try{
+      if(correctAnswer=='1'){
+        await api.patch(`editQuestionOptionByQuestionId/${props.option.question_id}`,{correct_answer:0})
+      } 
+
       const dataOption = {
         question_id:props.option.question_id,
         answer:answerText,

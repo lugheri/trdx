@@ -78,6 +78,7 @@ export default (routes:Router)=>{
   routes.get("/listOptionsQuestion/:question_id",CatalogController.listOptionsQuestion)
   routes.get("/infoOptionQuestion/:option_id",CatalogController.infoOptionQuestion)
   routes.patch("/editOptionQuestion/:option_id",CatalogController.editOptionQuestion)
+  routes.patch("/editQuestionOptionByQuestionId/:question_id",CatalogController.editQuestionOptionByQuestionId)
 
   //Questions Settings
   routes.get("/infoSettingsQuestion/:quiz_id",CatalogController.infoSettingsQuestion)

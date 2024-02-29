@@ -102,8 +102,8 @@ export const QuizSettings = (props:Props) => {
         <Card className="flex-1" component={
           <div className="flex flex-col w-full">
             <div className="flex flex-col h-36 justify-center items-center">
-              <p className="text-white text-lg font-black">{settings.home_title_1}</p>
-              <p className="text-green-500 text-lg font-black">{settings.home_title_2}</p>
+              <p className="text-white text-lg font-black text-center">{settings.home_title_1}</p>
+              <p className="text-green-500 text-lg font-black text-center">{settings.home_title_2}</p>
               <p className="text-white/70 text-sm font-light text-center">{settings.home_text}</p>
             </div>
             <Button 
@@ -117,8 +117,8 @@ export const QuizSettings = (props:Props) => {
         <Card className="flex-1" component={
           <div className="flex flex-col w-full">
             <div className="flex flex-col h-36 justify-center items-center">
-              <p className="text-white text-lg font-black">{settings.reproved_title_1}</p>
-              <p className="text-green-500 text-lg font-black">{settings.reproved_title_2}</p>
+              <p className="text-white text-lg font-black text-center">{settings.reproved_title_1}</p>
+              <p className="text-green-500 text-lg font-black text-center">{settings.reproved_title_2}</p>
               <p className="text-white/70 text-sm font-light text-center">{settings.reproved_text}</p>
             </div>
             <Button 
@@ -132,9 +132,9 @@ export const QuizSettings = (props:Props) => {
         <Card className="flex-1" component={
           <div className="flex flex-col w-full">
             <div className="flex flex-col h-36 justify-center items-center">
-              <p className="text-white text-lg font-black">{settings.approved_title_1}</p>
-              <p className="text-green-500 text-lg font-black">{settings.approved_title_2}</p>
-              <p className="text-white/70 text-sm font-light text-center">{settings.approved_text}</p>
+              <p className="text-white text-lg font-black text-center">{settings.approved_title_1}</p>
+              <p className="text-green-500 text-lg font-black text-center">{settings.approved_title_2}</p>
+              <p className="text-white/70 text-sm font-light text-center text-center">{settings.approved_text}</p>
             </div>
             <Button 
               name="Editar Tela de Aprovação" 

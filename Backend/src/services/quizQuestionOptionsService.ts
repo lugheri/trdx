@@ -38,5 +38,10 @@ class QuizQuestionsOptionsService{
     await QuizQuestionOptions.update(dataQuestionOption,{where:{id:questionOptionId}})
     return true
   }
+
+  async editQuestionOptionByQuestionId(questionId:number,dataQuestionOption:QuizQuestionOptionsType):Promise<boolean>{
+    await QuizQuestionOptions.update(dataQuestionOption,{where:{question_id:questionId}})
+    return true
+  }
 }
 export default new QuizQuestionsOptionsService();

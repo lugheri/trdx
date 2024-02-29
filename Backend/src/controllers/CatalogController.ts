@@ -588,6 +588,22 @@ class CatalogController{
       res.json({"error":err})  
     }
   }
+  async editQuestionOptionByQuestionId(req:Request,res:Response){
+    const questionId : number = parseInt(req.params.question_id)
+    const dataOptionQuestion = QuizQuestionOptionsDTO.safeParse(req.body)
+    if(!dataOptionQuestion.success){
+      res.json({"error": dataOptionQuestion.error})  
+      return
+    }
+    try{
+      const edit = await quizQuestionOptionsService.editQuestionOptionByQuestionId(questionId, dataOptionQuestion.data)
+      res.json({"success": true,"response": edit})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
 
   //Settings Questions
   async infoSettingsQuestion(req:Request,res:Response){

@@ -60,7 +60,8 @@ export const QuizStart = (props:Props) => {
         <QuizQuestions 
           studentId={props.student_id} 
           infoLesson={props.infoLesson}
-          settings={settings}/> }
+          settings={settings}
+          closeQuiz={setInitQuiz}/> }
     </div>
   )
 }
@@ -69,25 +70,31 @@ type QuizQuestionsProps = {
   studentId:number,
   infoLesson:ILessons,
   settings:ISettingsQuiz,
+  closeQuiz:React.Dispatch<React.SetStateAction<boolean>>
 }
 const QuizQuestions = (props:QuizQuestionsProps) => {
   const [ lastQuestionId, setLastQuestionId] = useState(0)
+  const [ endQuiz, setEndQuiz ] = useState(false)
   return(
     <Modal className="max-w-[95%] w-[100vw] h-[80vh] lg:w-[85vw] lg:h-[90vh] mr-0 px-0 py-0 " component={
       <div className="flex flex-col justify-center h-full bg-neutral-950 overflow-auto">
         { props.settings.show_modules === 1 && <ListModules courseId={props.infoLesson.course_id} moduleId={props.infoLesson.module_id}/>}  
+        { endQuiz === false && (
+          <div className="py-4">
+            <p className="text-white font-black text-xl lg:text-3xl text-center">{props.settings.home_title_1}</p>
+            <p className="text-[#0f0] font-black text-xl lg:text-3xl mb-2 text-center">{props.settings.home_title_2}</p>
+            <p className="text-white/70 my-2 text-sm font-extralight text-center">{props.settings.home_text}</p>
+          </div>
+        )}
 
-        <div className="py-4">
-          <p className="text-white font-black text-xl lg:text-3xl text-center">{props.settings.home_title_1}</p>
-          <p className="text-[#0f0] font-black text-xl lg:text-3xl mb-2 text-center">{props.settings.home_title_2}</p>
-          <p className="text-white/70 my-2 text-sm font-extralight text-center">{props.settings.home_text}</p>
-        </div>
         <Questions 
           quizId={props.infoLesson.id}
           studentId={props.studentId}
           lastQuestionId={lastQuestionId}
           setLastQuestionId={setLastQuestionId}
-          settings={props.settings}/>
+          settings={props.settings}
+          setEndQuiz={setEndQuiz}
+          closeQuiz={props.closeQuiz}/>
       </div>
     }/>
   )
@@ -98,10 +105,12 @@ type QuestionsProps = {
   studentId:number,
   lastQuestionId:number,
   settings:ISettingsQuiz,
-  setLastQuestionId:React.Dispatch<React.SetStateAction<number>>
+  setLastQuestionId:React.Dispatch<React.SetStateAction<number>>,
+  setEndQuiz:React.Dispatch<React.SetStateAction<boolean>>,
+  closeQuiz:React.Dispatch<React.SetStateAction<boolean>>
 }
 const Questions = (props:QuestionsProps) => {
-
+  console.log("Renderizou Questions")
   const [ error, setError ] = useState<string|null>(null)
   const [ question, setQuestion ] = useState<IQuestionQuiz|null|''>('')
   const [ options, setOptions ] = useState<IOptionQuestionQuiz[]|null>(null)
@@ -111,38 +120,40 @@ const Questions = (props:QuestionsProps) => {
     try{
       const q = await api.get(`previousQuestion/${props.quizId}/${question}`)
       if(q.data.success){
-        const dataQ : IQuestionQuiz = q.data.response
-        console.log('PREVIOUS',dataQ)
+        const dataQ : IQuestionQuiz = q.data.response       
         props.setLastQuestionId(dataQ.order == 1 ? 0 : dataQ.id-1)
         setSelected(null)
         return
       }
       setError(q.data.message)
     }catch(err){
+      
       setError('Ocorreu um erro interno')
     }
   }
 
   const nextQuestion = async () => {
     try{
-      const q = await api.get(`nextQuestion/${props.quizId}/${props.lastQuestionId}`)
-      console.log('Question',q.data)
+      const q = await api.get(`nextQuestion/${props.quizId}/${props.lastQuestionId}`)      
       if(q.data.success){
         const dataQ : IQuestionQuiz = q.data.response
         setQuestion(dataQ)
+        if(dataQ ===null){
+          props.setEndQuiz(true)
+          return
+        }
         if(dataQ.type_question === "O"){
-          const o = await api.get(`listOptionsQuestion/${dataQ.id}`)
+          const o = await api.get(`listOptionsQuestion/${dataQ.id}`)        
           setOptions(o.data.response)
           setSelected(null)
           return
         }       
         setOptions([])
-
         return
       }
       setError(q.data.message)
     }catch(err){
-      setError('Ocorreu um erro interno')
+      setError('Ocorreu um erro ao buscar a proxima questão!')
     }
   }
 
@@ -154,37 +165,55 @@ const Questions = (props:QuestionsProps) => {
         { question === '' ? <LoadingBars/> 
         : question === null ? 
         ( 
-          <EndQuiz quizId={props.quizId} studentId={props.studentId} settings={props.settings}/>
+          <EndQuiz 
+            quizId={props.quizId} 
+            studentId={props.studentId} 
+            settings={props.settings} 
+            closeQuiz={props.closeQuiz}/>
         ):(
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full justify-center items-center">
             <p className="text-white text-3xl font-light mb-3">
               {question.order}. {question.question}
             </p>
-            { question.type_question == 'D' ? (
-              <TextAnswer
-                question_id={question.id}
-                quizId={props.quizId}
-                setSelected={setSelected}
-                studentId={props.studentId}
-              />
-            ) : options === null ? <LoadingBars/> 
-            : options.length == 0 ? <p className="text-white/50">Sem Opções</p>
-            : options.map((option,key)=>(
-              <OptionAnswer key={key} option={option} selected={selected} setSelected={setSelected} quizId={props.quizId} studentId={props.studentId}/>
-            ))}
 
+            {/*TYPE QUESTION*/}
+            { question.type_question == 'D' ? (              
+              <div className="flex flex-col justify-center items-center w-4/5 p-1">
+                {/*DISSERTATIVE QUESTION */}
+                <TextAnswer
+                  question_id={question.id}
+                  quizId={props.quizId}
+                  setSelected={setSelected}
+                  studentId={props.studentId} />
+              </div>
+            ) : options === null ? <LoadingBars/> 
+              : options.length == 0 ? <p className="text-white/50">Sem Opções</p>
+              : <div className="flex flex-col justify-start items-start max-w-4/5">
+                  { options.map((option,key)=>(
+                    <OptionAnswer key={key} 
+                      option={option} 
+                      selected={selected} setSelected={setSelected} 
+                      quizId={props.quizId} 
+                      studentId={props.studentId}/>
+                  ))}
+                </div>
+            }
+            
+            {/*NAVIGATION QUESTIONS */}
             <div className="flex justify-end items-center my-8">
-              { question.order > 1 && 
-              (
+              { question.order > 1 && (
                 <div 
                   className="flex justify-center m-1 items-center text-center cursor-pointer font-light py-3 px-4 text-lg bg-gradient-to-r from-neutral-800 to-neutral-900 shadow-slate-950 shadow-md text-white/80 rounded-md"
                   onClick={()=>previousQuestion(question.id)}>
                   Pergunta Anterior
                 </div>
               )}
-              <Button name="Proxima Pergunta" disabled={selected ? false : true } size="lg" onClick={()=>props.setLastQuestionId(question.id)}/>
+              <Button 
+                name="Proxima Pergunta" 
+                disabled={selected ? false : true } 
+                size="lg" 
+                onClick={()=>props.setLastQuestionId(question.id)}/>
             </div>
-
           </div>
         )}
       </div>
@@ -192,8 +221,83 @@ const Questions = (props:QuestionsProps) => {
       <p className="text-red-500">{error}</p>
     )
   )
+    
 }
 
+//ANSWERS COMPONENTS
+
+//DISSERTATIVE ANSWER COMPONENT
+type TextAnswerProps = {
+  studentId:number,
+  quizId:number,
+  question_id:number,
+  setSelected:React.Dispatch<React.SetStateAction<number|null>>
+}
+const TextAnswer = (props:TextAnswerProps) => {
+  const [ answerId, setAnswerId ] = useState(0)
+  const [ answerText, setAnswerText ] = useState('')
+  const infoAnswer = async () => {
+    try{
+      const a = await api.get(`infoAnswerQuestion/${props.question_id}/${props.studentId}`)
+      const answer:IAnswersQuiz = a.data.response     
+      if(answer){
+        console.log('Answer',answer.option_id)
+        setAnswerText(answer.answer)
+        setAnswerId(answer.id)
+      }
+    }catch(err){
+      console.log(err)
+    }
+  }
+  useEffect(()=>{infoAnswer()},[props.question_id])
+
+  const AnswerQuestion = async () => {
+    if(answerId==0){
+      {/*Respondendo questao */}
+      const data = {
+        student_id:props.studentId,
+        quiz_id:props.quizId,
+        question_id:props.question_id,
+        option_id:0,
+        answer:answerText,
+        correct_answer:0
+      }
+      console.log('data',data)
+      props.setSelected(1)
+      const r = await api.post('answerQuestion',data)
+      if(r.data.error){
+        console.log(r.data.message)
+        return        
+      }
+    }else{
+      {/*Atualizando resposta da questao*/}
+      const data = {
+        student_id:props.studentId,
+        quiz_id:props.quizId,
+        question_id:props.question_id,
+        option_id:0,
+        answer:answerText,
+        correct_answer:0
+      }
+      props.setSelected(1)
+      const r = await api.patch(`editAnswerQuestion/${props.question_id}/${props.studentId}`,data)
+      if(r.data.error){
+        console.log(r.data.message)
+        return        
+      }
+    }
+  }
+  
+  return(
+    <div className='flex flex-col justify-center items-end w-full'>
+      <div className='flex w-full'>
+        <TextAreaForm value={answerText} onChange={setAnswerText} placeholder="Digite sua resposta"/>
+      </div>
+      <Button btn="success" icon="faFloppyDisk" name="Salvar Resposta" onClick={()=>AnswerQuestion()}/>
+    </div>
+  )
+}
+//OBJETIVE ANSWER COMPONENT
 type OptionAnswerProps = {
   option:IOptionQuestionQuiz,
   selected:number|null,
@@ -274,75 +378,6 @@ const OptionAnswer = (props:OptionAnswerProps) => {
   )
 }
 
-type TextAnswerProps = {
-  studentId:number,
-  quizId:number,
-  question_id:number,
-  setSelected:React.Dispatch<React.SetStateAction<number|null>>
-}
-const TextAnswer = (props:TextAnswerProps) => {
-  const [ answer, setAnswer ] = useState('')
-  const [ answerId, setAnswerId ] = useState(0)
-  const infoAnswer = async () => {
-    try{
-      const a = await api.get(`infoAnswerQuestion/${props.question_id}/${props.studentId}`)
-      const answer:IAnswersQuiz = a.data.response     
-      if(answer){
-        console.log('Answer',answer.option_id)
-        setAnswer(answer.answer)
-        setAnswerId(answer.id)
-      }
-
-    }catch(err){
-      console.log(err)
-    }
-  }
-  useEffect(()=>{infoAnswer()},[props.question_id])
-
-  const AnswerQuestion = async () => {
-    if(answerId==0){
-      {/*Respondendo questao */}
-      const data = {
-        student_id:props.studentId,
-        quiz_id:props.quizId,
-        question_id:props.question_id,
-        option_id:0,
-        answer:answer,
-        correct_answer:0
-      }
-      console.log('data',data)
-      props.setSelected(1)
-      const r = await api.post('answerQuestion',data)
-      if(r.data.error){
-        console.log(r.data.message)
-        return        
-      }
-    }else{
-      {/*Atualizando resposta da questao*/}
-      const data = {
-        student_id:props.studentId,
-        quiz_id:props.quizId,
-        question_id:props.question_id,
-        option_id:0,
-        answer:answer,
-        correct_answer:0
-      }
-      props.setSelected(1)
-      const r = await api.patch(`editAnswerQuestion/${props.question_id}/${props.studentId}`,data)
-      if(r.data.error){
-        console.log(r.data.message)
-        return        
-      }
-    }
-  }
-  
-  return(
-    <div className='flex flex-col'>
-      <TextAreaForm value={answer} onChange={setAnswer}/>
-      <Button name="salvar" onClick={()=>AnswerQuestion()}/>
-    </div>
-  )
-}
 
 type ListModulesProps = {
   courseId:number,
@@ -388,15 +423,46 @@ const ListModules = (props:ListModulesProps) => {
 type EndQuizProps = {
   studentId:number,
   quizId:number,
-  settings:ISettingsQuiz
+  settings:ISettingsQuiz,
+  closeQuiz:React.Dispatch<React.SetStateAction<boolean>>
 }
-const EndQuiz = (EndQuizProps:EndQuizProps) => {
+const EndQuiz = (props:EndQuizProps) => {
+  const [ approved, setApproved ] = useState<boolean|null>(null)
   const endingQuiz = () => {
-    console.log('eNDING')
+    setApproved(true)
   }
+  useEffect(()=>{endingQuiz()},[])
   return(
-    <div className="flex flex-col justify-center items-center">
-
+    <div className="flex flex-col justify-center items-center text-white">      
+      { approved === null ? 
+        <LoadingBars/> 
+      : approved == true ? (
+        <>
+          <div className="py-4">
+            <p className="text-white font-black text-xl lg:text-3xl text-center">{props.settings.approved_title_1}</p>
+            <p className="text-[#0f0] font-black text-xl lg:text-3xl mb-2 text-center">{props.settings.approved_title_2}</p>
+            <p className="text-white/70 my-2 text-sm font-extralight text-center">{props.settings.approved_text}</p>
+            
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="py-4">
+            <p className="text-white font-black text-xl lg:text-3xl text-center">{props.settings.reproved_title_1}</p>
+            <p className="text-[#f00] font-black text-xl lg:text-3xl mb-2 text-center">{props.settings.reproved_title_2}</p>
+            <p className="text-white/70 my-2 text-sm font-extralight text-center">{props.settings.reproved_text}</p>
+            <Button 
+                name="Concluir" 
+                size="lg" 
+                onClick={()=>props.closeQuiz(false)}/>
+          </div>
+        </>
+      )}
+      <Button className="px-4 py-4" 
+        btn="success"
+        type="outline"
+        name="Concluir Questionário" 
+        onClick={()=>props.closeQuiz(false)}/>
     </div>
   )
 
