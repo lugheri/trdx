@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Student } from "../../../../contexts/Dtos/auth.dto";
-import { IAnswersQuiz, IOptionQuestionQuiz, IQuestionQuiz, ISettingsQuiz } from "../../../Admin/Content/Dtos/quiz.dto";
+import { IAnswersQuiz, IOptionQuestionQuiz, IQuestionQuiz, IQuizStudentGrade, ISettingsQuiz } from "../../../Admin/Content/Dtos/quiz.dto";
 import { ILessons, IModules } from "../../Dtos/courses.dto";
 import api from "../../../../services/api";
 import { Loading, LoadingBars } from "../../../../components/Loading";
@@ -19,7 +19,22 @@ export const QuizStart = (props:Props) => {
   const [ error, setError ] = useState<string|null>(null)
   const [ settings, setSettings ] = useState<ISettingsQuiz|null>(null)
 
+  const [ infoGradeQuiz, setInfoGradeQuiz ] = useState<IQuizStudentGrade|null|number>(0)
+
   const [ initQuiz, setInitQuiz ] = useState(false)
+  const checkingGrade = async () => {
+    try{
+      const info = await api.get(`gradeQuizStudent/${props.student_id}/${props.infoLesson.id}`)
+      if(info.data.error){
+        setError(info.data.message)
+        return
+      }
+      setInfoGradeQuiz(info.data.response)
+    }catch(e){
+      console.log(e)
+      setError('Ocorreu um erro ao checar os dados do questionário')
+    }
+  }
   const getQuizSettings = async () => {
     try{
       const infoSett = await api.get(`infoSettingsQuestion/${props.infoLesson.id}`)
@@ -33,24 +48,37 @@ export const QuizStart = (props:Props) => {
       setError('Ocorreu um erro ao recuperar as configurações do questionário')
     }      
   }
-  useEffect(()=>{getQuizSettings()},[])
+  useEffect(()=>{
+    checkingGrade()
+    getQuizSettings()
+  },[initQuiz])
 
   return(
     <div className="flex flex-col justify-center items-center w-full h-[80vh] lg:h-[100vh]">
       { error === null ? 
         settings === null ? <Loading/> : (
         <>
-        <div className="flex flex-col justify-center items-center">
-          <p className="text-white font-black text-2xl lg:text-5xl text-center">{settings.home_title_1}</p>
-          <p className="text-[#0f0] font-black text-2xl lg:text-5xl mb-4 text-center">{settings.home_title_2}</p>
-          <p className="text-white/80 my-4 font-light text-center">{settings.home_text}</p>
-
-        </div>
-        
-        <Button 
-          className='mt-12 py-4 px-4 lg:w-1/3' 
-          name="Iniciar Questionário" 
-          onClick={()=>setInitQuiz(true)}/>
+          <div className="flex flex-col justify-center items-center">
+            <p className="text-white font-black text-2xl lg:text-5xl text-center">{settings.home_title_1}</p>
+            <p className="text-[#0f0] font-black text-2xl lg:text-5xl mb-4 text-center">{settings.home_title_2}</p>
+          </div>
+          {infoGradeQuiz===0 ? (
+            <LoadingBars/>
+          ) : infoGradeQuiz == null ? (
+            <>
+              <p className="text-white/80 my-4 font-light text-center">{settings.home_text}</p>
+              <Button 
+                className='mt-12 py-4 px-4 lg:w-1/3' 
+                name="Iniciar Questionário" 
+                onClick={()=>setInitQuiz(true)}/>
+            </>
+          ) : (
+            <Button 
+              disabled={true}           
+              icon="faCheck"
+              className='mt-12 py-4 px-4 lg:w-1/3 cursor-default' 
+              name="Questionário Concluido!" />
+          ) }
         </>
       ) : (
         <p className="text-red-500">{error}</p>
@@ -93,6 +121,7 @@ const QuizQuestions = (props:QuizQuestionsProps) => {
           lastQuestionId={lastQuestionId}
           setLastQuestionId={setLastQuestionId}
           settings={props.settings}
+          infoLesson={props.infoLesson}
           setEndQuiz={setEndQuiz}
           closeQuiz={props.closeQuiz}/>
       </div>
@@ -105,6 +134,7 @@ type QuestionsProps = {
   studentId:number,
   lastQuestionId:number,
   settings:ISettingsQuiz,
+  infoLesson:ILessons,
   setLastQuestionId:React.Dispatch<React.SetStateAction<number>>,
   setEndQuiz:React.Dispatch<React.SetStateAction<boolean>>,
   closeQuiz:React.Dispatch<React.SetStateAction<boolean>>
@@ -169,6 +199,7 @@ const Questions = (props:QuestionsProps) => {
             quizId={props.quizId} 
             studentId={props.studentId} 
             settings={props.settings} 
+            infoLesson={props.infoLesson}
             closeQuiz={props.closeQuiz}/>
         ):(
           <div className="flex flex-col w-full justify-center items-center">
@@ -424,16 +455,68 @@ type EndQuizProps = {
   studentId:number,
   quizId:number,
   settings:ISettingsQuiz,
+  infoLesson:ILessons,
   closeQuiz:React.Dispatch<React.SetStateAction<boolean>>
 }
 const EndQuiz = (props:EndQuizProps) => {
   const [ approved, setApproved ] = useState<boolean|null>(null)
-  const endingQuiz = () => {
-    setApproved(true)
+  const [ grade, setGrade ] = useState<number|null>(null)
+  const [ error, setError ] = useState<null|string>(null)
+
+  const watchLesson = async () => {
+    try{
+      const options = {'viewed':1,
+        student_id: props.studentId, 
+        course_id: props.infoLesson.course_id,
+        module_id: props.infoLesson.module_id,
+        lesson_id: props.quizId}      
+      await api.post(`watchedLesson`,options)
+    }catch(e){
+      console.log(e)
+    }
   }
-  useEffect(()=>{endingQuiz()},[])
+
+  const getAverageGrade = async () => {
+    setApproved(true)
+    try{    
+      const a = await api.get(`averageGradeQuizStudent/${props.studentId}/${props.quizId}`)
+      if(a.data.error){
+        setError(a.data.message)
+        return
+      }
+      setGrade(a.data.response)
+      setApproved(a.data.response > props.settings.passing_threshold ? true : false)
+    }catch(e){
+      console.log(e)
+      setError(e)
+    }
+  }
+
+  const endQuiz = async () => {
+    try{    
+      const data = {
+        student_id:props.studentId,
+        quiz_id:props.quizId,
+        grade:grade,
+        approved:approved === true ? 1 : 0,
+        completed:1
+      }
+      const end = await api.post('endQuiz',data)
+      await watchLesson()
+      if(end.data.error){
+        setError(end.data.message)
+        return
+      }
+      props.closeQuiz(false)
+    }catch(e){
+      console.log(e)
+      setError(e)
+    }
+  }
+  useEffect(()=>{getAverageGrade()},[])
   return(
-    <div className="flex flex-col justify-center items-center text-white">      
+    <div className="flex flex-col justify-center items-center text-white">   
+      { error !==null && (<p className="text-red-500">{error}</p>)}   
       { approved === null ? 
         <LoadingBars/> 
       : approved == true ? (
@@ -451,10 +534,6 @@ const EndQuiz = (props:EndQuizProps) => {
             <p className="text-white font-black text-xl lg:text-3xl text-center">{props.settings.reproved_title_1}</p>
             <p className="text-[#f00] font-black text-xl lg:text-3xl mb-2 text-center">{props.settings.reproved_title_2}</p>
             <p className="text-white/70 my-2 text-sm font-extralight text-center">{props.settings.reproved_text}</p>
-            <Button 
-                name="Concluir" 
-                size="lg" 
-                onClick={()=>props.closeQuiz(false)}/>
           </div>
         </>
       )}
@@ -462,7 +541,7 @@ const EndQuiz = (props:EndQuizProps) => {
         btn="success"
         type="outline"
         name="Concluir Questionário" 
-        onClick={()=>props.closeQuiz(false)}/>
+        onClick={()=>endQuiz()}/>
     </div>
   )
 

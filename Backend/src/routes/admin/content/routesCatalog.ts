@@ -92,5 +92,8 @@ export default (routes:Router)=>{
   routes.get("/infoAnswerQuestion/:question_id/:student_id",CatalogController.infoAnswerQuestion)
   routes.patch("/editAnswerQuestion/:question_id/:student_id",CatalogController.editAnswerQuestion)
   //End Quiz
+  routes.get("/averageGradeQuizStudent/:student_id/:quiz_id",CatalogController.averageGradeQuizStudent)
   routes.post("/endQuiz",CatalogController.endQuiz)
+  //Get Grade
+  routes.get("/gradeQuizStudent/:student_id/:quiz_id",CatalogController.gradeQuizStudent)
 }

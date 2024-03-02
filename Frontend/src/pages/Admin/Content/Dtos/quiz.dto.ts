@@ -44,3 +44,13 @@ export interface IAnswersQuiz{
   answer:string;
   correct_answer:number;
 }
+
+export interface IQuizStudentGrade{
+  id:number;
+  quiz_id:number;
+  student_id:number;
+  date:string;
+  grade:number;
+  approved:number;
+  completed:number;
+}

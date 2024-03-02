@@ -7,6 +7,7 @@ export interface QuizStudentsGradeInstance extends Model{
   student_id:number;
   date:string;
   grade:number;
+  approved:number;
   completed:number;
 }
 
@@ -27,6 +28,9 @@ export const QuizStudentsGrade = sequelize.define<QuizStudentsGradeInstance>('Qu
     defaultValue:DataTypes.NOW
   },
   grade:{
+    type:DataTypes.DECIMAL
+  },
+  approved:{
     type:DataTypes.DECIMAL
   },
   completed:{

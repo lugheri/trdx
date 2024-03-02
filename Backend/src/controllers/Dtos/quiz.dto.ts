@@ -49,10 +49,12 @@ export const QuizStudentAnswerDTO = z.object({
 })
 export type QuizStudentAnswerType = z.infer<typeof QuizStudentAnswerDTO>;
 
-export const StudentsQuizDTO = z.object({
+export const QuizStudentsGradeDTO = z.object({
   student_id:z.optional(z.number()),
   quiz_id:z.optional(z.number()),
   date:z.optional(z.string()),
-  grade_average:z.optional(z.number())
+  grade:z.optional(z.number()),
+  approved:z.optional(z.number()),
+  completed:z.optional(z.number())
 })
-export type StudentsQuizType = z.infer<typeof StudentsQuizDTO>;
+export type QuizStudentsGradeType = z.infer<typeof QuizStudentsGradeDTO>;

@@ -8,12 +8,12 @@ import LessonsAttachmentsService from '../services/LessonsAttachmentsService';
 import lessonAccessRulesService from '../services/lessonAccessRulesService';
 import moment from 'moment';
 import studentsService from '../services/studentsService';
-import { QuizQuestionDTO, QuizQuestionOptionsDTO, QuizQuestionSettingsDTO, QuizQuestionSettingsPartialDTO, QuizStudentAnswerDTO, StudentsQuizDTO } from './Dtos/quiz.dto';
+import { QuizQuestionDTO, QuizQuestionOptionsDTO, QuizQuestionSettingsDTO, QuizQuestionSettingsPartialDTO, QuizStudentAnswerDTO, QuizStudentsGradeDTO } from './Dtos/quiz.dto';
 import quizQuestionOptionsService from '../services/quizQuestionOptionsService';
 import quizQuestionsService from '../services/quizQuestionsService';
 import quizSettingsService from '../services/quizSettingsService';
-import studentsQuizService from '../services/studentsQuizService';
 import quizStudentsAnswersService from '../services/quizStudentsAnswersService';
+import quizStudentsGradeService from '../services/quizStudentsGradeService';
 
 class CatalogController{
   //Courses
@@ -637,9 +637,7 @@ class CatalogController{
   //Students Page
   async nextQuestion(req:Request,res:Response){
     const quiz_id = parseInt(req.params.quiz_id)
-    const last_question_id = parseInt(req.params.last_question_id)
-    console.log("quiz_id",quiz_id)
-    console.log("last_question_id",last_question_id)
+    const last_question_id = parseInt(req.params.last_question_id) 
     try{
       const nextQuestion = await quizQuestionsService.nextQuestion(quiz_id,last_question_id)
       res.json({"success": true,"response": nextQuestion})  
@@ -652,9 +650,7 @@ class CatalogController{
 
   async previousQuestion(req:Request,res:Response){
     const quiz_id = parseInt(req.params.quiz_id)
-    const next_question_id = parseInt(req.params.next_question_id)
-    console.log("quiz_id",quiz_id)
-    console.log("next_question_id",next_question_id)
+    const next_question_id = parseInt(req.params.next_question_id)  
     try{
       const previousQuestion = await quizQuestionsService.previousQuestion(quiz_id,next_question_id)
       res.json({"success": true,"response": previousQuestion})  
@@ -715,14 +711,28 @@ class CatalogController{
     }
   }
 
+  async averageGradeQuizStudent(req:Request,res:Response){
+    const student_id =  parseInt(req.params.student_id)
+    const quiz_id =  parseInt(req.params.quiz_id)
+    try{
+      const average = await quizStudentsAnswersService.gradeAverageQuizStudent(student_id,quiz_id)
+      res.json({"success": true,"response": average})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":true,"message":err})  
+    } 
+  }
+
   async endQuiz(req:Request,res:Response){
-    const dataEndQuiz = StudentsQuizDTO.safeParse(req.body)
+    const dataEndQuiz = QuizStudentsGradeDTO.safeParse(req.body)    
     if(!dataEndQuiz.success){
       res.json({"error":true,"message":dataEndQuiz.error})
       return
     }
     try{
-      const data = await studentsQuizService.createData(dataEndQuiz.data)
+      console.log(dataEndQuiz.data)
+      const data = await quizStudentsGradeService.createData(dataEndQuiz.data)
       if(data){
         res.json({"success": true,"response": data})  
         return
@@ -732,6 +742,19 @@ class CatalogController{
     }catch(err){
       console.error(err)
       res.json({"error":err})  
+    } 
+  }
+
+  async gradeQuizStudent(req:Request,res:Response){
+    const student_id =  parseInt(req.params.student_id)
+    const quiz_id =  parseInt(req.params.quiz_id)
+    try{
+      const infoGradeQuiz = await quizStudentsGradeService.gradeQuizStudent(quiz_id,student_id)
+      res.json({"success": true,"response": infoGradeQuiz})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":true,"message":err})  
     } 
   }
 
