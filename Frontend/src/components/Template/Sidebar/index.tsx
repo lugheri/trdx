@@ -24,24 +24,37 @@ export const Sidebar = () => {
   const authenticated = useAuth();  
   const userData:Student|null = authenticated ? authenticated.userData : null
   const [ progress, setProgress] = useState(0);
-  useEffect(()=>{
-    const getProgress = async () => {
-      try{
-        const prog = await api.get(`progressStudent/${userData ? userData.id : 0}`)
-       
-        setProgress(prog.data.response)      
-        console.log(progress)  
-      }catch(e){
-        console.log(e)
-      }
+  const [ typeAccess, setTypeAccess ] = useState<null | 'community' | 'default'>(null)
+  
+  const checkTypeAccess = async () => {
+    try{
+      const type = await api.get(`checkTypeStudentAccess/${userData ? userData.id : 0}`)
+      console.log("Type",type.data.response)
+      setTypeAccess(type.data.response['community'] == 1 ? 'community' : 'default')
+    }catch(err){
+      console.error(err)
     }
+  }
+  const getProgress = async () => {
+    try{
+      const prog = await api.get(`progressStudent/${userData ? userData.id : 0}`)     
+      setProgress(prog.data.response)      
+      console.log(progress)  
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+
+  useEffect(()=>{
+    checkTypeAccess()
     getProgress()
   },[])
 
   const side = [
     {to:"/",icon:Home,iconActive:HomeActive,target:"",name:"Home"},
     {to:"/coursesGallery",icon:Book,iconActive:BookActive,target:"",name:"Meus Cursos"},
-    {to:"/communityStudent",icon:Community,iconActive:CommunityActive,target:"",name:"Comunidade"},
+    typeAccess === "community" && {to:"/communityStudent",icon:Community,iconActive:CommunityActive,target:"",name:"Comunidade"},
     {to:"https://www.instagram.com/guilhermecardosox/",icon:Insta,iconActive:InstaActive,target:"_blank",name:"Instagram"},
     {to:"https://www.youtube.com/c/GuilhermeCardoso",icon:Ytube,iconActive:YtubeActive,target:"_blank",name:"Canal do Youtube"},
     {to:"/Profile",icon:"Profile",iconActive:"",target:"",name:"Minha Conta"},
@@ -50,10 +63,10 @@ export const Sidebar = () => {
   
   return(
     <div className="h-full fixed z-20 group overflow-auto hover:transition-all duration-500 
-                     /*Mobile**/ hidden w-[16%] hover:w-[80%]
-                     /*Tablet*/ md:flex md:w-20 md:hover:w-[35%]
-                     /*Desktop*/ lg:flex lg:w-20 lg:hover:w-[18%]
-                     /*TV******/ 2xl:flex 2xl:w-24 2xl:hover:w-[18%]">
+                    /*Mobile**/ hidden w-[16%] hover:w-[80%]
+                    /*Tablet*/ md:flex md:w-20 md:hover:w-[35%]
+                    /*Desktop*/ lg:flex lg:w-20 lg:hover:w-[18%]
+                    /*TV******/ 2xl:flex 2xl:w-24 2xl:hover:w-[18%]">
       <div className="side-blur absolute w-full h-full"/>
       <div className="absolute w-full h-full flex flex-col justify-center items-center hover:px-4">
         <img src={Brand} className="w-[30%] group-hover:w-[15%] h-auto"/>
@@ -71,16 +84,20 @@ export const Sidebar = () => {
         <div className="flex flex-col w-full px-4 group-hover:px-8">
           <ul>
             {side.map((item,key)=>
-              <ItemSide 
-                studentId={userData ? userData.id : 0} 
-                key={key}
-                to={item.to} 
-                target={item.target}
-                icon={item.icon}
-                iconActive={item.iconActive}
-                name={item.name} 
-                classButton="w-auto justify-center group-hover:w-[100%] group-hover:justify-start group-hover:pl-4"
-                classText="hidden group-hover:flex" />
+              item && (
+              <>            
+                <ItemSide 
+                  studentId={userData ? userData.id : 0} 
+                  key={key}
+                  to={item.to} 
+                  target={item.target}
+                  icon={item.icon}
+                  iconActive={item.iconActive}
+                  name={item.name} 
+                  classButton="w-auto justify-center group-hover:w-[100%] group-hover:justify-start group-hover:pl-4"
+                  classText="hidden group-hover:flex" />
+              </>
+              )
             )}           
           </ul>
         </div>        

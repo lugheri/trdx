@@ -2,18 +2,18 @@ import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react"
 import * as Fas from "@fortawesome/free-solid-svg-icons";
 import * as Far from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { User } from "../../../../../contexts/Dtos/auth.dto"
 import WaveSurfer from 'wavesurfer.js';
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm.js'
 import DOMPurify from 'dompurify';
-import api from "../../../../../services/api";
+import api from "../../../../../../services/api";
 import EmojiPicker, { EmojiClickData, EmojiStyle, Theme } from 'emoji-picker-react';
-import { Modal } from "../../../../../components/Modal";
-import { Button } from "../../../../../components/Buttons";
-import { LoadingBars } from "../../../../../components/Loading";
+import { Modal } from "../../../../../../components/Modal";
+import { Button } from "../../../../../../components/Buttons";
+import { LoadingBars } from "../../../../../../components/Loading";
+import { IStudent } from "../../../../Students/Dtos/student.dto";
 
 type PropsType = {
-  userdata:User,
+  userdata:IStudent,
   setUpdate:React.Dispatch<React.SetStateAction<boolean>>
 }
 export const ChatInput_AdmCommunity = (props:PropsType) => {
@@ -29,9 +29,9 @@ export const ChatInput_AdmCommunity = (props:PropsType) => {
     if(message != ""){
       try{
         const data = {
-          is_student: 1,
+          is_student: 0,
           user_id: props.userdata.id,
-          user_photo: props.userdata.photo === null ? 0 : props.userdata.photo,
+          user_photo: props.userdata.phone === null ? 0 : props.userdata.photo,
           user_name:props.userdata.name,
           message:DOMPurify.sanitize(message, { ALLOWED_TAGS: ['img','br'] }),
           media: 0
@@ -195,7 +195,7 @@ const TextInput = (props:TextInputProps) => {
 
 //File Input
 type PropsListFiles = {
-  userdata:User,
+  userdata:IStudent,
   setError:React.Dispatch<React.SetStateAction<string|null>>,
   files:File[],
   setFiles:React.Dispatch<React.SetStateAction<File[]>>
@@ -209,7 +209,7 @@ const ListFiles = (props:PropsListFiles) => {
     if(props.files.length > 0){
       try{
         const data = {
-          is_student: 1,
+          is_student: 0,
           user_id: props.userdata.id,
           user_photo: props.userdata.photo === null ? 0 : props.userdata.photo,
           user_name:props.userdata.name,
@@ -286,7 +286,7 @@ const FileItem = (props:PropsFileItem) => {
 
 //Record Audio
 type PropsRecord = {
-  userdata:User,
+  userdata:IStudent,
   setError:React.Dispatch<React.SetStateAction<string|null>>
   setRecordAudio:React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -403,7 +403,7 @@ const RecordAudio = (props:PropsRecord) => {
         props.setRecordAudio(false)
 
         const data = {
-          is_student: 1,
+          is_student: 0,
           user_id: props.userdata.id,
           user_photo: props.userdata.photo === null ? 0 : props.userdata.photo,
           user_name:props.userdata.name,

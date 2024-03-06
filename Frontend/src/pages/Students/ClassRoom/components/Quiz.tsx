@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Student } from "../../../../contexts/Dtos/auth.dto";
 import { IAnswersQuiz, IOptionQuestionQuiz, IQuestionQuiz, IQuizStudentGrade, ISettingsQuiz } from "../../../Admin/Content/Dtos/quiz.dto";
 import { ILessons, IModules } from "../../Dtos/courses.dto";
 import api from "../../../../services/api";

@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { User } from "../../../../../contexts/Dtos/auth.dto"
-import { ICommunityMessage } from "../../../../Students/CommunityStudent/Dto/community.dto";
-import api from "../../../../../services/api";
-import { LoadingBars } from "../../../../../components/Loading";
+import { ICommunityMessage } from "../../../../../Students/CommunityStudent/Dto/community.dto";
+import api from "../../../../../../services/api";
+import { LoadingBars } from "../../../../../../components/Loading";
 import { MessageBox_AdmCommunity } from "./MessageBox_AdmCommunity";
+import { IStudent } from "../../../../Students/Dtos/student.dto";
 
 type PropsType = {
   page:number,
-  userdata:User,
+  userdata:IStudent,
   update:boolean,
   setUpdate:React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -39,7 +39,7 @@ export const BodyConversation_AdmCommunity = (props:PropsType) => {
 
 type PropsTypeMessage = {
   page:number,
-  userdata:User,
+  userdata:IStudent,
   update:boolean,
   setUpdate:React.Dispatch<React.SetStateAction<boolean>>,
   messagesContainerRef:React.MutableRefObject<HTMLDivElement>

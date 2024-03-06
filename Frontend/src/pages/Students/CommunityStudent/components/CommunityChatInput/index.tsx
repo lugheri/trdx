@@ -110,11 +110,12 @@ export const CommunityChatInput = (props:PropsType) => {
               </button> 
             </div>
             { error !== null && <p className="text-red-500">{error}</p>}
+            {/*
             <button 
               className="mx-1 text-black/80 hover:text-black bg-white h-12 w-12 rounded-md"
               onClick={()=>setRecordAudio(true)}>
               <FontAwesomeIcon icon={Fas.faMicrophoneLines}/>
-            </button>  
+              </button>*/}  
             <button
               type="submit" 
               className="mx-1 text-black/80 hover:text-black bg-green-500 h-12 w-12 rounded-md">

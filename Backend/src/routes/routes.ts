@@ -9,6 +9,7 @@ import routesCatalog from './admin/content/routesCatalog';
 import routesComments from './admin/content/routesComments';
 import routesTeachers from './admin/content/routesTeachers';
 // :: Community
+import routesCommunityAdm from './admin/community/routesCommunityAdm';
 // :: Students
 import routesStudents from './admin/students/routesStudents';
 // :: Support
@@ -41,6 +42,7 @@ routesCatalog(routes)
 routesComments(routes)
 routesTeachers(routes)
 // :: Community
+routesCommunityAdm(routes)
 // :: Students
 routesStudents(routes)
 // :: Support

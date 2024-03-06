@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState } from "react"
 import { Card } from "../../../../components/Cards"
-import { SearchInputForm, SelectForm, TextAreaForm } from "../../../../components/Inputs"
+import { SearchInputForm, SelectForm } from "../../../../components/Inputs"
 import { TitlePage } from "../../../../components/Template/TitlePage"
 import { Button } from "../../../../components/Buttons"
 import { IComments } from "../Dtos/comments.dto"
@@ -16,6 +16,7 @@ import { ICourse, ILessonsModule } from "../Dtos/courses.dto"
 import { Modal, TitleModal } from "../../../../components/Modal"
 import { RenderImageGallery } from "../../../../components/RenderImageGallery"
 import { ITeacher } from "../Dtos/teachers.dto"
+import { MessageTextInput } from "../../../../components/MessageTextInput"
 
 export const Comments = () => {
   const [ searchParams, setSearchParams ] = useState("")
@@ -220,7 +221,7 @@ const Comment : React.FC<CommentComponent> = (props) => {
             <b>Cod. do Aluno: {props.comment.student_id}-</b> <FontAwesomeIcon className="mx-2 text-teal-500 text-[.2rem]" icon={Fas.faCircle}/>
             <span>-</span>
           </p>
-          <p className="text-white text font-extralight my-2">{props.comment.comment}</p>
+          <div className="text-white text font-extralight my-2" dangerouslySetInnerHTML={{ __html: props.comment.comment }} />
 
           <div className="flex border-t border-neutral-600 justify-between">
             <div className="flex">
@@ -243,7 +244,7 @@ const Comment : React.FC<CommentComponent> = (props) => {
             <FontAwesomeIcon className="mx-2 text-teal-500 text-[.2rem]" icon={Fas.faCircle}/>
             <p className="text-white text-xs">{formatDate(props.comment.date_created)}</p>
           </p>
-          <p className="text-white text font-extralight my-2">{props.comment.comment}</p>
+          <div className="text-white text font-extralight my-2" dangerouslySetInnerHTML={{ __html: props.comment.comment }} />
          
 
           <div className="flex border-t border-neutral-600 justify-between">
@@ -255,7 +256,8 @@ const Comment : React.FC<CommentComponent> = (props) => {
           </div>
           { answersQuestion !== null && 
           <div className="bg-neutral-900 p-2 rounded text-white">
-            <p className="text-xs font-light"><b>Resposta:</b> {answersQuestion.comment}</p>  
+            <p className="text-xs font-light"><b>Resposta:</b>
+            <div dangerouslySetInnerHTML={{ __html: answersQuestion.comment }} /></p>  
           </div>}
         </div>
         
@@ -347,10 +349,10 @@ const AnswerComment : React.FC<AnswerCommentComponent> = (props) => {
 
   }
 
-  return(<Modal component={
+  return(<Modal className="overflow-x-visible" component={
     <div className="flex flex-col w-[900px]">
       <TitleModal icon="faReply" title="Responder Comentário" close={()=>props.setAnswer(null)}/>
-      <div className="flex flex-col p-4 overflow-hidden">
+      <div className="flex flex-col p-4">
         {/*COMMENT*/}
         <div className="flex overflow-hidden">      
           {props.infoStudent == null ? 
@@ -363,7 +365,7 @@ const AnswerComment : React.FC<AnswerCommentComponent> = (props) => {
                   <b>Cod. do Aluno: {props.comment.student_id}-</b> <FontAwesomeIcon className="mx-2 text-teal-500 text-[.2rem]" icon={Fas.faCircle}/>
                   <span>-</span>
                 </p>
-                <p className="text-white text font-extralight my-2">{props.comment.comment}</p>            
+                <div className="text-white text font-extralight my-2" dangerouslySetInnerHTML={{ __html: props.comment.comment }} />            
               </div>
             </>
           : <>
@@ -375,7 +377,7 @@ const AnswerComment : React.FC<AnswerCommentComponent> = (props) => {
                 <b>{props.infoStudent.name}</b> <FontAwesomeIcon className="mx-2 text-teal-500 text-[.2rem]" icon={Fas.faCircle}/>
                 <span>{props.infoStudent.mail}</span>
               </p>
-              <p className="text-white text font-extralight my-2">{props.comment.comment}</p>         
+              <div className="text-white text font-extralight my-2" dangerouslySetInnerHTML={{ __html: props.comment.comment }} />     
             </div>
           </>} 
         </div>
@@ -390,8 +392,14 @@ const AnswerComment : React.FC<AnswerCommentComponent> = (props) => {
           </div>}
         
         
-        <form onSubmit={(e)=>saveAnswerComment(e)}>
-          <TextAreaForm value={answer} required onChange={setAnswer} label="Resposta" />
+        <form onSubmit={(e)=>saveAnswerComment(e)} className="mt-20">
+          
+          <label className="font-semibold italic text-sm text-neutral-300  py-1">
+            Resposta
+          </label>
+          <div className="shadow rounded-md p-2 border mb-4 border-neutral-700 bg-neutral-500/20">          
+            <MessageTextInput message={answer} setMessage={setAnswer} sizeEmoji="18px" classStyle="bottom-10"/>
+          </div>
           {teachers === null ? <LoadingBars/> : <SelectForm label="Responder" options={teachers} valueKey="id" empty="Responder como?" lableKey="name" required value={answerAs} onChange={setAnswerAs}/>}
           {error && <p className="text-red-500">{error}</p>}
           <div className="flex justify-end border-t border-neutral-600 pt-2 mt-2">
@@ -432,7 +440,9 @@ const RemoveComment : React.FC<RemoveCommentComponent> = (props) => {
       <TitleModal icon="faTrash" title="Remover Comentário" close={()=>props.setRemove(null)}/>    
        <p className="text-white font-xl mt-8 mx-4 mb-4">
         Confirmar a remoção do comentário<br/>
-        <span className="text-sm italic font-light"> "{props.comment.comment}"?</span></p>
+        <span className="flex text-sm italic font-light">"
+          <div dangerouslySetInnerHTML={{ __html: props.comment.comment }} />
+        " ?</span></p>
         <p className="w-full text-right text-sm text-neutral-300">- Aluno: {props.studentName}</p>
      <div className="flex border-t mt-4 p-2 justify-end items-center">
        <Button name="Cancelar" btn="muted"  type='outline' onClick={()=>props.setRemove(null)} />

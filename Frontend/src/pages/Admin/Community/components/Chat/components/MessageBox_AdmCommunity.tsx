@@ -1,21 +1,22 @@
 import { useEffect, useRef, useState } from "react"
-import { StudentProfilePhoto } from "../../../../../components/StudentProfilePhoto"
-import { User } from "../../../../../contexts/Dtos/auth.dto"
-import { ICommunityMedia, ICommunityMessage } from "../../../../Students/CommunityStudent/Dto/community.dto"
-import api from "../../../../../services/api"
-import { LoadingBars } from "../../../../../components/Loading"
-import { urlBase } from "../../../../../utils/baseUrl"
+import { StudentProfilePhoto } from "../../../../../../components/StudentProfilePhoto"
+import { ICommunityMedia, ICommunityMessage } from "../../../../../Students/CommunityStudent/Dto/community.dto"
+import api from "../../../../../../services/api"
+import { LoadingBars } from "../../../../../../components/Loading"
+import { urlBase } from "../../../../../../utils/baseUrl"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faFile } from "@fortawesome/free-solid-svg-icons"
-import { Button } from "../../../../../components/Buttons"
+import {  faChevronDown, faFile } from "@fortawesome/free-solid-svg-icons"
+import { Button } from "../../../../../../components/Buttons"
+import { IStudent } from "../../../../Students/Dtos/student.dto"
 
 type PropsType = {
-  userdata:User,
+  userdata:IStudent,
   message:ICommunityMessage
 }
 export const MessageBox_AdmCommunity = (props:PropsType) => {
   return(
     <div className="flex flex-col">
+     
       { props.userdata.id === props.message.user_id ? (
         <MyMessage message={props.message}/>
       ) : (
@@ -33,7 +34,9 @@ const MyMessage = (props:PropsMessageType) => {
     <div className="flex flex-1 justify-end ">
       <div className="py-1 px-4 flex">       
         <div className="flex flex-col flex-1 justify-end">
-          <div className="bg-teal-700 max-w-[250px] lg:max-w-[500px] text-white text-sm font-light shadow shadow-neutral-950/50 rounded-md rounded-se-none">
+          <div className="bg-teal-700 group relative max-w-[250px] lg:max-w-[500px] text-white text-sm font-light shadow shadow-neutral-950/50 rounded-md rounded-se-none">
+            <FontAwesomeIcon 
+              className="bg-teal-700 group-hover:opacity-100 opacity-0 hover:bg-teal-800 shadow-md cursor-pointer w-4 h-4 rounded-full p-1 text-xs right-0 text-white absolute" icon={faChevronDown}/>
             { props.message.media === 0 ? (
               <div className="m-3" dangerouslySetInnerHTML={{ __html: props.message.message }} />
             ) : (
@@ -54,7 +57,9 @@ const OtherMessage = (props:PropsMessageType) => {
             <div className="mx-2 w-10 ">
             </div>
             <div className="flex flex-col flex-1">              
-              <div className="bg-neutral-700 max-w-[200px] lg:max-w-[500px] mb-1 text-white text-sm font-light shadow shadow-neutral-950/50 rounded-md rounded-ss-none">
+              <div className="bg-neutral-700 group relative max-w-[200px] lg:max-w-[500px] mb-1 text-white text-sm font-light shadow shadow-neutral-950/50 rounded-md rounded-ss-none">
+              <FontAwesomeIcon
+                className="bg-neutral-700 group-hover:opacity-100 opacity-0 hover:bg-neutral-800 shadow-md cursor-pointer w-4 h-4 rounded-full p-1 text-xs left-0 text-white absolute" icon={faChevronDown}/>
               { props.message.media === 0 ? (
                 <div className="m-3" dangerouslySetInnerHTML={{ __html: props.message.message }} />
               ) : (
@@ -72,7 +77,10 @@ const OtherMessage = (props:PropsMessageType) => {
               class="w-10 h-10 my-1 mx-2 group-hover:hidden"/>
             <div className="flex flex-col flex-1">
               <p className="text-white/50 text-xs mt-3 mb-1">{props.message.user_name}</p>
-              <div className="bg-neutral-700 max-w-[200px] lg:max-w-[500px] mb-1 text-white text-sm font-light rounded-md rounded-ss-none shadow shadow-neutral-950/50">
+              <div className="bg-neutral-700 group relative max-w-[200px] lg:max-w-[500px] mb-1 text-white text-sm font-light rounded-md rounded-ss-none shadow shadow-neutral-950/50">
+                <FontAwesomeIcon
+                  className="bg-neutral-700 group-hover:opacity-100 opacity-0 hover:bg-neutral-800 shadow-md cursor-pointer w-4 h-4 rounded-full p-1 text-xs left-0 text-white absolute" icon={faChevronDown}/>
+              
                 { props.message.media === 0 ? (
                   <div className="m-3" dangerouslySetInnerHTML={{ __html: props.message.message }} />
                 ) : (

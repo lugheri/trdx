@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { StudentProfilePhoto } from "../../../../../components/StudentProfilePhoto"
 import { Student } from "../../../../../contexts/Dtos/auth.dto"
-import { faEllipsisVertical, faSearch } from "@fortawesome/free-solid-svg-icons"
-import { useEffect, useState } from "react"
+import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons"
+import { useEffect } from "react"
 import api from "../../../../../services/api"
 
 type PropsType = {
@@ -11,8 +11,8 @@ type PropsType = {
 }
 
 export const CommunityTitleBar = (props:PropsType) => {
-  const [ member, setMember ] = useState(0)
-  const [ onLine, setOnline ] = useState(0)
+  //const [ member, setMember ] = useState(0)
+  //const [ onLine, setOnline ] = useState(0)
   
   const changeStatusOnline = async () => {
     try{
@@ -22,7 +22,7 @@ export const CommunityTitleBar = (props:PropsType) => {
     }
   }
 
-  const getInfoMembers = async () => {
+  /*const getInfoMembers = async () => {
     try{
       const data = await api.get('getInfoMembers')
       setMember(data.data.members)
@@ -30,11 +30,11 @@ export const CommunityTitleBar = (props:PropsType) => {
     }catch(err){
       console.log(err)
     }
-  }
+  }*/
   useEffect(()=>{
     const interval = setInterval(() => {
       changeStatusOnline()
-      getInfoMembers()
+      //getInfoMembers()
     }, 1500);
     return () => clearInterval(interval);
   },[])
@@ -48,17 +48,17 @@ export const CommunityTitleBar = (props:PropsType) => {
           class="w-[50px] h-[50px] my-1 mx-2 group-hover:hidden"/>
         <div className="flex flex-col">
           <p className="text-white">{props.userdata.name}</p>
-          <p className="text-sm text-white/50 font-light">On Line</p>
+          <p className="text-sm text-white/50 font-light">Online</p>
         </div>
       </div>
       <div className="flex-1 flex-col justify-center items-center hidden lg:flex">
         <p className="text-white">Comunidade TraderX</p>
-        <p className="text-sm text-white/50 font-light">{member} Members, {onLine} Online</p>
+        {/*<p className="text-sm text-white/50 font-light">{member} Members, {onLine} Online</p>*/}
       </div>
       <div className="flex lg:flex-1 justify-end items-center">
-        <button className="text text-white/50 hover:text-white mx-2">
+        {/*<button className="text text-white/50 hover:text-white mx-2">
           <FontAwesomeIcon icon={faSearch}/>
-        </button>
+        </button>*/}
         <button 
           className="text text-white/50 hover:text-white mx-2" 
           onClick={()=>props.openUserInfo(true)}>

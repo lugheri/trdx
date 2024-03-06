@@ -122,6 +122,17 @@ class StudentsController{
       res.json({"error":err})  
     }
   }
+
+  async totalMembers(req:Request, res:Response){
+    try{
+      const total = await studentsService.totalCommunityMembers()
+      res.json({"success": true,"response": total})  
+      return
+    }catch(err){
+      console.error(err)
+      res.json({"error":err})  
+    }
+  }
   async searchStudentOld(req:Request, res:Response){
     const searchParams = SearchStudentDTO.safeParse(req.body)
     if(!searchParams.success){

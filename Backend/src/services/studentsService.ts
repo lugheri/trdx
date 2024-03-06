@@ -24,6 +24,15 @@ class StudentsService{
     await redisSet(redisKey,infoStudent)
     return infoStudent
   }
+  async infoStudentByMail(mail:string):Promise<null | StudentsInstance >{
+    const redisKey = `infoStudentByMail:[${mail}]`
+    const infoStudentByMailRedis = await redisGet(redisKey)
+    if(infoStudentByMailRedis!==null){ return infoStudentByMailRedis }   
+    const student = await Students.findOne({where:{mail:mail}})
+    const infoStudent = student ? student : null
+    await redisSet(redisKey,infoStudent)
+    return infoStudent
+  }
   async editStudent(studentId:number,studentData:StudentPartialType):Promise<boolean>{   
     await redisDel(`infoStudent:[${studentId}]`)
     await Students.update(studentData,{where:{id:studentId}})   
@@ -40,7 +49,7 @@ class StudentsService{
     const p = page-1
     const qtdRegPage = 15
     const offset = qtdRegPage * p 
-    const filterCondition = filter ? { nome: filter } : {};
+    const filterCondition = filter ? { community: filter } : {};
     const listStudents = await Students.findAll({
       where: {status: status, ...filterCondition},
       order:[[orderedBy,order]],

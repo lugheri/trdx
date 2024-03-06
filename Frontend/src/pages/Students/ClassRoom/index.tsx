@@ -7,8 +7,6 @@ import { Student } from '../../../contexts/Dtos/auth.dto';
 import api from '../../../services/api';
 import { ICourse } from '../Dtos/courses.dto';
 import { NotePad } from './components/NotePad';
-import { Quiz } from './components/Quiz';
-
 
 export const ClassRoom = () => {
   const authenticated = useAuth();  

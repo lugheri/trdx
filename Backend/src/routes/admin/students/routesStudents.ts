@@ -12,6 +12,7 @@ export default (routes: Router) => {
   
   //Search and Info
   routes.get("/totalStudents/:status", StudentsController.totalStudents)
+  routes.get("/totalMembers/", StudentsController.totalMembers)
   routes.get("/lastStudentAccess/:studentId", StudentsController.lastStudentAccess)
   routes.get("/searchParams/:status/:searchParams/:page/:filterType/:orderedBy/:order", StudentsController.searchStudent)
   routes.post("/searchStudents", StudentsController.searchStudent)
