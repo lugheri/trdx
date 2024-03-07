@@ -5,12 +5,14 @@ export interface CommunityMessagesInstance extends Model{
   id:number;
   date_created:string;
   is_student:number;
+  answer_message:number;
   user_id:number;
   user_photo:number;
   user_name:string;
   user_last_message:number;
   message:string;
   media:number;
+  public:number;
   status:number;
 }
 
@@ -26,6 +28,10 @@ export const CommunityMessages = sequelize.define<CommunityMessagesInstance>("Co
   },
   is_student:{
     type:DataTypes.INTEGER
+  },
+  answer_message:{
+    type:DataTypes.INTEGER,
+    defaultValue:0
   },
   user_id:{
     type:DataTypes.INTEGER
@@ -44,6 +50,10 @@ export const CommunityMessages = sequelize.define<CommunityMessagesInstance>("Co
   },
   media:{
     type:DataTypes.INTEGER
+  },
+  public:{
+    type:DataTypes.INTEGER,
+    defaultValue:1
   },
   status:{
     type:DataTypes.INTEGER,

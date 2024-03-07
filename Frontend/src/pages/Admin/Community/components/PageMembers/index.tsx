@@ -67,8 +67,7 @@ export const Member  = (props:PropsMember) => {
   return(
     <div 
       className={`flex justify-between items-center w-full p-2 cursor-pointer hover:bg-gray-900`}
-      onClick={()=>props.setInfoMember(props.student)}
-      >      
+      onClick={()=>props.setInfoMember(props.student)}>
       <StudentProfilePhoto 
         student_id={props.student.id} 
         photo_id={props.student.photo} 

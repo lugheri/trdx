@@ -25,7 +25,7 @@ export default (routes:Router)=>{
   routes.post("/listCourses",CatalogController.listCourses);
   routes.get("/infoCourse/:courseId",CatalogController.infoCourse);
   routes.patch("/editCourse/:courseId",CatalogController.editCourse);
- 
+
 
   //Modules
   routes.post("/newModuleCourse",CatalogController.newModuleCourse);

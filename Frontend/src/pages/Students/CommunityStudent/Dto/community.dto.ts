@@ -20,3 +20,15 @@ export interface ICommunityMedia{
   duration:number;
   status:number;
 }
+
+export interface ICommunityBlockMember{
+  id:number;
+  date:string;
+  user_block_responsible:number;
+  member_id:number;
+  block_audio_message:number;
+  block_media_message:number;
+  block_message_message:number;
+  block_access:number;
+}
+

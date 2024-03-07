@@ -28,7 +28,7 @@ export const StudentProfilePhoto : React.FC<{student_id:number,photo_id:number,c
       const time = reload+1
       setReload(time)
     },15000) 
-  },[reload])
+  },[reload,props.photo_id])
 
   return(
     urlPhoto ? 

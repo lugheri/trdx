@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import studentsService from "../services/studentsService";
+import { CommunityBlockedMembersDTO } from "./Dtos/community.dto";
+import communityMessageService from "../services/communityMessageService";
 
 class CommunityAdmController{
   async getPhotoProfile(req:Request,res:Response){
@@ -23,5 +25,49 @@ class CommunityAdmController{
       res.json({"error":true,"message":err})
     }
   }
+
+
+  async blockingMember(req:Request,res:Response){
+    try{
+      const dataBlock = CommunityBlockedMembersDTO.safeParse(req.body)
+      if(!dataBlock.success){
+        res.json({"error":true,"message":dataBlock.error.message})
+        return
+      }
+      await communityMessageService.blockingMember(dataBlock.data)
+      res.json({"success":true})
+    }catch(err){
+      console.log(err)
+      res.json({"error":true,"message":err})
+    }
+  }
+
+  async editBlockMember(req:Request,res:Response){
+    try{
+      const member_id = parseInt(req.params.member_id)
+      const dataBlock = CommunityBlockedMembersDTO.safeParse(req.body)
+      if(!dataBlock.success){
+        res.json({"error":true,"message":dataBlock.error.message})
+        return
+      }
+      await communityMessageService.editBlockingMember(member_id,dataBlock.data)
+      res.json({"success":true})
+    }catch(err){
+      console.log(err)
+      res.json({"error":true,"message":err})
+    }
+  }
+  
+  async infoBlockMember(req:Request,res:Response){
+    try{
+      const member_id = parseInt(req.params.member_id)
+      const infoBlock = await communityMessageService.getDataBlockMember(member_id)
+      res.json({"success":true,"response":infoBlock})
+    }catch(err){
+      console.log(err)
+      res.json({"error":true,"message":err})
+    }
+  }
+
 }
 export default new CommunityAdmController()

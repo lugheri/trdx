@@ -8,7 +8,7 @@ import { PageMembers } from "./components/PageMembers";
 import api from "../../../services/api";
 import { Chat } from "./components/Chat";
 import { IStudent } from "../Students/Dtos/student.dto";
-import { Button } from "../../../components/Buttons";
+import { InfoMember } from "./components/InfoMember";
 
 export const Community = () => {
   const authenticated = useAuth();
@@ -41,14 +41,7 @@ export const Community = () => {
           </div>
         </div>
         <Chat userdata={userData}/>
-        { infoMember && (
-          <div className="flex flex-col w-1/4 bg-gray-900 mx-1 rounded-xl p-4">
-            <div className="flex w-full justify-between items-start">
-              <p className="text-white">Info</p>
-              <Button name="Fechar" btn="muted" type="notline" onClick={()=>setInfoMember(null)}/> 
-            </div>
-            <p className="text-white/50 text-xs">Dados do aluno {infoMember.name} ... </p>
-          </div>)}
+        { infoMember && <InfoMember infoMember={infoMember} setInfoMember={setInfoMember} responsibleUser={userData.id}/> }
       </div>
     )
   )
