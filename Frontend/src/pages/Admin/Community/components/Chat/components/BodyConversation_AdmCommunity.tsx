@@ -24,7 +24,7 @@ export const BodyConversation_AdmCommunity = (props:PropsType) => {
   }, []);
 
   return(
-    <div className="flex-1 overflow-auto pb-4 scrollBarCommunity" ref={messagesContainerRef}>
+    <div className="h-[85%] overflow-auto pb-4 scrollBarCommunity" ref={messagesContainerRef}>
       <PageMessage 
         page={1}        
         setUpdate={props.setUpdate} 
@@ -49,6 +49,7 @@ const PageMessage = (props:PropsTypeMessage) => {
   const [ lastMessages, setLastMessages ] = useState<null|ICommunityMessage[]>(null) 
   const [ nextPage, setNextPage ] = useState<number|null>(null)
   const container = props.messagesContainerRef.current;
+  const [editMessage, setEditMessage] = useState<ICommunityMessage|null>(null)
 
   useEffect(() => {
     if (!container) return;
@@ -129,6 +130,9 @@ const PageMessage = (props:PropsTypeMessage) => {
           { lastMessages.map((message,key)=>(
             <MessageBox_AdmCommunity 
               key={key}
+              editMessage={editMessage}
+              setEditMessage={setEditMessage}
+              setUpdate={props.setUpdate}
               userdata={props.userdata}
               message={message}/> 
             ))}

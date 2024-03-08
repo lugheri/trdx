@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import studentsService from "../services/studentsService";
-import { CommunityBlockedMembersDTO } from "./Dtos/community.dto";
+import { CommunityBlockedMembersDTO, CommunityMessageDTO } from "./Dtos/community.dto";
 import communityMessageService from "../services/communityMessageService";
 
 class CommunityAdmController{
@@ -63,6 +63,22 @@ class CommunityAdmController{
       const member_id = parseInt(req.params.member_id)
       const infoBlock = await communityMessageService.getDataBlockMember(member_id)
       res.json({"success":true,"response":infoBlock})
+    }catch(err){
+      console.log(err)
+      res.json({"error":true,"message":err})
+    }
+  }
+
+  async editMessage(req:Request,res:Response){
+    try{
+      const messageId = parseInt(req.params.message_id)
+      const dataMessage = CommunityMessageDTO.safeParse(req.body)
+      if(!dataMessage.success){
+        res.json({"error":true,"message":dataMessage.error.message})
+        return
+      }
+      await communityMessageService.editMessages(messageId,dataMessage.data)
+      res.json({"success":true})
     }catch(err){
       console.log(err)
       res.json({"error":true,"message":err})

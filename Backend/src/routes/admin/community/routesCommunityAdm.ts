@@ -8,4 +8,7 @@ export default (routes: Router) => {
   routes.post('/blockingMember',CommunityAdmController.blockingMember)
   routes.patch('/editBlockMember/:member_id',CommunityAdmController.editBlockMember)
   routes.get('/infoBlockMember/:member_id',CommunityAdmController.infoBlockMember)
+
+  routes.patch('/editMessage/:message_id',CommunityAdmController.editMessage)
+  
 }

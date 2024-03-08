@@ -245,8 +245,6 @@ class CommunityController{
     res.json({"error":true, "message":"No file received"})     
   }
   
-  async editMessage(req:Request,res:Response){
 
-  }
 }
 export default new CommunityController();

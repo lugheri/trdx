@@ -8,6 +8,7 @@ export interface ICommunityMessage{
   user_last_message:number;
   message:string;
   media:number;
+  public:number;
   status:number;
 }
 

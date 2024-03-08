@@ -28,7 +28,8 @@ export const SearchMembers = (props:Props) => {
 type SearchMemberProps = {
   page:number,
   params:string,
-  status:number,
+  status:number,  
+  infoMember:IStudent|null,
   setInfoMember:React.Dispatch<React.SetStateAction<IStudent|null>>
 }
 export const SearchMemberResults : React.FC<SearchMemberProps> = (props) => {
@@ -56,11 +57,11 @@ export const SearchMemberResults : React.FC<SearchMemberProps> = (props) => {
           <p>Nenhum Aluno encontrado</p>
         </div>
       : <>
-        { students.map((student,key)=><Member key={key} student={student} setInfoMember={props.setInfoMember}/>)}
+        { students.map((student,key)=><Member key={key} student={student} infoMember={props.infoMember} setInfoMember={props.setInfoMember}/>)}
         { nextPage === 0 
           ? students.length >= 15 
             && <Button block btn="muted" type="notline" name="Carregar Mais Alunos" onClick={()=>setNextPage(props.page+1)}/>
-          : <SearchMemberResults status={props.status} page={nextPage} params={props.params} setInfoMember={props.setInfoMember}/>
+          : <SearchMemberResults status={props.status} page={nextPage} params={props.params} infoMember={props.infoMember} setInfoMember={props.setInfoMember}/>
         }    
       </>} 
   </>)

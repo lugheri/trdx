@@ -10,7 +10,7 @@ type Props = {
   userdata:User;
 }
 export const Chat = (props:Props) => {
-  const [update, setUpdate ] = useState(true)
+  const [ update, setUpdate ] = useState(true)
   const [ error, setError ] = useState<null|string>(null)
   const [ studentAccessData, setStudentAccessData ] = useState<IStudent|null|''>(null)
   const getDataStudentAccess = async () => {
@@ -43,15 +43,18 @@ export const Chat = (props:Props) => {
       <div className="flex-1 flex flex-col">
         <Title_AdmCommunity/>
         <div className="flex justify-start items-center h-full">
-          <div className=" h-full rounded-md p-2 flex-col flex flex-1 ">
+          <div className="h-full rounded-md p-2 flex-col flex flex-1 ">
             <BodyConversation_AdmCommunity
               page={1}
               userdata={studentAccessData}
               setUpdate={setUpdate}
               update={update}/>
             <ChatInput_AdmCommunity 
+              initialMessage=""
               userdata={studentAccessData}
-              setUpdate={setUpdate} />
+              setUpdate={setUpdate} 
+              answerMessage={0}
+              action="new"/>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import api from "../../../../../../services/api"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faSearch } from "@fortawesome/free-solid-svg-icons"
+import { faCog, faSearch } from "@fortawesome/free-solid-svg-icons"
 
 
 export const Title_AdmCommunity = () => {
@@ -30,6 +30,9 @@ export const Title_AdmCommunity = () => {
       <div className="flex justify-end items-center">
         <button className="text text-white/50 hover:text-white mx-2">
           <FontAwesomeIcon icon={faSearch}/>
+        </button>    
+        <button className="text text-white/50 hover:text-white mx-2">
+          <FontAwesomeIcon icon={faCog}/>
         </button>        
       </div>
     </div>  

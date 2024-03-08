@@ -20,6 +20,6 @@ export default (routes: Router) => {
   routes.get("/loadMedia/:mediaId",CommunityController.loadMedia)
   routes.post("/newAudioMessage",CommunityController.newAudioMessage)
   routes.post("/newFileMessage",upload.single('file'),CommunityController.newFileMessage)
-  routes.put("/editMessage/:message_id",CommunityController.editMessage)
+  
   
 }

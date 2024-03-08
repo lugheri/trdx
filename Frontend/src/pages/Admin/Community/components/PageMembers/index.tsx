@@ -10,6 +10,7 @@ import { StudentProfilePhoto } from "../../../../../components/StudentProfilePho
 type Props = {
   page:number,
   status:number,
+  infoMember:IStudent|null,
   setInfoMember:React.Dispatch<React.SetStateAction<IStudent|null>>
 }
 export const PageMembers = (props:Props) => {
@@ -48,11 +49,11 @@ export const PageMembers = (props:Props) => {
         </div>
       ) : (
         <>
-          { students.map((student,key)=>(<Member key={key} student={student} setInfoMember={props.setInfoMember}/>))}
+          { students.map((student,key)=>(<Member key={key} student={student} infoMember={props.infoMember} setInfoMember={props.setInfoMember}/>))}
           { nextPage === 0 ? students.length >= 15 && (
             <Button block btn="muted" type="notline" name="Carregar Mais Alunos" onClick={()=>setNextPage(props.page+1)}/>
           ) : (
-            <PageMembers status={props.status} page={nextPage} setInfoMember={props.setInfoMember}/>
+            <PageMembers status={props.status} page={nextPage} infoMember={props.infoMember} setInfoMember={props.setInfoMember}/>
           )}
         </>
       )} 
@@ -61,19 +62,22 @@ export const PageMembers = (props:Props) => {
 
 type PropsMember = {
   student:IStudent,
+  infoMember:IStudent|null,
   setInfoMember:React.Dispatch<React.SetStateAction<IStudent|null>>
 }
 export const Member  = (props:PropsMember) => {   
   return(
     <div 
-      className={`flex justify-between items-center w-full p-2 cursor-pointer hover:bg-gray-900`}
+      className={`flex justify-between items-center w-full p-2 cursor-pointer hover:bg-gray-900
+                ${props.infoMember && props.infoMember.id === props.student.id && "bg-gray-950"}
+      `}
       onClick={()=>props.setInfoMember(props.student)}>
       <StudentProfilePhoto 
         student_id={props.student.id} 
         photo_id={props.student.photo} 
         autoUpdate={true} 
         class="w-10 h-10 my-1 mx-1 group-hover:hidden"/>
-      <div className="flex flex-col justify-center flex-1 py-2 px-1">
+      <div className="flex flex-col justify-center flex-1 py-2 px-1">       
         <p className="text-white font-light text-sm">{props.student.name}</p>
         <p className="text-white/50 font-light text-xs">{props.student.mail}</p>
       </div>

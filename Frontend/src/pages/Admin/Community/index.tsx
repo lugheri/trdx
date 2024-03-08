@@ -28,15 +28,15 @@ export const Community = () => {
     userData == null ? (
       <LoadingBars/>
     ) : (
-      <div className="flex h-full py-1">
+      <div className="flex h-full py-1 bg-gradient-to-l from-neutral-900 via-neutral-950 to-transparent">
         <div className="bg-gray-800 w-1/4 mx-1 rounded-xl flex flex-col overflow-hidden">
           <ProfileAdmCommunity userData={userData}/>
           <SearchMembers totalMembers={totalMembers} searchParams={searchParams} setSearchParams={setSearchParams}/>
           <div className="flex flex-col flex-1 overflow-x-hidden overflow-x-auto">
             { searchParams !== '' ? (
-              <SearchMemberResults page={1} params={searchParams} status={1} setInfoMember={setInfoMember}/>
+              <SearchMemberResults page={1} params={searchParams} status={1} infoMember={infoMember} setInfoMember={setInfoMember}/>
             ) : (
-              <PageMembers page={1} status={1} setInfoMember={setInfoMember}/>
+              <PageMembers page={1} status={1} infoMember={infoMember} setInfoMember={setInfoMember}/>
             )}
           </div>
         </div>
