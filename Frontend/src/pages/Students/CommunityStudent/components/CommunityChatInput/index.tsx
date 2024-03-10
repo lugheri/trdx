@@ -16,7 +16,10 @@ import DOMPurify from 'dompurify';
 
 type PropsType = {
   userdata:Student,
-  setUpdate:React.Dispatch<React.SetStateAction<boolean>>
+  update:boolean,
+  setUpdate:React.Dispatch<React.SetStateAction<boolean>>,
+  disableAudio?:boolean,
+  disableMedia?:boolean
 }
 export const CommunityChatInput = (props:PropsType) => {
   const [ error, setError ] = useState<string|null>(null)
@@ -40,7 +43,7 @@ export const CommunityChatInput = (props:PropsType) => {
           media: 0
         }
         console.log('Data',data)
-        props.setUpdate(true)
+        props.setUpdate(!props.update)
         console.log('Updated')
         const r = await api.post('newMessage',data)
         if(r.data.error){setError(r.data.message)
@@ -105,17 +108,20 @@ export const CommunityChatInput = (props:PropsType) => {
                   </button>
                 </div>
               )}
-              <button className="mx-1 text-white/50 hover:text-white" onClick={()=>setChangeTypeFile(!changeTypeFile)} >
-                <FontAwesomeIcon icon={Far.faFile}/>
-              </button> 
+              { !props.disableMedia &&
+                <button className="mx-1 text-white/50 hover:text-white" onClick={()=>setChangeTypeFile(!changeTypeFile)} >
+                  <FontAwesomeIcon icon={Far.faFile}/>
+                </button> 
+              }
             </div>
             { error !== null && <p className="text-red-500">{error}</p>}
-            {/*
-            <button 
-              className="mx-1 text-black/80 hover:text-black bg-white h-12 w-12 rounded-md"
-              onClick={()=>setRecordAudio(true)}>
-              <FontAwesomeIcon icon={Fas.faMicrophoneLines}/>
-              </button>*/}  
+            { !props.disableAudio &&
+              <button 
+                className="mx-1 text-black/80 hover:text-black bg-white h-12 w-12 rounded-md"
+                onClick={()=>setRecordAudio(true)}>
+                <FontAwesomeIcon icon={Fas.faMicrophoneLines}/>
+                </button>
+            }  
             <button
               type="submit" 
               className="mx-1 text-black/80 hover:text-black bg-green-500 h-12 w-12 rounded-md">

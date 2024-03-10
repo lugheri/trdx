@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import studentsService from "../services/studentsService";
-import { CommunityBlockedMembersDTO, CommunityMessageDTO } from "./Dtos/community.dto";
+import { CommunityBlockedMembersDTO, CommunityMessageDTO, CommunitySetupDTO } from "./Dtos/community.dto";
 import communityMessageService from "../services/communityMessageService";
 
 class CommunityAdmController{
@@ -20,6 +20,46 @@ class CommunityAdmController{
       const mail_student_access = req.params.mail_student_access
       const infoStudent = await studentsService.infoStudentByMail(mail_student_access)
       res.json({"success":true,"response":infoStudent})
+    }catch(err){
+      console.log(err)
+      res.json({"error":true,"message":err})
+    }
+  }
+
+  async newSetupChat(req:Request,res:Response){
+    try{
+      const dataSetup = CommunitySetupDTO.safeParse(req.body)
+      if(!dataSetup.success){
+        res.json({"error":true,"message":dataSetup.error.message})
+        return
+      }
+      await communityMessageService.newSetupCommunity(dataSetup.data)
+      res.json({"success":true})
+    }catch(err){
+      console.log(err)
+      res.json({"error":true,"message":err})
+    }
+  }
+
+  async infoSetupChat(req:Request,res:Response){
+    try{
+      const infoSetup = await communityMessageService.getSetupCommunity()
+      res.json({"success":true,"response":infoSetup})
+    }catch(err){
+      console.log(err)
+      res.json({"error":true,"message":err})
+    }
+  }
+
+  async editSetupChat(req:Request,res:Response){
+    try{
+      const dataSetup = CommunitySetupDTO.safeParse(req.body)
+      if(!dataSetup.success){
+        res.json({"error":true,"message":dataSetup.error.message})
+        return
+      }
+      await communityMessageService.editSetupCommunity(dataSetup.data)
+      res.json({"success":true})
     }catch(err){
       console.log(err)
       res.json({"error":true,"message":err})

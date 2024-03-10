@@ -39,3 +39,13 @@ export const CommunityBlockedMembersDTO = z.object({
   block_access: z.optional(z.literal(1).or(z.literal(0))).default(1)
 })
 export type CommunityBlockedMembersType = z.infer<typeof CommunityBlockedMembersDTO>
+
+export const CommunitySetupDTO = z.object({
+  block_audio_message: z.optional(z.literal(1).or(z.literal(0))).default(1),
+  block_media_message: z.optional(z.literal(1).or(z.literal(0))).default(1),
+  block_message_message: z.optional(z.literal(1).or(z.literal(0))).default(1),
+  block_access: z.optional(z.literal(1).or(z.literal(0))).default(1),
+  status: z.optional(z.literal(1).or(z.literal(0))).default(1)
+})
+export type CommunitySetupType = z.infer<typeof CommunitySetupDTO>
+

@@ -4,6 +4,7 @@ import { ICommunityMessage } from "../../Dto/community.dto"
 import api from "../../../../../services/api"
 import { LoadingBars } from "../../../../../components/Loading"
 import { CommunityMessageBox } from "../CommunityMessageBox"
+import moment from "moment"
 
 type PropsType = {
   page:number,
@@ -55,7 +56,7 @@ const PageMessage = (props:PropsTypeMessage) => {
     const handleScroll = () => {
       if (container.scrollTop <= 0) {
         console.log('O usuário rolou para o topo do componente!');     
-        setNextPage(props.page+1)
+        //setNextPage(props.page+1)
       }     
     };
     container.addEventListener('scroll', handleScroll);
@@ -99,10 +100,12 @@ const PageMessage = (props:PropsTypeMessage) => {
     }
   }
   useEffect(() => {
-    console.log('Update Atualizado',props.update)
-    if(props.update){
-      getMessages()
-      props.setUpdate(false)
+    getMessages()
+    if (container) {       
+      const bottomPosition = container.scrollHeight - container.scrollTop - container.clientHeight;
+      if (bottomPosition < 100) {
+        container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+      }
     }
   }, [props.update]); 
 
@@ -137,13 +140,61 @@ const PageMessage = (props:PropsTypeMessage) => {
             </div>
           )}   
           { lastMessages.map((message,key)=>(
-            <CommunityMessageBox 
-              key={key}
-              userdata={props.userdata}
-              message={message}/> 
-            ))}
+            <> 
+              <DateMessage index={key} lastMessages={lastMessages} message={message}/>
+              <CommunityMessageBox 
+                key={key}
+                userdata={props.userdata}
+                message={message}/> 
+            </>
+          ))}
         </div> 
       </>
     ) 
   )
+}
+
+
+type DateMessageProps = {
+  message:ICommunityMessage,
+  lastMessages:ICommunityMessage[],
+  index:number
+}
+const DateMessage = (props:DateMessageProps) => {
+  moment.locale('pt-br')
+  const weekPortugueseDays =  [
+    "Domingo",
+    "Segunda-feira",
+    "Terça-feira",
+    "Quarta-feira",
+    "Quinta-feira",
+    "Sexta-feira",
+    "Sábado"
+  ];
+  const previousMessageDate = props.index > 0 ? new Date(props.lastMessages[props.index - 1].date_created) : null;
+  const lastDataMessage = moment(previousMessageDate).format('DD/MM/YYYY')
+  const currentMessageData = moment(props.message.date_created)
+  const label = currentMessageData.isSame(moment(), 'day') ?  "HOJE" 
+                : currentMessageData.isSame(moment().subtract(1, 'day'), 'day') ?  "ONTEM" 
+                : currentMessageData.isSame(moment().subtract(2, 'day'), 'day') ?  "ANTEONTEM" 
+                : currentMessageData.isSame(moment().subtract(3, 'day'), 'day') ?  weekPortugueseDays[currentMessageData.day()]
+                : currentMessageData.isSame(moment().subtract(4, 'day'), 'day') ?  weekPortugueseDays[currentMessageData.day()]
+                : currentMessageData.isSame(moment().subtract(5, 'day'), 'day') ?  weekPortugueseDays[currentMessageData.day()]
+                : currentMessageData.isSame(moment().subtract(6, 'day'), 'day') ?  weekPortugueseDays[currentMessageData.day()]
+                : currentMessageData.format("DD/MM/YYYY")
+
+  
+  return (
+    lastDataMessage != currentMessageData.format('DD/MM/YYYY') && (
+      <div className="flex justify-center items-center mb-1 mt-4">
+        <div className="border-b border-neutral-800 flex-1 mx-4 h-[1px]"></div>
+        <p 
+        className="text-white text-xs font-light bg-slate-800 px-2 py-1 rounded shadow"
+        title={`${currentMessageData.format("DD/MM/YYYY")}`}>
+          {label} 
+        </p>
+        <div className="border-b border-neutral-800 flex-1 mx-4 h-[1px]"></div>
+      </div>
+    )
+  );
 }

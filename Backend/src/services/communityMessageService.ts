@@ -1,8 +1,9 @@
 import { redisDel, redisGet, redisSet } from "../config/redis";
-import { CommunityBlockedMembersType, CommunityMediaType, CommunityMessageType } from "../controllers/Dtos/community.dto";
+import { CommunityBlockedMembersType, CommunityMediaType, CommunityMessageType, CommunitySetupType } from "../controllers/Dtos/community.dto";
 import { CommunityBlockedMembers, CommunityBlockedMembersInstance } from "../models/CommunityBlockedMembers";
 import { CommunityMedia } from "../models/CommunityMedia";
 import { CommunityMessages } from "../models/CommunityMessage";
+import { CommunitySetup, CommunitySetupInstance } from "../models/CommunitySetup";
 
 class CommunityMessageService{
   async newMessage(dataMessage:CommunityMessageType){
@@ -48,6 +49,34 @@ class CommunityMessageService{
   }
 
   //Manager
+  
+
+  async newSetupCommunity(dataSetup:CommunitySetupType){
+    const redisKey=`Community:editSetupCommunity`
+    await redisDel(redisKey)
+    await CommunitySetup.findOrCreate({
+      where: { status:1},
+      defaults:dataSetup
+    });
+    return true
+  }
+
+  async editSetupCommunity(dataSetup:CommunitySetupType){
+    const redisKey=`Community:editSetupCommunity`
+    await redisDel(redisKey)
+    await CommunitySetup.update(dataSetup,{where:{status:1}})
+    return true
+  }
+
+  async getSetupCommunity():Promise<CommunitySetupInstance|null>{
+    const redisKey=`Community:editSetupCommunity`
+    const editSetupCommunityRedis = await redisGet(redisKey)
+    if(editSetupCommunityRedis!==null){return editSetupCommunityRedis}
+    const dataBlock = await CommunitySetup.findOne({where:{status:1}})
+    await redisSet(redisKey,dataBlock ? dataBlock : null)
+    return dataBlock ? dataBlock : null
+  }
+
   async blockingMember(dataBlock:CommunityBlockedMembersType){
     const redisKey=`Community:blockedMember:[${dataBlock.member_id}]`
     await redisDel(redisKey)
@@ -57,6 +86,7 @@ class CommunityMessageService{
     });
     return true
   }
+
 
   async editBlockingMember(memberId:number,dataBlock:CommunityBlockedMembersType){
     const redisKey=`Community:blockedMember:[${memberId}]`

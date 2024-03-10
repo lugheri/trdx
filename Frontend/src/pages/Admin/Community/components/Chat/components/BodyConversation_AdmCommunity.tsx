@@ -4,6 +4,8 @@ import api from "../../../../../../services/api";
 import { LoadingBars } from "../../../../../../components/Loading";
 import { MessageBox_AdmCommunity } from "./MessageBox_AdmCommunity";
 import { IStudent } from "../../../../Students/Dtos/student.dto";
+import moment from "moment";
+import 'moment/locale/pt-br'
 
 type PropsType = {
   page:number,
@@ -128,16 +130,62 @@ const PageMessage = (props:PropsTypeMessage) => {
             </div>
           )}   
           { lastMessages.map((message,key)=>(
-            <MessageBox_AdmCommunity 
-              key={key}
-              editMessage={editMessage}
-              setEditMessage={setEditMessage}
-              setUpdate={props.setUpdate}
-              userdata={props.userdata}
-              message={message}/> 
-            ))}
+            <> 
+              <DateMessage index={key} lastMessages={lastMessages} message={message}/>
+               
+              <MessageBox_AdmCommunity 
+                key={key}
+                editMessage={editMessage}
+                setEditMessage={setEditMessage}
+                setUpdate={props.setUpdate}
+                userdata={props.userdata}
+                message={message}/> 
+            </>
+          ))}
+            
         </div> 
       </>      
     ) 
   )
+}
+
+type DateMessageProps = {
+  message:ICommunityMessage,
+  lastMessages:ICommunityMessage[],
+  index:number
+}
+const DateMessage = (props:DateMessageProps) => {
+  moment.locale('pt-br')
+  const weekPortugueseDays =  [
+    "Domingo",
+    "Segunda-feira",
+    "Terça-feira",
+    "Quarta-feira",
+    "Quinta-feira",
+    "Sexta-feira",
+    "Sábado"
+  ];
+  const previousMessageDate = props.index > 0 ? new Date(props.lastMessages[props.index - 1].date_created) : null;
+  const lastDataMessage = moment(previousMessageDate).format('DD/MM/YYYY')
+  const currentMessageData = moment(props.message.date_created)
+  const label = currentMessageData.isSame(moment(), 'day') ?  "HOJE" 
+                : currentMessageData.isSame(moment().subtract(1, 'day'), 'day') ?  "ONTEM" 
+                : currentMessageData.isSame(moment().subtract(2, 'day'), 'day') ?  "ANTEONTEM" 
+                : currentMessageData.isSame(moment().subtract(3, 'day'), 'day') ?  weekPortugueseDays[currentMessageData.day()]
+                : currentMessageData.isSame(moment().subtract(4, 'day'), 'day') ?  weekPortugueseDays[currentMessageData.day()]
+                : currentMessageData.isSame(moment().subtract(5, 'day'), 'day') ?  weekPortugueseDays[currentMessageData.day()]
+                : currentMessageData.isSame(moment().subtract(6, 'day'), 'day') ?  weekPortugueseDays[currentMessageData.day()]
+                : currentMessageData.format("DD/MM/YYYY")
+
+  
+  return (
+    <div className="flex justify-center">
+      {/* Se a mensagem atual foi criada hoje, exibe "HOJE", senão exibe a data da mensagem anterior */}
+      { lastDataMessage != currentMessageData.format('DD/MM/YYYY') && (
+        <p className="text-white text-xs font-light bg-slate-800 px-2 py-1 rounded">
+          {label} 
+        </p>
+      )}
+    </div>     
+  );
 }

@@ -8,6 +8,7 @@ import { Button } from "../../../../../components/Buttons"
 import { urlBase } from "../../../../../utils/baseUrl"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFile } from "@fortawesome/free-solid-svg-icons"
+import moment from "moment"
 
 
 type PropsType = {
@@ -43,6 +44,7 @@ const MyMessage = (props:PropsMessageType) => {
             ) : (
               <LoadMedia mediaId={props.message.media}  message={props.message.message}  />
             )}
+            <p className="text-xs text-white/80 float-right mx-1">{moment(props.message.date_created).format('HH:mm')}</p>
           </div>
         </div> 
       </div>
@@ -64,6 +66,7 @@ const OtherMessage = (props:PropsMessageType) => {
               ) : (
                 <LoadMedia mediaId={props.message.media} message={props.message.message} />
               )}
+              <p className="text-xs text-white/80 float-right mx-1">{moment(props.message.date_created).format('HH:mm')}</p>
               </div>
             </div> 
           </>
@@ -82,6 +85,7 @@ const OtherMessage = (props:PropsMessageType) => {
                 ) : (
                   <LoadMedia mediaId={props.message.media} message={props.message.message} />
                 )}
+                <p className="text-xs text-white/80 float-right mx-1">{moment(props.message.date_created).format('HH:mm')}</p>
               </div>
             </div> 
           </>

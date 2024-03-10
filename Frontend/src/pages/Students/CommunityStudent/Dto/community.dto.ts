@@ -33,3 +33,12 @@ export interface ICommunityBlockMember{
   block_access:number;
 }
 
+export interface ICommunitySetup{
+  id:number;
+  block_audio_message:number;
+  block_media_message:number;
+  block_message_message:number;
+  block_access:number;
+  status:number;
+}
+

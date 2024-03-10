@@ -6,8 +6,9 @@ import { useEffect, useState } from "react"
 import { ICommunityBlockMember } from "../../../../Students/CommunityStudent/Dto/community.dto"
 import { LoadingBars } from "../../../../../components/Loading"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons"
+import { faExclamationTriangle, faIdCard } from "@fortawesome/free-solid-svg-icons"
 import api from "../../../../../services/api"
+import { NavLink } from "react-router-dom"
 
 type Props = {
   responsibleUser:number,
@@ -85,6 +86,13 @@ export const InfoMember = (props:Props) => {
         <p className="text-white font-bold text-lg text-center mt-2"> {props.infoMember.name}</p>
         <p className="text-green-500/80 font-light text-center"> {props.infoMember.mail}</p>
         <p className="text-white/50 text-xs font-light">Membro desde: {moment(props.infoMember.since).format('DD/MM/YYYY')}</p>
+        <NavLink
+          className="flex justify-center items-center text-center cursor-pointer text-teal-500 hover:bg-[#16a085] hover:text-white p-2 text-xs rounded-md"
+          to={`/admin/students/actives/info/${props.infoMember.id}`}
+          target="blank"
+          title="Abrir Ficha do Aluno">
+          <FontAwesomeIcon className="mx-1" icon={faIdCard}/> Abrir ficha do aluno
+        </NavLink>
       </div>
       <div className="bg-slate-950 p-8 my-2 w-full rounded text-white/50 font-light flex justify-center items-center">
         Midias
