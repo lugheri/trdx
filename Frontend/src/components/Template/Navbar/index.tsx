@@ -1,4 +1,3 @@
-import useAuth from "../../../hooks/useAuth";
 import { useState } from 'react';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -11,10 +10,11 @@ import Logo from '/img/logo.png'
 import { Student } from "../../../contexts/Dtos/auth.dto";
 import { StudentProfilePhoto } from "../../StudentProfilePhoto";
 
-export const Navbar = () => {
-  const authenticated = useAuth();  
-  const userData:Student|null = authenticated ? authenticated.userData : null
-
+type Props = {
+  userData:Student,
+  typeAccess:'community' | 'default'
+}
+export const Navbar = (props:Props) => { 
  /* const location = useLocation();  
   const component = location.pathname.split('/')[1]
   const lesson = location.pathname.split('/')[4]*/
@@ -43,8 +43,8 @@ export const Navbar = () => {
             {/*PROFILE*/}
             <div className="flex flex-col flex-1">
               <div className="flex justify-start items-center">
-                <StudentProfilePhoto student_id={userData ? userData.id : 0} photo_id={0} autoUpdate={true} class="w-[40px] h-[40px]"/>
-                <p className="ml-2 font-light text-sm text-slate-300">{userData?.name}</p>
+                <StudentProfilePhoto student_id={props.userData.id} photo_id={0} autoUpdate={true} class="w-[40px] h-[40px]"/>
+                <p className="ml-2 font-light text-sm text-slate-300">{props.userData.name}</p>
               </div>
               <div className="flex w-[70%] justify-start items-center mt-2">
                 <div className="w-[80%] h-[10px] p-[1px]  bg-gradient-to-r from-[#24ff0055] to-[#2eff2a] rounded-md shadow">
@@ -57,7 +57,7 @@ export const Navbar = () => {
               <FontAwesomeIcon icon={Fas.faCog}/>
             </NavLink>                 
           </div>
-          <div className="flex flex-wrap justify-end">
+          <div className="flex flex-wrap justify-between">
             <SideItem 
                 to={`/`} 
                 name='Inicio' 
@@ -68,6 +68,13 @@ export const Navbar = () => {
                 name='Meus Cursos' 
                 icon='faChalkboard'
                 onClick={()=>setMobileNav('closed')}/>  
+              { props.typeAccess === "community" && 
+                <SideItem 
+                  to={`/communityStudent`} 
+                  name='Comunidade' 
+                  icon='faUsers'
+                  onClick={()=>setMobileNav('closed')}/>
+              }
               <SideItem 
                 to={`https://www.instagram.com/guilhermecardosox/`} 
                 name='Instagram' 
@@ -104,7 +111,7 @@ const SideItem : React.FC<{to:string;icon:keyof typeof Fas|null;name?:string;onC
       to={props.to}
       onClick={props.onClick}
       className={({ isActive, isPending }) =>isActive ? navActive : isPending ? navDefault : navDefault}>
-      {props.icon ? (<FontAwesomeIcon className={`px-4 ml-3 opacity-60 ${isActiveNav ? "text-black":"text-[#00ff00]"}`} icon={ props.name == 'Instagram' ? Fab.faInstagram : Fas[props.icon] as IconProp}/>) : false}
+      {props.icon ? (<FontAwesomeIcon className={`mx-3  opacity-60 ${isActiveNav ? "text-black":"text-[#00ff00]"}`} icon={ props.name == 'Instagram' ? Fab.faInstagram : Fas[props.icon] as IconProp}/>) : false}
       {props.name ? (<p className="text-xs">{props.name}</p>) : false}      
     </NavLink>
   )

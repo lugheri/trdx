@@ -20,24 +20,15 @@ import Ytube from '/img/svg/youtube.svg';
 import YtubeActive from '/img/svg/youtube_active.svg';
 import Exit from '/img/svg/exit.svg';
 
-export const Sidebar = () => {
-  const authenticated = useAuth();  
-  const userData:Student|null = authenticated ? authenticated.userData : null
-  const [ progress, setProgress] = useState(0);
-  const [ typeAccess, setTypeAccess ] = useState<null | 'community' | 'default'>(null)
-  
-  const checkTypeAccess = async () => {
-    try{
-      const type = await api.get(`checkTypeStudentAccess/${userData ? userData.id : 0}`)
-      console.log("Type",type.data.response)
-      setTypeAccess(type.data.response['community'] == 1 ? 'community' : 'default')
-    }catch(err){
-      console.error(err)
-    }
-  }
+type Props = {
+  userData:Student,
+  typeAccess:'community' | 'default'
+}
+export const Sidebar = (props:Props) => { 
+  const [ progress, setProgress] = useState(0);   
   const getProgress = async () => {
     try{
-      const prog = await api.get(`progressStudent/${userData ? userData.id : 0}`)     
+      const prog = await api.get(`progressStudent/${props.userData.id}`)     
       setProgress(prog.data.response)      
       console.log(progress)  
     }catch(e){
@@ -46,15 +37,14 @@ export const Sidebar = () => {
   }
 
 
-  useEffect(()=>{
-    checkTypeAccess()
+  useEffect(()=>{  
     getProgress()
   },[])
 
   const side = [
     {to:"/",icon:Home,iconActive:HomeActive,target:"",name:"Home"},
     {to:"/coursesGallery",icon:Book,iconActive:BookActive,target:"",name:"Meus Cursos"},
-    typeAccess === "community" && {to:"/communityStudent",icon:Community,iconActive:CommunityActive,target:"",name:"Comunidade"},
+    props.typeAccess === "community" && {to:"/communityStudent",icon:Community,iconActive:CommunityActive,target:"",name:"Comunidade"},
     {to:"https://www.instagram.com/guilhermecardosox/",icon:Insta,iconActive:InstaActive,target:"_blank",name:"Instagram"},
     {to:"https://www.youtube.com/c/GuilhermeCardoso",icon:Ytube,iconActive:YtubeActive,target:"_blank",name:"Canal do Youtube"},
     {to:"/Profile",icon:"Profile",iconActive:"",target:"",name:"Minha Conta"},
@@ -71,13 +61,13 @@ export const Sidebar = () => {
       <div className="absolute w-full h-full flex flex-col justify-center items-center hover:px-4">
         <img src={Brand} className="w-[30%] group-hover:w-[15%] h-auto"/>
         <StudentProfilePhoto 
-          student_id={userData ? userData.id : 0} 
+          student_id={props.userData.id} 
           photo_id={0} 
           autoUpdate={true} 
           class="w-[50px] h-[50px] my-4 group-hover:hidden"/>
 
         <ProfileInfo 
-          userData={userData} 
+          userData={props.userData} 
           progress={progress}
           className="hidden group-hover:flex group-hover:transition-all group-hover:duration-1000 "/>
 
@@ -87,7 +77,7 @@ export const Sidebar = () => {
               item && (
               <>            
                 <ItemSide 
-                  studentId={userData ? userData.id : 0} 
+                  studentId={props.userData.id} 
                   key={key}
                   to={item.to} 
                   target={item.target}

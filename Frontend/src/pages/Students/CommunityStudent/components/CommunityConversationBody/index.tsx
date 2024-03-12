@@ -174,9 +174,9 @@ const DateMessage = (props:DateMessageProps) => {
   const previousMessageDate = props.index > 0 ? new Date(props.lastMessages[props.index - 1].date_created) : null;
   const lastDataMessage = moment(previousMessageDate).format('DD/MM/YYYY')
   const currentMessageData = moment(props.message.date_created)
-  const label = currentMessageData.isSame(moment(), 'day') ?  "HOJE" 
-                : currentMessageData.isSame(moment().subtract(1, 'day'), 'day') ?  "ONTEM" 
-                : currentMessageData.isSame(moment().subtract(2, 'day'), 'day') ?  "ANTEONTEM" 
+  const label = currentMessageData.isSame(moment(), 'day') ?  "Hoje" 
+                : currentMessageData.isSame(moment().subtract(1, 'day'), 'day') ?  "Ontem" 
+                : currentMessageData.isSame(moment().subtract(2, 'day'), 'day') ?  weekPortugueseDays[currentMessageData.day()] 
                 : currentMessageData.isSame(moment().subtract(3, 'day'), 'day') ?  weekPortugueseDays[currentMessageData.day()]
                 : currentMessageData.isSame(moment().subtract(4, 'day'), 'day') ?  weekPortugueseDays[currentMessageData.day()]
                 : currentMessageData.isSame(moment().subtract(5, 'day'), 'day') ?  weekPortugueseDays[currentMessageData.day()]

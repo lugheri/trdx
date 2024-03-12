@@ -1,13 +1,33 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet } from "react-router-dom"
 import { Navbar } from "./Navbar"
 import { Sidebar } from "./Sidebar"
 import { SidebarAdm } from "./SidebarAdm"
 import { NavbarAdm } from "./NavbarAdm"
+import useAuth from '../../hooks/useAuth';
+import { Student } from '../../contexts/Dtos/auth.dto';
+import api from '../../services/api';
+import { LoadingBars } from '../Loading';
 
 
 
 export const Template = () => {
+  const authenticated = useAuth();  
+  const userData:Student|null = authenticated ? authenticated.userData : null
+  const [ typeAccess, setTypeAccess ] = useState<null | 'community' | 'default'>(null)
+
+  const checkTypeAccess = async () => {
+    try{
+      const type = await api.get(`checkTypeStudentAccess/${userData ? userData.id : 0}`)
+      setTypeAccess(type.data.response['community'] == 1 ? 'community' : 'default')
+    }catch(err){
+      console.error(err)
+    }
+  }
+  useEffect(()=>{
+    checkTypeAccess()
+  },[])
+
   /*Sizes responsives 
    - : Mobile
    - sm: Tables
@@ -23,13 +43,14 @@ export const Template = () => {
    - 2xl: Tv and Big Monitors
   */
   return(
-    <div className="
-      h-screen w-screen overflow-x-hidden overflow-y-auto
-      ">
-      <Sidebar/>
-      <Navbar/>
-      <Outlet/>  
-    </div>
+    userData === null ? 
+    <LoadingBars/> : (
+      <div className="h-screen w-screen overflow-x-hidden overflow-y-auto">
+        <Sidebar typeAccess={typeAccess} userData={userData}/>
+        <Navbar  typeAccess={typeAccess} userData={userData}/>
+        <Outlet/>  
+      </div>
+    )
   )
 }
 
@@ -48,16 +69,16 @@ export const TemplateAdm = () => {
   )
 }
 
-
+/*
 export const TemplateOld = () => {
   return (
     <div className="bg-[#070707] flex h-screen w-screen">
-      <Sidebar/>
+      <Sidebar />
       <div className="flex flex-col w-screen overflow-auto">
         <Navbar/>
         <Outlet/>  
       </div>
     </div>
   )
-}
+}*/
 

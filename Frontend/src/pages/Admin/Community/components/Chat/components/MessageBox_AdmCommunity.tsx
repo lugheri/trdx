@@ -85,7 +85,7 @@ const MyMessage = (props:PropsMessageType) => {
           ) : (
             <LoadMedia mediaId={props.message.media}  message={props.message.message}  />
           )}
-          <p className="text-xs text-white/80 float-right mx-1">{moment(props.message.date_created).format('DD/MM HH:mm')}</p>
+          <p className="text-xs text-white/80 float-right mx-1">{moment(props.message.date_created).format('HH:mm')}</p>
         </div>
       </div> 
     </div>
@@ -155,11 +155,11 @@ const ActionsMessage = (props:ActionsMessageProps) => {
   }
   return(
     <div className="bg-slate-700 p-4 absolute rounded text-sm flex flex-col justify-center items-start z-10 shadow-md shadow-black/50 mb-4">
-      {/*<button 
+      {<button 
         onClick={()=>props.setAnswerMessage(props.dataMessage)}
       className="text-white/80 font-light mb-2 hover:text-white">
         Responder
-      </button>*/}
+      </button>}
       { props.dataMessage.message!="" && 
         <button 
           onClick={()=>props.setEditMessage(props.dataMessage)}
