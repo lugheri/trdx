@@ -7,6 +7,7 @@ import coursesValidityContractsService from "../services/coursesValidityContract
 import lessonsViewedService from "../services/lessonsViewedService";
 import md5 from 'md5';
 import { redisGet, redisSet } from "../config/redis";
+import moment from "moment";
 
 class StudentsController{
   async newStudent(req:Request, res:Response){ 
@@ -311,6 +312,40 @@ class StudentsController{
   
 
   //Validity Contracts
+  async checkValidityStudent(req:Request,res:Response){
+    const studentId : number = parseInt(req.params.studentId)
+    try{
+      const coursesStudent = await studentCoursesServices.myCourses(studentId)
+      if(coursesStudent.length === 0){
+        res.json({"success":true})
+        return
+      }
+      let activeContracts = 0
+      const today = moment().format('YYYY-MM-DD') 
+      for (const course of coursesStudent) {
+        const contracts = await coursesValidityContractsService.validityCourse(course.id,studentId)
+        if(contracts){
+          if(contracts.end_validity>today){
+            const endContract = moment(contracts.end_validity, 'YYYY-MM-DD').format('YYYY-MM-DD')             
+            if (moment(today).isAfter(endContract)) {
+              if(contracts.payment_cycle === 'V'){
+                activeContracts++
+              }              
+            }else{
+              activeContracts++
+            }
+          }
+        }
+      }
+      if(activeContracts == 0){
+        await studentsService.editStudent(studentId,{community:0})
+      }
+      res.json({ "success": true, "activeContracts": activeContracts });
+    }catch(err){
+      res.json({"error":err})
+    }
+  }
+
   async activeContract(req:Request,res:Response){
     const studentId : number = parseInt(req.params.studentId)
     const courseId : number = parseInt(req.params.courseId)

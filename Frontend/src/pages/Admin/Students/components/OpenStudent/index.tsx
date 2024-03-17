@@ -38,6 +38,18 @@ export const OpenStudent = () => {
     }
   }
 
+  //Chech Access
+  const checkContracts = async () => {
+    try{
+      setUpdateStudent(0)
+      await api.get(`checkValidityStudent/${studentId}`)
+      setUpdateStudent(1)
+    }catch(err){
+      console.log(err)
+    }
+  }
+  useEffect(()=>{checkContracts()},[])
+
   const [ lastAccess, setLastAccess ] = useState<ILastAccess|false|null>(false)
   const getLastAccess = async () => {
     try{

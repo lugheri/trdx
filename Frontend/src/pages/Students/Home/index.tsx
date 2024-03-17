@@ -9,10 +9,21 @@ import { CoursesCarousel } from './components/CoursesCarousel';
 
 
 import { BannerHome } from './components/BannerHome';
+import api from '../../../services/api';
+import { useEffect } from 'react';
 
 export const Home = () => {
   const authenticated = useAuth();  
   const userData:Student|null = authenticated ? authenticated.userData : null  
+
+  const checkContracts = async () => {
+    try{
+      await api.get(`checkValidityStudent/${userData.id}`)
+    }catch(err){
+      console.log(err)
+    }
+  }
+  useEffect(()=>{checkContracts()},[])
 
  
 

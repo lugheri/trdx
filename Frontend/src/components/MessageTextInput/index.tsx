@@ -1,7 +1,8 @@
 import { faSmile } from "@fortawesome/free-regular-svg-icons"
+import { faX } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import EmojiPicker, { EmojiClickData, EmojiStyle, Theme } from "emoji-picker-react"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 
 type Props = {
   setMessage:React.Dispatch<React.SetStateAction<string>>,
@@ -12,44 +13,36 @@ type Props = {
 }
 export const MessageTextInput = (props:Props) => {
   const [showPicker, setShowPicker] = useState(false);
-  const editableDivText = useRef<HTMLDivElement>(null)
+  const editableDivText = useRef<HTMLDivElement>(null);
+  const div = editableDivText.current;
 
   const handleMessage = () => {
-    const div = editableDivText.current;
-    if (div) {     
-      props.setMessage(div.innerHTML);     
-    }
-    setShowPicker(false);
+    if (div) { props.setMessage(div.innerHTML);}
   }
 
-  const handleEmojiSelect = (emoji: EmojiClickData) => {
-    const size = props.sizeEmoji ? props.sizeEmoji  :  '24px'
-    const emojiLink = `<img src='${emoji.imageUrl}' style='display: inline;width:${size}'/>`
-    props.setMessage(props.message+emojiLink)
-  }
-
-  useEffect(()=>{
-    if(editableDivText.current){
-      //Focus on editable div
-      editableDivText.current.focus();
+  const handleEmojiSelect = (emoji: EmojiClickData) => {   
+    const size = '24px'
+    const emojiLink = `<img src='${emoji.imageUrl}' style='display: inline;width:${size}'/>`     
+    if (div) { 
       const selection = window.getSelection();
-      if (selection) {
-        const range = document.createRange();
-        range.selectNodeContents(editableDivText.current)
-        range.collapse(false); //move cursor to end
-        selection.removeAllRanges();
-        selection.addRange(range);
+      const range = selection.getRangeAt(0);      
+      if(range.startOffset == 0){
+        props.setMessage(div.innerHTML+emojiLink);
+      }else{
+        const newNode = document.createTextNode(emoji.emoji);
+        range.insertNode(newNode);     
+        props.setMessage(div.innerHTML.replace(emoji.emoji,emojiLink));
       }
-    }
-  },[props.message]) 
+    }  
+  }; 
 
   return(
-    <div className="flex flex-1 relative">
+    <div className="flex flex-1 relative" onBlur={handleMessage}>
       <button 
         type="button"
         className="mx-1 text-white/50 hover:text-white"
         onClick={()=>setShowPicker(!showPicker)}>
-        <FontAwesomeIcon icon={faSmile}/>
+          { showPicker ? <FontAwesomeIcon className="text-white/80 mx-1" icon={faX}/> : <FontAwesomeIcon icon={faSmile}/>}       
       </button>
 
       { showPicker && (
@@ -65,14 +58,13 @@ export const MessageTextInput = (props:Props) => {
       
       { props.placeholder && (
         <p className="absolute left-8 text-white/50 font-light italic">
-          { props.message === '' && "Digite o seu comentário..."}
+          { editableDivText.current.innerHTML == "" && "Digite o seu comentário..."}
         </p>)}
       <div 
         ref={editableDivText}
         contentEditable={true} 
         className="mx-1 p-1 z-10 flex-1 border-b border-white/50 text-white font-light text-sm focus-visible:outline-none"
-        dangerouslySetInnerHTML={{ __html: props.message}}
-        onInput={handleMessage}/>
+        dangerouslySetInnerHTML={{ __html: props.message}}/>
     </div>
   )
 }

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
 import Brand from '/img/brand.png'
-import useAuth from '../../../hooks/useAuth';
 import { Student } from '../../../contexts/Dtos/auth.dto';
 import { StudentProfilePhoto } from '../../StudentProfilePhoto';
 import api from '../../../services/api';

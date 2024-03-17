@@ -55,6 +55,7 @@ export default (routes: Router) => {
   
 
   //Validity Contracts Courses
+  routes.get('/checkValidityStudent/:studentId',StudentsController.checkValidityStudent)
   routes.get('/validityContracts/:studentId/:courseId',StudentsController.validityContracts)
   routes.get('/activeContract/:studentId/:courseId',StudentsController.activeContract)
   routes.post('/addContract',StudentsController.addContract)

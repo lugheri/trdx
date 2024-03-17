@@ -49,7 +49,7 @@ export const CommunityChatInput = (props:PropsType) => {
         if(r.data.error){setError(r.data.message)
           return
         }
-       
+      
       }catch(err){
         setError('Ocorreu um erro ao disparar a mensagem')
         console.log(err)
@@ -146,45 +146,34 @@ type TextInputProps = {
 const TextInput = (props:TextInputProps) => {
   //EMOJI
   const editableDivText = useRef<HTMLDivElement>(null);//Div de Edicao de Texto  
-  
-  const handleEmojiSelect = (emoji: EmojiClickData) => {
+  const div = editableDivText.current;
+
+  const handleEmojiSelect = (emoji: EmojiClickData) => {   
     const size = '24px'
-    const emojiLink = `<img src='${emoji.imageUrl}' style='display: inline;width:${size}'/>`
-    props.setMessage(props.message+emojiLink)
-  };
-
-  useEffect(() => {
-    if (editableDivText.current) {
-      editableDivText.current.focus(); // Foca na div editável
+    const emojiLink = `<img src='${emoji.imageUrl}' style='display: inline;width:${size}'/>`     
+    if (div) { 
       const selection = window.getSelection();
-      if (selection) {
-        const range = document.createRange();
-        range.selectNodeContents(editableDivText.current);
-        range.collapse(false); // Move o cursor para o final
-        selection.removeAllRanges();
-        selection.addRange(range);
+      const range = selection.getRangeAt(0);      
+      if(range.startOffset == 0){
+        props.setMessage(div.innerHTML+emojiLink);
+      }else{
+        const newNode = document.createTextNode(emoji.emoji);
+        range.insertNode(newNode);     
+        props.setMessage(div.innerHTML.replace(emoji.emoji,emojiLink));
       }
-    }
-  }, [props.message]);
-  
-  
-
-  const handleMessageHTMLChange= () => {
-    const div = editableDivText.current;
-    if (div) {     
-      
-      props.setMessage(div.innerHTML);     
-    }
-    props.setShowPicker(false);
+    }  
   };
 
+  const handleMessageHTMLChange= () => {    
+    if (div) { props.setMessage(div.innerHTML);}   
+  };
   return(
-    <div className="flex flex-1">
+    <div className="flex flex-1" onBlur={handleMessageHTMLChange}>
       <button 
         type="button"
         className="mx-1 text-white/50 hover:text-white"
         onClick={() => props.setShowPicker(!props.showPicker)}>
-        <FontAwesomeIcon icon={Far.faSmile}/>
+        { props.showPicker ? <FontAwesomeIcon className="text-white/80 mx-1" icon={Fas.faX}/> : <FontAwesomeIcon icon={Far.faSmile}/>}
       </button>
       { props.showPicker && (
         <div className="absolute bottom-14  rounded-lg shadow">
@@ -201,7 +190,7 @@ const TextInput = (props:TextInputProps) => {
         contentEditable={true} 
         className="mx-1 p-1 flex-1 border-none text-white font-light text-sm focus-visible:outline-none"
         dangerouslySetInnerHTML={{ __html: props.message }}
-        onInput={handleMessageHTMLChange}/>        
+        />        
     </div>
   )
 }
