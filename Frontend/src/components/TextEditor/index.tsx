@@ -8,7 +8,7 @@ type TextEditorComponent = {
 export const TextEditor : React.FC<TextEditorComponent> = (props) => {
   const modules = {
     toolbar: [
-      [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+      [{ 'header': '1'}, {'header': '2'}, { 'font': [] }], [{ 'color': [] }],
       [{size: []}],
       ['bold', 'italic', 'underline', 'strike', 'blockquote'],
       [{'list': 'ordered'}, {'list': 'bullet'}, 
@@ -25,7 +25,7 @@ export const TextEditor : React.FC<TextEditorComponent> = (props) => {
     'header', 'font', 'size',
     'bold', 'italic', 'underline', 'strike', 'blockquote',
     'list', 'bullet', 'indent',
-    'link', 'image', 'video'
+    'link', 'image', 'color','video'
   ]
   return <ReactQuill 
           className="w-full bg-neutral-300"  

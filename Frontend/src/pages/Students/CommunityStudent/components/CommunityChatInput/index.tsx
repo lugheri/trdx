@@ -32,14 +32,28 @@ export const CommunityChatInput = (props:PropsType) => {
     setShowPicker(false);
     setError(null)
     event.preventDefault();  
+    let messageFormatted:string
     if(message != ""){
+      const http = message.split(' https://')
+      console.log('http',http)
+      if(http.length == 1){
+        messageFormatted=message
+      }else{
+        const link = http[1].split(' ')
+        let endMessage=''
+        for (let i = 1; i < link.length; i++) {
+          endMessage=endMessage+' '+link[i]
+        }
+        messageFormatted = `${http[0]} <a href="https://${link[0]}" style="color:#48dbfb" target="_blank">https://${link[0]}</a> ${endMessage}`
+      }   
+
       try{
         const data = {
           is_student: 1,
           user_id: props.userdata.id,
           user_photo: props.userdata.photo === null ? 0 : props.userdata.photo,
           user_name:props.userdata.name,
-          message:DOMPurify.sanitize(message, { ALLOWED_TAGS: ['img','br'] }),
+          message:DOMPurify.sanitize(messageFormatted, { ALLOWED_TAGS: ['img','br','a'] }),
           media: 0
         }
         console.log('Data',data)

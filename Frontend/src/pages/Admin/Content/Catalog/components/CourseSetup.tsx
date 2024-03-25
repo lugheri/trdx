@@ -12,6 +12,7 @@ import { RenderImageGallery } from '../../../../../components/RenderImageGallery
 import { CourseEditInfo } from './CourseEditInfo';
 import { ModuleCourse } from './ModulesCourse';
 import { ModuleSetup } from './ModuleSetup';
+import { InputForm } from '../../../../../components/Inputs';
 
 type OpenCourseComponent = {
   setOpenCourse: React.Dispatch<React.SetStateAction<null|number>>;
@@ -21,6 +22,7 @@ export const CourseSetup : React.FC<OpenCourseComponent> = (props) => {
   const [ setupModule, setSetupModule ] = useState<null | number>(null)
   const [ infoCourse, setInfoCourse ] = useState<null|ICourse>(null)
   const [ editInfoCourse, setEditInfoCourse ] = useState(false)
+  const [ editLinkPage, setEditLinkPage ] = useState(false)
 
 
 
@@ -31,7 +33,7 @@ export const CourseSetup : React.FC<OpenCourseComponent> = (props) => {
       setInfoCourse(i.data.response)
     }catch(e){ console.log(e) }
   }
-  useEffect(()=>{ getInfo()},[editInfoCourse])
+  useEffect(()=>{ getInfo()},[editInfoCourse,editLinkPage])
   return(
     <>
       { infoCourse === null ? <Loading/> :
@@ -60,6 +62,7 @@ export const CourseSetup : React.FC<OpenCourseComponent> = (props) => {
                     <div className="flex justify-end items-center p-2 bg-gradient-to-r from-neutral-900 to-neutral-800 flex-1 w-full">
                       <Button icon="faReply" name="Voltar" btn="muted" type="notline" size="sm" className='rounded-none' onClick={()=>props.setOpenCourse(null)} />
                       <Button icon="faChartColumn" name="Estatísticas" btn="info" type="notline" size="sm" className='rounded-none'/>
+                      <Button icon="faExternalLink" name="Página de Venda" btn="info" type="notline" size="sm" className='rounded-none' onClick={()=>setEditLinkPage(true)}/>
                       <Button icon="faEdit" name="Editar Informações" btn="info" type="notline" size="sm" className='rounded-none' onClick={()=>setEditInfoCourse(true)}/>
                     </div>
                   </div>             
@@ -67,6 +70,7 @@ export const CourseSetup : React.FC<OpenCourseComponent> = (props) => {
             }/>
 
             { infoCourse && <ModuleCourse infoCourse={infoCourse} setSetupModule={setSetupModule}/>}
+            { editLinkPage && <LinkPageCourse infoCourse={infoCourse} close={setEditLinkPage}/>}
             { editInfoCourse ? <Modal component={
               <div>
                 <TitleModal 
@@ -86,4 +90,38 @@ export const CourseSetup : React.FC<OpenCourseComponent> = (props) => {
       </div>
     }
   </>)
+}
+
+
+//Editing link sell course page
+type LinkPageProps = {
+  infoCourse:ICourse,
+  close:React.Dispatch<React.SetStateAction<boolean>>
+}
+const LinkPageCourse = ({infoCourse,close}:LinkPageProps) => {
+  const [ linkPage, setLinkPage ] = useState(infoCourse.link_page)
+
+  const saveLinkPage = async () => {   
+    try{
+      close(false)  
+      const data = {
+        "link_page":linkPage
+      }
+      await api.patch(`editCourse/${infoCourse.id}`, data)
+    }catch(e){console.log(e)}
+  }
+
+  return(<Modal component={
+    <div className="flex flex-col">
+      <TitleModal title='Link de Venda' icon='faExternalLink' close={()=>close(false)}/>
+      <div className="p-2 flex flex-col">
+        <p className="text-white my-2 font-light">Cadastre o link da página de vendas do curso <strong>{infoCourse.name}</strong>!</p>
+        <InputForm label='Link da Página' placeholder='Insira o link da sua página de vendas do curso' value={linkPage} onChange={setLinkPage}/>
+      </div>
+      <div className="flex justify-end border-t border-neutral-600 pt-2 mt-2">
+        <Button btn="muted" name='Cancelar' type='notline' onClick={()=>close(false)} />
+        <Button btn="success" icon="faFloppyDisk" name='Salvar Link' onClick={saveLinkPage} />
+      </div>    
+    </div>
+  }/>)
 }

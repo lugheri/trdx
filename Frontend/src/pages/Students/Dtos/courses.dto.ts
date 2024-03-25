@@ -4,6 +4,7 @@ export interface ICourse{
   image:number;
   background_image:number;
   default_thumb:number;
+  link_page:string;
   author:string;
   name:string;
   description:string;

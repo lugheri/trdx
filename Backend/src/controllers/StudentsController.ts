@@ -325,15 +325,13 @@ class StudentsController{
       for (const course of coursesStudent) {
         const contracts = await coursesValidityContractsService.validityCourse(course.id,studentId)
         if(contracts){
-          if(contracts.end_validity>today){
-            const endContract = moment(contracts.end_validity, 'YYYY-MM-DD').format('YYYY-MM-DD')             
-            if (moment(today).isAfter(endContract)) {
-              if(contracts.payment_cycle === 'V'){
-                activeContracts++
-              }              
-            }else{
+          const endContract = moment(contracts.end_validity, 'YYYY-MM-DD').format('YYYY-MM-DD')             
+          if (moment(today).isAfter(endContract)) {
+            if(contracts.payment_cycle === 'V'){
               activeContracts++
-            }
+            }              
+          }else{
+            activeContracts++
           }
         }
       }

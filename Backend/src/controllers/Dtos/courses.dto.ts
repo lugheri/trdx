@@ -5,6 +5,7 @@ export const CoursesDTO = z.object({
   image:z.optional(z.number()),
   background_image:z.optional(z.number()),
   default_thumb:z.optional(z.number()),
+  link_page:z.optional(z.string()),
   author:z.optional(z.string()),
   name:z.optional(z.string()),
   description:z.optional(z.string()),

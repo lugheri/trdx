@@ -144,7 +144,7 @@ const Questions = (props:QuestionsProps) => {
   const [ question, setQuestion ] = useState<IQuestionQuiz|null|''>('')
   const [ options, setOptions ] = useState<IOptionQuestionQuiz[]|null>(null)
   const [ selected, setSelected ] = useState<number|null>(null)
- 
+
   const previousQuestion = async (question:number) => {
     try{
       const q = await api.get(`previousQuestion/${props.quizId}/${question}`)

@@ -23,7 +23,7 @@ type PropsType = {
   close?:React.Dispatch<React.SetStateAction<ICommunityMessage|null>>
 }
 export const ChatInput_AdmCommunity = (props:PropsType) => {
-  const [ error, setError ] = useState<string|null>(null)
+  const [ error, setError ] = useState<string|null>(null) 
   //SUBMIT TEXT MESSAGE
   const [ showPicker, setShowPicker] = useState(false);
   const [ message, setMessage ]= useState(props.initialMessage);
@@ -31,8 +31,25 @@ export const ChatInput_AdmCommunity = (props:PropsType) => {
   const handleSubmit = async (event:FormEvent) => {
     setShowPicker(false);
     setError(null)
+
+
     event.preventDefault(); 
+    let messageFormatted:string
     if(message != ""){
+      const http = message.split(' https://')
+      console.log('http',http)
+      if(http.length == 1){
+        messageFormatted=message
+      }else{
+        const link = http[1].split(' ')
+        let endMessage=''
+        for (let i = 1; i < link.length; i++) {
+          endMessage=endMessage+' '+link[i]
+        }
+        messageFormatted = `${http[0]} <a href="https://${link[0]}" style="color:#48dbfb" target="_blank">https://${link[0]}</a> ${endMessage}`
+      }   
+      
+
       try{        
         props.setUpdate(true)
         if(props.action == "new"){
@@ -41,7 +58,7 @@ export const ChatInput_AdmCommunity = (props:PropsType) => {
             user_id: props.userdata.id,
             user_photo: props.userdata.phone === null ? 0 : props.userdata.photo,
             user_name:props.userdata.name,
-            message:DOMPurify.sanitize(message, { ALLOWED_TAGS: ['img','br'] }),
+            message:DOMPurify.sanitize(messageFormatted, { ALLOWED_TAGS: ['img','br','a'] }),
             answer_message:props.answerMessage,
             media: 0
           }
@@ -53,7 +70,7 @@ export const ChatInput_AdmCommunity = (props:PropsType) => {
         }else{
           const data = {
             is_student: 0,
-            message:DOMPurify.sanitize(message, { ALLOWED_TAGS: ['img','br'] }),
+            message:DOMPurify.sanitize(messageFormatted, { ALLOWED_TAGS: ['img','br','a'] }),
             media: 0
           }
           const r = await api.patch(`editMessage/${props.message_id}`,data)

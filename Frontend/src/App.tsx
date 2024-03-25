@@ -3,7 +3,7 @@ import { ThemeProvider } from "./contexts/theme";
 import RoutesApp from "./routes";
 
 const App = () => {  
-   return (
+  return (
     <ThemeProvider>
       <AuthProvider>
         <RoutesApp/>

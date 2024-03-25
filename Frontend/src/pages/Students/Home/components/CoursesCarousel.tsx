@@ -104,11 +104,11 @@ export const CoursesCarousel : React.FC<CoursesCarouselComponent> = (props)  => 
           </Slider>
           <button 
             className="absolute h-[360px] top-0 px-2 flex justify-center items-center group
-                       left-[16%] md:left-20 lg:left-20 2xl:left-24" 
+                      left-[16%] md:left-20 lg:left-20 2xl:left-24" 
             onClick={previous}>
             <span 
               className="bg-neutral-800 w-10 h-10 flex justify-center items-center rounded-full text-white shadow 
-                         group-hover:bg-green-500/30 group-hover:border group-hover:border-green-500 group-hover:text-[#0f0]">
+                        group-hover:bg-green-500/30 group-hover:border group-hover:border-green-500 group-hover:text-[#0f0]">
               <FontAwesomeIcon 
                 className="text-xl"
                 icon={Fas.faChevronLeft}/>
@@ -119,7 +119,7 @@ export const CoursesCarousel : React.FC<CoursesCarouselComponent> = (props)  => 
             onClick={next}>
             <span 
               className="bg-neutral-800 w-10 h-10 flex justify-center items-center rounded-full text-white shadow 
-                         group-hover:bg-green-500/30 group-hover:border group-hover:border-green-500 group-hover:text-[#0f0]">
+                      group-hover:bg-green-500/30 group-hover:border group-hover:border-green-500 group-hover:text-[#0f0]">
               <FontAwesomeIcon 
                 className="text-xl"
                 icon={Fas.faChevronRight}/>
@@ -134,6 +134,10 @@ export const CoursesCarousel : React.FC<CoursesCarouselComponent> = (props)  => 
 
 const Course : React.FC<{infoCourse:ICourse;userId:number}> = (props) => {
   const [ validityCourse, setValidityCourse] = useState<null|'not_have'|'expired'|'valid'>(null);
+  const openLinkPage = async (link:string) => {
+    window.open(link, '_blank');   
+  }
+
   useEffect(()=>{
     const checkValidity = async () => {
       try{
@@ -162,15 +166,21 @@ const Course : React.FC<{infoCourse:ICourse;userId:number}> = (props) => {
         : <div className="flex justify-center items-center p-2 rounded-xl bg-black w-full h-full">
             <img className="w-1/2" src={Logo}/>
           </div>
-        }
-        
+        }        
         { validityCourse == 'valid' ?
           <button
           className="p-2 bg-neutral-800 w-[60%] text-white text-xs font-light rounded-md absolute hidden bottom-0 left-[20%] shadow 
                       group-hover:bottom-[10px] group-hover:block group-hover:animate-slideUp"  
           onClick={()=>openCourse()}><FontAwesomeIcon icon={Fas.faFolderOpen}/> Abrir Curso</button>
         : <div className="absolute w-full h-full bg-black/80 text-white/60 flex justify-center items-center text-5xl" >
-             { validityCourse == 'not_have' ? <FontAwesomeIcon icon={Fas.faLock}/> : <p>EXPIRADO</p>} 
+            { validityCourse == 'not_have' ? <FontAwesomeIcon icon={Fas.faLock}/> : <p>EXPIRADO</p>} 
+            { props.infoCourse.link_page  &&
+              <button
+                className="p-2 bg-neutral-800 w-[60%] text-white text-xs font-light rounded-md absolute hidden 
+                          bottom-0 left-[20%] shadow group-hover:bottom-[10px] group-hover:block group-hover:animate-slideUp"  
+                onClick={()=>openLinkPage(props.infoCourse.link_page)}>
+                  <FontAwesomeIcon icon={Fas.faInfoCircle}/> Saiba Mais
+              </button>} 
           </div>
         }
       </div> 

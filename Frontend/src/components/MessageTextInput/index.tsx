@@ -58,7 +58,7 @@ export const MessageTextInput = (props:Props) => {
       
       { props.placeholder && (
         <p className="absolute left-8 text-white/50 font-light italic">
-          { editableDivText.current.innerHTML == "" && "Digite o seu comentário..."}
+          {  editableDivText.current ? editableDivText.current.innerHTML == "" && "Digite o seu comentário..." : "Digite o seu comentário..." }
         </p>)}
       <div 
         ref={editableDivText}
